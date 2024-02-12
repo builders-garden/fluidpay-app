@@ -32,6 +32,8 @@
         <data android:scheme="ghost"/>
         <data android:scheme="split3"/>
         <data android:scheme="garden.builders.split3"/>
+        <data android:scheme="crumina"/>
+        <data android:scheme="garden.builders.crumina"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

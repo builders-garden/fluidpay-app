@@ -40,7 +40,7 @@ const Home = () => {
       return router.push("/onboarding");
     }
     const password = await SecureStore.getItemAsync(`password-${address}`);
-    const email = `${address}@ghost.app`;
+    const email = `${address}@crumina.app`;
     await signInWithEmailAndPassword(firebaseAuth, email, password!);
     // get user and set it in the store
     const document = await getDoc(
@@ -72,7 +72,7 @@ const Home = () => {
       )}
       {connectionStatus === "disconnected" && (
         <ConnectWallet
-          modalTitle="Split3"
+          modalTitle="Crumina"
           buttonTitle="Login"
           modalTitleIconUrl=""
           theme={theme}

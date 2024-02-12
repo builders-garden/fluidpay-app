@@ -98,9 +98,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace 'garden.builders.split3'
+    namespace 'garden.builders.crumina'
     defaultConfig {
-        applicationId 'garden.builders.split3'
+        applicationId 'garden.builders.crumina'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
