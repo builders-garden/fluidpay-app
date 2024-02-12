@@ -44,13 +44,13 @@ export default function TransactionsList({
   };
   return (
     <>
-      <Text className="text-[#53516C] font-semibold mt-4 mb-2">
+      <Text className="text-[#8F8F91] font-semibold mt-4 mb-2">
         {withAddress ? "Transactions between you" : "Transaction History"}
       </Text>
       <Divider />
       {loading && transactions.length === 0 && (
         <View className="mt-4">
-          <ActivityIndicator animating={true} color={"#C9B3F9"} />
+          <ActivityIndicator animating={true} color={"#667DFF"} />
         </View>
       )}
       {transactions.length === 0 && !loading && (

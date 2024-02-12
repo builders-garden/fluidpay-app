@@ -217,7 +217,7 @@ export default function SendModal() {
         <Text className="text-white text-lg text-center font-semibold">
           {sendUser?.username}
         </Text>
-        <Text className="text-[#53516C] text-ellipsis">
+        <Text className="text-[#8F8F91] text-ellipsis">
           {shortenAddress(sendUser?.address, false)}
           {isCrossChain && ` • ${sendUserChain}`}
           {/* {isCrossChain && ` • ${sendUser?.chain}`} */}
@@ -232,9 +232,9 @@ export default function SendModal() {
           lagAutoFocus={false}
         />
         {balanceOfLoading ? (
-          <ActivityIndicator animating={true} color={"#C9B3F9"} />
+          <ActivityIndicator animating={true} color={"#667DFF"} />
         ) : (
-          <Text className="text-[#53516C] font-semibold">
+          <Text className="text-[#8F8F91] font-semibold">
             ${balance} available
           </Text>
         )}
@@ -277,7 +277,7 @@ export default function SendModal() {
         isApproveLoading ||
         isSendCrossChainLoading ||
         loading ? (
-          <ActivityIndicator animating={true} color={"#C9B3F9"} />
+          <ActivityIndicator animating={true} color={"#667DFF"} />
         ) : (
           <View className="flex flex-row justify-between">
             <View className="flex-1 mx-2">

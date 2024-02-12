@@ -45,7 +45,7 @@ export default function QRCodeModal({ option }: { option?: QRScreenOptions }) {
                 <Text className="text-white font-semibold text-lg text-center">
                   {user?.username}
                 </Text>
-                <Text className="text-[#53516C] font-semibold text-md">
+                <Text className="text-[#8F8F91] font-semibold text-md">
                   {shortenAddress(user?.address)}
                 </Text>
               </View>

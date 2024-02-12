@@ -147,11 +147,11 @@ export default function BorrowModal() {
       </Text>
       {isLoading || !userData ? (
         <View className="mt-4">
-          <ActivityIndicator animating={true} color={"#C9B3F9"} />
+          <ActivityIndicator animating={true} color={"#667DFF"} />
         </View>
       ) : (
         <View>
-          {/* <Text className="text-[#53516C] font-semibold mt-8">
+          {/* <Text className="text-[#8F8F91] font-semibold mt-8">
             Total collateral base (USD)
           </Text>
           <Text className="text-white font-semibold mt-2">
@@ -162,7 +162,7 @@ export default function BorrowModal() {
                 )
               : "0.00"}
           </Text> */}
-          <Text className="text-[#53516C] font-semibold mt-4">
+          <Text className="text-[#8F8F91] font-semibold mt-4">
             Borrowable GHO
           </Text>
           <Text className="text-white font-semibold mt-1 text-lg">
@@ -173,13 +173,13 @@ export default function BorrowModal() {
               : "0.00"}{" "}
             GHO
           </Text>
-          {/* <Text className="text-[#53516C] font-semibold mt-4">
+          {/* <Text className="text-[#8F8F91] font-semibold mt-4">
             Maximum LTV (loan-to-value)
           </Text>
           <Text className="text-white font-semibold mt-2">
             {formatUnits(userData[4], 4)}
           </Text>
-          <Text className="text-[#53516C] font-semibold mt-4">
+          <Text className="text-[#8F8F91] font-semibold mt-4">
             Health Factor
           </Text>
           <Text className="text-white font-semibold mt-2">
@@ -188,7 +188,7 @@ export default function BorrowModal() {
           {/* <Slider progress={progress} minimumValue={min} maximumValue={max} /> */}
           <View className="mt-4">
             {borrowLoading ? (
-              <ActivityIndicator animating={true} color={"#C9B3F9"} />
+              <ActivityIndicator animating={true} color={"#667DFF"} />
             ) : (
               <AppButton
                 text={
@@ -203,7 +203,7 @@ export default function BorrowModal() {
               />
             )}
           </View>
-          <Text className="text-[#53516C] font-semibold mt-4">
+          <Text className="text-[#8F8F91] font-semibold mt-4">
             Amount borrowed
           </Text>
           <Text className="text-white font-semibold mt-1 text-lg">
@@ -216,7 +216,7 @@ export default function BorrowModal() {
           </Text>
           <View className="mt-4">
             {repayLoading ? (
-              <ActivityIndicator animating={true} color={"#C9B3F9"} />
+              <ActivityIndicator animating={true} color={"#667DFF"} />
             ) : (
               <AppButton
                 text={

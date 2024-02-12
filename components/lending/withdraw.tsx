@@ -159,8 +159,8 @@ export default function LendingWithdraw({
           bubble={(s) => `${s.toFixed(0)}`}
           theme={{
             disableMinTrackTintColor: "#fff",
-            maximumTrackTintColor: "#53516C",
-            minimumTrackTintColor: "#C9B3F9",
+            maximumTrackTintColor: "#8F8F91",
+            minimumTrackTintColor: "#667DFF",
             cacheTrackTintColor: "#333",
             bubbleBackgroundColor: "#666",
           }}
@@ -168,7 +168,7 @@ export default function LendingWithdraw({
       </View>
       <View className="mt-2">
         {isWithdrawing || isSwapping || isApproving ? (
-          <ActivityIndicator animating={true} color={"#C9B3F9"} />
+          <ActivityIndicator animating={true} color={"#667DFF"} />
         ) : (
           <AppButton
             text="Withdraw"

@@ -75,7 +75,7 @@ export default function Pocket() {
           </View>
         </View>
         <Pressable
-          className="border-2 border-[#C9B3F9] w-full p-3 rounded-lg flex flex-row items-center justify-between mt-4"
+          className="border-2 border-[#667DFF] w-full p-3 rounded-lg flex flex-row items-center justify-between mt-4"
           onPress={() => router.push("/app/aave-lending-modal")}
         >
           <View className="flex flex-row space-x-2 items-center">
@@ -97,13 +97,13 @@ export default function Pocket() {
               <Text className="text-lg text-emerald-500 font-semibold">
                 1.50%
               </Text>
-              <Text className="text-[#53516C]">APY</Text>
+              <Text className="text-[#8F8F91]">APY</Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#C9B3F9" />
+            <Icon name="chevron-right" size={16} color="#667DFF" />
           </View>
         </Pressable>
         <Pressable
-          className="border-2 border-[#C9B3F9] w-full p-3 rounded-lg flex flex-row items-center justify-between mt-4"
+          className="border-2 border-[#667DFF] w-full p-3 rounded-lg flex flex-row items-center justify-between mt-4"
           onPress={() => router.push("/app/vault-modal")}
         >
           <View className="flex flex-row space-x-2 items-center">
@@ -125,9 +125,9 @@ export default function Pocket() {
               <Text className="text-lg text-emerald-500 font-semibold">
                 3.00%
               </Text>
-              <Text className="text-[#53516C]">APY</Text>
+              <Text className="text-[#8F8F91]">APY</Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#C9B3F9" />
+            <Icon name="chevron-right" size={16} color="#667DFF" />
           </View>
         </Pressable>
         {/* <View className="my-8 flex items-center w-full">

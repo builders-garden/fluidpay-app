@@ -33,14 +33,14 @@ export default function AddMoneyModal() {
           size={20}
         />
       </Appbar.Header>
-      <Text className="text-[#53516C] font-semibold mt-8">
+      <Text className="text-[#8F8F91] font-semibold mt-8">
         Add money to account
       </Text>
       <Text className="text-white font-semibold mt-2">
         Send GHO, USDC, USDT to your address below.
       </Text>
       <View className="bg-[#292836] rounded-lg flex flex-row justify-between mt-4 px-4 py-2">
-        <Text className="text-[#53516C] text-ellipsis">
+        <Text className="text-[#8F8F91] text-ellipsis">
           {shortenAddress(user?.address)}
         </Text>
         <Pressable
@@ -55,7 +55,7 @@ export default function AddMoneyModal() {
           <Icon
             name={!copied ? "clipboard" : "check"}
             size={16}
-            color={!copied ? "#53516C" : "green"}
+            color={!copied ? "#8F8F91" : "green"}
           />
         </Pressable>
       </View>

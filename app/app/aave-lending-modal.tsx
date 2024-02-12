@@ -96,19 +96,19 @@ export default function AAVELendingModal({
         </View>
         <View className="flex flex-row items-center justify-around space-x-4">
           <View className="flex flex-col space-y-1 items-center w-48">
-            <Text className="text-[#53516C] font-semibold">Balance</Text>
+            <Text className="text-[#8F8F91] font-semibold">Balance</Text>
             <Text className="text-white text-2xl font-bold text-center">
               ${balance}
             </Text>
           </View>
           <View className="flex flex-col space-y-1 items-center w-48">
-            <Text className="text-[#53516C] font-semibold">Borrowed</Text>
+            <Text className="text-[#8F8F91] font-semibold">Borrowed</Text>
             <Text className="text-white text-2xl font-bold text-center">
               ${readableUserBorrowBalance.toFixed(2)}
             </Text>
           </View>
           <View className="flex flex-col space-y-1 items-center w-48">
-            <Text className="text-[#53516C] font-semibold">APY</Text>
+            <Text className="text-[#8F8F91] font-semibold">APY</Text>
             <Text className="text-white text-2xl font-bold text-center">
               1.50%
             </Text>

@@ -17,8 +17,8 @@ import { doc, getDoc } from "firebase/firestore";
 const theme = darkTheme({
   colors: {
     buttonBackgroundColor: "transparent",
-    buttonTextColor: "#C9B3F9",
-    buttonBorderColor: "#C9B3F9",
+    buttonTextColor: "#667DFF",
+    buttonBorderColor: "#667DFF",
   },
 });
 
@@ -68,7 +68,7 @@ const Home = () => {
 
       {/* <Text className="text-white text-4xl font-bold mb-4">Ghost</Text> */}
       {connectionStatus === "connecting" && (
-        <ActivityIndicator animating={true} color={"#C9B3F9"} />
+        <ActivityIndicator animating={true} color={"#667DFF"} />
       )}
       {connectionStatus === "disconnected" && (
         <ConnectWallet

@@ -96,21 +96,21 @@ export default function LendingBorrow({
         />
       </View>
       {balanceOfLoading ? (
-        <ActivityIndicator animating={true} color={"#C9B3F9"} />
+        <ActivityIndicator animating={true} color={"#667DFF"} />
       ) : (
         <>
-          <Text className="text-[#53516C] font-semibold text-center">
+          <Text className="text-[#8F8F91] font-semibold text-center">
             ${parseFloat(formatUnits(userData[2], 8)).toFixed(2)} borrowable
           </Text>
           {/* 
-          <Text className="text-[#53516C] font-semibold">
+          <Text className="text-[#8F8F91] font-semibold">
             ${formatUnits(userData[1], 8)} borrowed
           </Text> */}
         </>
       )}
       <View className="mt-8 w-full">
         {isBorrowing || isApproving ? (
-          <ActivityIndicator animating={true} color={"#C9B3F9"} />
+          <ActivityIndicator animating={true} color={"#667DFF"} />
         ) : (
           <AppButton
             text="Borrow"

@@ -52,20 +52,20 @@ export default function Onboarding() {
       try {
         await createUserWithEmailAndPassword(
           firebaseAuth,
-          `${address}@split3.app`,
+          `${address}@crumina.app`,
           password
         );
       } catch (error) {
         await signInWithEmailAndPassword(
           firebaseAuth,
-          `${address}@split3.app`,
+          `${address}@crumina.app`,
           password
         );
       }
     } else {
       await signInWithEmailAndPassword(
         firebaseAuth,
-        `${address}@split3.app`,
+        `${address}@crumina.app`,
         password
       );
     }
@@ -127,10 +127,10 @@ export default function Onboarding() {
           <Text className="text-white font-semibold text-lg text-center">
             Creating your account, this might{"\n"} take a while.
           </Text>
-          <Text className="text-[#53516C] text-center font-medium">
+          <Text className="text-[#8F8F91] text-center font-medium">
             {creationStatus}
           </Text>
-          <ActivityIndicator animating={loading} color={"#C9B3F9"} />
+          <ActivityIndicator animating={loading} color={"#667DFF"} />
         </View>
       )}
       {step === 1 && (

@@ -55,7 +55,7 @@ export default function ProfileModal() {
           <Text className="text-white text-lg text-center font-semibold">
             {profileUser?.username}
           </Text>
-          <Text className="text-[#53516C] text-ellipsis">
+          <Text className="text-[#8F8F91] text-ellipsis">
             {shortenAddress(profileUser?.address, false)}
           </Text>
         </View>

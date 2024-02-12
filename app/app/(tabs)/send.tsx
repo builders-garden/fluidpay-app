@@ -72,17 +72,17 @@ export default function Send() {
           placeholder="Search user, ENS or address..."
           onChangeText={onChangeText}
           value={searchQuery}
-          className="bg-transparent border border-[#53516C] !text-white"
-          iconColor="#C9B3F9"
+          className="bg-transparent border border-[#8F8F91] !text-white"
+          iconColor="#667DFF"
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect={false}
-          placeholderTextColor={"#53516C"}
+          placeholderTextColor={"#8F8F91"}
           theme={{ colors: { onSurfaceVariant: "#FFF" } }}
         />
         {searchQuery !== "" && (
           <>
-            <Text className="text-[#53516C] font-semibold mt-8">
+            <Text className="text-[#8F8F91] font-semibold mt-8">
               Search results
             </Text>
             <View className="flex flex-col space-y-4 mt-4">

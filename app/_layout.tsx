@@ -43,7 +43,7 @@ const toastConfig: ToastConfig = {
       {...props}
       style={{ borderLeftColor: "red", backgroundColor: "#21202E" }}
       text1Style={{ color: "white", fontWeight: "bold", fontSize: 16 }}
-      text2Style={{ color: "#53516C" }}
+      text2Style={{ color: "#8F8F91" }}
     />
   ),
 };
@@ -66,7 +66,7 @@ export default function AppLayout() {
               embeddedWallet({
                 auth: {
                   options: ["email", "google"],
-                  redirectUrl: "ghost://",
+                  redirectUrl: "crumina://",
                 },
               }),
               {

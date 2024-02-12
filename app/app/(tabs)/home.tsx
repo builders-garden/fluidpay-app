@@ -99,8 +99,8 @@ export default function Home() {
   }
 
   return (
-    <SafeAreaView className="bg-[#201F2D] flex-1">
-      <View className="flex flex-col px-4 mt-2 bg-[#201F2D]">
+    <SafeAreaView className="bg-black flex-1">
+      <View className="flex flex-col px-4 mt-2 bg-transparent">
         <View className="flex flex-row items-center justify-between">
           <View className="flex flex-row items-center space-x-4 pl-2">
             <Link href={"./settings"}>
@@ -114,23 +114,35 @@ export default function Home() {
             />
           </View>
         </View>
-        <View className="p-14">
-          <Text className="text-white font-semibold text-center">
-            Main • USDC
-          </Text>
-          <Text className="text-white font-bold text-center text-5xl">
-            $83,00
-          </Text>
-          <View className="flex flex-row justify-evenly items-center">
+        <View className="py-14 flex flex-col space-y-16">
+          <View className="flex flex-col space-y-6">
+            <Text className="text-white font-semibold text-center">
+              Main • USDC
+            </Text>
+            <Text className="text-white font-bold text-center text-5xl">
+              $83,00
+            </Text>
+          </View>
+          <View className="flex flex-row items-center justify-evenly w-full">
             <CircularButton
               text="Add money"
               icon="plus"
               onPress={() => router.push("/app/add-money-modal")}
             />
             <CircularButton
+              text="Request"
+              icon="paper-plane"
+              onPress={() => router.push("/app/request")}
+            />
+            <CircularButton
               text="Send"
               icon="paper-plane"
               onPress={() => router.push("/app/send")}
+            />
+            <CircularButton
+              text="Details"
+              icon="paper-plane"
+              onPress={() => router.push("/app/details")}
             />
           </View>
         </View>

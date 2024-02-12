@@ -59,17 +59,17 @@ export default function Settings() {
                     }, 1500);
                   }}
                 >
-                  <Text className="text-[#53516C] mr-2">
+                  <Text className="text-[#8F8F91] mr-2">
                     {shortenAddress(user.address)}
                   </Text>
                   <Icon
                     name={!copied ? "clipboard" : "check"}
                     size={16}
-                    color={!copied ? "#53516C" : "green"}
+                    color={!copied ? "#8F8F91" : "green"}
                   />
                 </Pressable>
               </View>
-              <Text className="text-[#53516C] font-semibold">
+              <Text className="text-[#8F8F91] font-semibold">
                 GHO • Sepolia
               </Text>
             </View>
@@ -83,7 +83,7 @@ export default function Settings() {
             }}
             variant="ghost"
           />
-          <Text className="text-[#53516C] font-semibold mt-8">Preferences</Text>
+          <Text className="text-[#8F8F91] font-semibold mt-8">Preferences</Text>
           <View className="flex flex-row justify-between mt-2">
             <Text className="max-w-[300px] text-white">
               Set aside the remainder of each received transaction rounded to
@@ -91,7 +91,7 @@ export default function Settings() {
               enabled by default.
             </Text>
             <Switch
-              trackColor={{ false: "black", true: "#C9B3F9" }}
+              trackColor={{ false: "black", true: "#667DFF" }}
               thumbColor={"#201F2D"}
               ios_backgroundColor="#3e3e3e"
               onValueChange={toggleSwitch}
@@ -112,7 +112,7 @@ export default function Settings() {
             onPress={() => {
               setShowModal(true);
             }}
-            className="text-[#C9B3F9] text-center font-semibold mt-8"
+            className="text-[#667DFF] text-center font-semibold mt-8"
           >
             LOGOUT
           </Text>

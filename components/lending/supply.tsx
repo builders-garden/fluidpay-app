@@ -144,15 +144,15 @@ export default function LendingSupply({
         />
       </View>
       {balanceOfLoading ? (
-        <ActivityIndicator animating={true} color={"#C9B3F9"} />
+        <ActivityIndicator animating={true} color={"#667DFF"} />
       ) : (
-        <Text className="text-[#53516C] font-semibold text-center">
+        <Text className="text-[#8F8F91] font-semibold text-center">
           ${balance} available
         </Text>
       )}
       <View className="mt-8 w-full">
         {isSupplying || isApproving || isApprovingGHO || isSwapping ? (
-          <ActivityIndicator animating={true} color={"#C9B3F9"} />
+          <ActivityIndicator animating={true} color={"#667DFF"} />
         ) : (
           <AppButton
             text="Supply"

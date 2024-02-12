@@ -58,7 +58,7 @@ export default function TransactionItem({
                 );
               }}
             >
-              <Text className="text-[#53516C]">Click to view detail</Text>
+              <Text className="text-[#8F8F91]">Click to view detail</Text>
             </Pressable>
           </View>
         </View>
@@ -70,7 +70,7 @@ export default function TransactionItem({
           >
             {!isFrom ? "+" : "-"} ${amount.toFixed(2)}
           </Text>
-          <Text className="text-[#53516C]">
+          <Text className="text-[#8F8F91]">
             <TimeAgo dateTo={new Date(createdAt)} />
           </Text>
         </View>
