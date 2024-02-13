@@ -49,10 +49,12 @@ export default function AppLayout() {
         options={{ presentation: "fullScreenModal", headerShown: false }}
       />
       <Stack.Screen name="settings" options={{ headerShown: false }} />
+      <Stack.Screen name="security-privacy" options={{ headerShown: false }} />
       <Stack.Screen
-        name="qrcode-modal"
-        options={{ presentation: "fullScreenModal", headerShown: false }}
+        name="notification-settings"
+        options={{ headerShown: false }}
       />
+      <Stack.Screen name="qrcode" options={{ headerShown: false }} />
     </Stack>
   );
 }

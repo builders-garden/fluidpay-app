@@ -141,8 +141,8 @@ export default function Home() {
   return (
     <View className="bg-black flex-1">
       <LinearGradient colors={["#3500B7", "#1B005E", "#000000"]} style={{}}>
-        <View className="flex flex-col px-4 mt-2 bg-transparent pt-12">
-          <View className="flex flex-row items-center justify-between">
+        <View className="flex flex-col mt-2 bg-transparent pt-12">
+          <View className="flex flex-row items-center justify-between px-4">
             <View className="flex flex-row items-center space-x-4 pl-2">
               <Link href={"/app/settings"}>
                 <Avatar name={user.username.charAt(0).toUpperCase()} />
@@ -151,11 +151,11 @@ export default function Home() {
             <View className="flex flex-row items-center space-x-0">
               <IconButton
                 icon={() => <Icon name="bell" color="#FFF" size={24} />}
-                onPress={() => router.push("/app/qrcode-modal")}
+                onPress={() => router.push("/app/qrcode")}
               />
             </View>
           </View>
-          <ScrollView className="px-2">
+          <ScrollView className="px-4">
             <View className="py-8 flex flex-col space-y-16">
               <View className="flex flex-col space-y-6">
                 <Text className="text-white font-semibold text-center">
@@ -188,7 +188,7 @@ export default function Home() {
                 />
               </View>
             </View>
-            <View className="bg-[#161618] h-[300px] w-full mx-auto rounded-lg p-4">
+            <View className="bg-[#161618] h-[300px] w-full mx-auto rounded-2xl p-4">
               <TransactionItem transaction={transactions[0]} index={0} />
               <TransactionItem transaction={transactions[1]} index={1} />
               <TransactionItem transaction={transactions[2]} index={2} />
@@ -196,7 +196,7 @@ export default function Home() {
                 See all
               </Text>
             </View>
-            <View className="bg-[#161618] h-[158px] w-full mx-auto rounded-lg mt-8 mb-24 p-4">
+            <View className="bg-[#161618] h-[158px] w-full mx-auto rounded-2xl mt-8 mb-36 p-4">
               <View className="flex flex-row items-center space-x-2">
                 <Text className="text-gray-400">Recent payees</Text>
                 <Icon name="chevron-right" color="grey" size={14} />

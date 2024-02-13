@@ -1,5 +1,5 @@
 import { Linking, Text, View } from "react-native";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { Appbar } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useRef, useState } from "react";
@@ -8,23 +8,23 @@ import { Scanner } from "../../components/scanner";
 import QRCode from "../../components/qrcode";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { useUserStore } from "../../store/use-user-store";
-import { SafeAreaView } from "react-native-safe-area-context";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "@thirdweb-dev/react-native";
 
 type QRScreenOptions = "Pay me" | "Scan";
 
-export default function QRCodeModal({ option }: { option?: QRScreenOptions }) {
-  const isPresented = router.canGoBack();
+export default function QRScreen({ option }: { option?: QRScreenOptions }) {
   const user = useUserStore((state) => state.user);
   const [tab, setTab] = useState<QRScreenOptions>(option || "Pay me");
   const tabs = useRef(["Scan", "Pay me"] as QRScreenOptions[]).current;
-  const title = tab === "Pay me" ? "Display QR Code" : "Scan QR Code";
 
   return (
-    <SafeAreaView className="flex-1 flex-col px-4 bg-black">
-      {!isPresented && <Link href="../">Dismiss</Link>}
-      <Appbar.Header elevated={false} className="bg-black text-white">
+    <View className="flex-1 flex-col px-4 bg-black">
+      <Appbar.Header
+        elevated={false}
+        statusBarHeight={48}
+        className="bg-black text-white"
+      >
         <Appbar.Action
           icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
           onPress={() => {
@@ -63,7 +63,7 @@ export default function QRCodeModal({ option }: { option?: QRScreenOptions }) {
       <View className="mt-8">
         <SegmentSlider {...{ tabs, tab, setTab }} />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
