@@ -31,6 +31,7 @@
     "expo-status-bar": "~1.6.0",
     "expo-web-browser": "~12.3.2",
     "firebase": "^10.7.1",
+    "ky": "^1.2.0",
     "nativewind": "^2.0.11",
     "node-libs-browser": "^2.2.1",
     "react": "18.2.0",
