@@ -77,7 +77,7 @@ export default function AppTabsLayout() {
             />
           ),
           headerShown: false,
-          title: "Invest",
+          title: "Settings",
           tabBarInactiveTintColor: "#8F8F91",
           tabBarActiveTintColor: "#667DFF",
           tabBarBackground: () => <View className="bg-[#252526] flex-1" />,

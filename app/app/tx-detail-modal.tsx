@@ -1,10 +1,11 @@
 import { Link, router } from "expo-router";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useUserStore } from "../../store";
-import { shortenAddress } from "@thirdweb-dev/react-native";
+import Avatar from "../../components/avatar";
+import TimeAgo from "@andordavoti/react-native-timeago";
 
 export default function TransactionDetailModal() {
   const isPresented = router.canGoBack();
@@ -18,58 +19,48 @@ export default function TransactionDetailModal() {
         statusBarHeight={0}
         className="bg-black text-white"
       >
-        <Appbar.Content
-          title=""
-          color="#fff"
-          titleStyle={{ fontWeight: "bold" }}
-        />
         <Appbar.Action
-          icon={() => <Icon name="close" size={24} color="#FFF" />}
+          icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
           onPress={() => {
             router.back();
           }}
           color="#fff"
           size={20}
         />
+        <Appbar.Content
+          title=""
+          color="#fff"
+          titleStyle={{ fontWeight: "bold" }}
+        />
       </Appbar.Header>
       <View className="flex px-4 h-full space-y-8">
-        <View className="flex flex-row items-center justify-between space-x-2">
-          <View className="flex space-y-2">
-            <Text className="text-3xl text-white font-bold">
-              $<Text className="text-4xl">823</Text>,00
+        <View className="flex">
+          <View className="flex flex-row items-center justify-between space-x-2">
+            <Text className="text-3xl text-white font-bold">-$18,46</Text>
+            <Avatar name="F" />
+          </View>
+          <View className="flex">
+            <Text className="text-[#667DFF] text-lg font-semibold">
+              frankc - @frankcc
             </Text>
-            <Text className="text-white text-lg font-semibold">
-              Optimism • USDC
+            <Text className="text-[#8F8F91]">
+              <TimeAgo dateTo={new Date()} />
             </Text>
           </View>
-
-          <Image
-            className="h-16 w-16"
-            source={require("../../images/usdc.png")}
-          />
         </View>
+
         <View className="bg-[#161618] w-full mx-auto rounded-lg p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
-            <View className="flex space-y-3">
-              <Text className="text-gray-400 text-lg font-medium">
-                Beneficiary
-              </Text>
-              <Text className="text-[#667DFF] text-lg font-medium">
-                {user?.username}
-              </Text>
-            </View>
+            <Text className="text-gray-400 text-lg font-medium">Status</Text>
 
-            <Icon name="copy" size={20} color="#667DFF" />
+            <Text className="text-green-500 text-lg font-medium">Success</Text>
           </View>
           <View className="flex flex-row items-center justify-between">
-            <View className="flex space-y-3">
-              <Text className="text-gray-400 text-lg font-medium">Address</Text>
-              <Text className="text-[#667DFF] text-lg font-medium">
-                {shortenAddress(user?.address)}
-              </Text>
-            </View>
+            <Text className="text-gray-400 text-lg font-medium">
+              Block explorer
+            </Text>
 
-            <Icon name="copy" size={20} color="#667DFF" />
+            <Text className="text-[#667DFF] text-lg font-medium">View</Text>
           </View>
         </View>
       </View>

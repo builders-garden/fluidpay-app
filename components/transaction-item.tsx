@@ -1,8 +1,6 @@
 import { Pressable, View, Text } from "react-native";
 import { DBTransaction } from "../store/interfaces";
 import TimeAgo from "@andordavoti/react-native-timeago";
-import { sepolia } from "../constants/sepolia";
-import * as WebBrowser from "expo-web-browser";
 import Avatar from "./avatar";
 import { router } from "expo-router";
 import { useProfileStore } from "../store/use-profile-store";
@@ -45,23 +43,25 @@ export default function TransactionItem({
             />
           </Pressable>
 
-          <View className="flex flex-col">
-            <Text className="text-white font-semibold text-lg">
-              {isFrom ? toUsername : fromUsername}
-            </Text>
-            <Pressable
+          <Pressable onPress={() => router.push("/app/tx-detail-modal")}>
+            <View className="flex flex-col">
+              <Text className="text-white font-semibold text-lg">
+                {isFrom ? toUsername : fromUsername}
+              </Text>
+              {/* <Pressable
               key={`event-${index}`}
               onPress={async () => {
                 await WebBrowser.openBrowserAsync(
                   `${sepolia.explorers[0].url}/tx/${txHash}`
                 );
               }}
-            >
+            > */}
               <Text className="text-[#8F8F91]">
                 <TimeAgo dateTo={new Date(createdAt)} />
               </Text>
-            </Pressable>
-          </View>
+              {/* </Pressable> */}
+            </View>
+          </Pressable>
         </View>
         <View className="flex flex-col items-end justify-center">
           <Text

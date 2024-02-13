@@ -4,15 +4,16 @@ import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "@thirdweb-dev/react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { useUserStore } from "../../store";
 import { SafeAreaView } from "react-native-safe-area-context";
 import CircularButton from "../../components/circular-button";
 import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../components/transaction-item";
+import { useProfileStore } from "../../store/use-profile-store";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
-  const user = useUserStore((state) => state.user);
+  const user = useProfileStore((state) => state.user);
+  const setProfileUser = useProfileStore((state) => state.setProfileUser);
 
   const transactions = [
     {
@@ -108,6 +109,7 @@ export default function ProfileModal() {
         <Appbar.Action
           icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
           onPress={() => {
+            setProfileUser(undefined);
             router.back();
           }}
           color="#fff"

@@ -1,6 +1,6 @@
 import { useConnectedWallet } from "@thirdweb-dev/react-native";
 import { Link, Redirect } from "expo-router";
-import { SafeAreaView, View, Text } from "react-native";
+import { SafeAreaView, View, Text, Pressable } from "react-native";
 import { IconButton } from "react-native-paper";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
@@ -9,11 +9,16 @@ import { useUserStore } from "../../../store";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
+import { useProfileStore } from "../../../store/use-profile-store";
 
 export default function Home() {
   const signer = useConnectedWallet();
   // const [refreshing, setRefreshing] = React.useState(false);
   const user = useUserStore((state) => state.user);
+  const setProfileUser = useProfileStore((state) => state.setProfileUser);
+  const setProfileUserTransactions = useProfileStore(
+    (state) => state.setProfileUserTransactions
+  );
   // const { contract } = useContract(GHO_SEPOLIA_ADDRESS);
   const transactions = [
     {
@@ -137,7 +142,7 @@ export default function Home() {
       <View className="flex flex-col px-4 mt-2 bg-transparent">
         <View className="flex flex-row items-center justify-between">
           <View className="flex flex-row items-center space-x-4 pl-2">
-            <Link href={"/app/profile-modal"}>
+            <Link href={"/app/settings"}>
               <Avatar name={user.username.charAt(0).toUpperCase()} />
             </Link>
           </View>
@@ -149,7 +154,7 @@ export default function Home() {
           </View>
         </View>
         <ScrollView className="px-2">
-          <View className="py-14 flex flex-col space-y-16">
+          <View className="py-8 flex flex-col space-y-16">
             <View className="flex flex-col space-y-6">
               <Text className="text-white font-semibold text-center">
                 Main • USDC
@@ -195,18 +200,51 @@ export default function Home() {
               <Icon name="chevron-right" color="grey" size={14} />
             </View>
             <View className="flex flex-row justify-evenly w-full pt-6">
-              <View className="flex space-y-2">
-                <Avatar name="O" />
-                <Text className="text-white font-semibold">orbulo</Text>
-              </View>
-              <View className="flex space-y-2">
-                <Avatar name="O" />
-                <Text className="text-white font-semibold">orbulo</Text>
-              </View>
-              <View className="flex space-y-2">
-                <Avatar name="O" />
-                <Text className="text-white font-semibold">orbulo</Text>
-              </View>
+              <Pressable
+                onPress={() => {
+                  setProfileUser({
+                    address: "0x123",
+                    username: "orbulo",
+                  });
+                  setProfileUserTransactions([]);
+                  router.push("/app/profile-modal");
+                }}
+              >
+                <View className="flex space-y-2">
+                  <Avatar name="O" />
+                  <Text className="text-white font-semibold">orbulo</Text>
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setProfileUser({
+                    address: "0x123",
+                    username: "orbulo",
+                  });
+                  setProfileUserTransactions([]);
+                  router.push("/app/profile-modal");
+                }}
+              >
+                <View className="flex space-y-2">
+                  <Avatar name="O" />
+                  <Text className="text-white font-semibold">orbulo</Text>
+                </View>
+              </Pressable>
+              <Pressable
+                onPress={() => {
+                  setProfileUser({
+                    address: "0x123",
+                    username: "orbulo",
+                  });
+                  setProfileUserTransactions([]);
+                  router.push("/app/profile-modal");
+                }}
+              >
+                <View className="flex space-y-2">
+                  <Avatar name="O" />
+                  <Text className="text-white font-semibold">orbulo</Text>
+                </View>
+              </Pressable>
             </View>
           </View>
         </ScrollView>

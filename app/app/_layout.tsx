@@ -41,6 +41,10 @@ export default function AppLayout() {
         options={{ presentation: "modal", headerShown: false }}
       />
       <Stack.Screen
+        name="tx-detail-modal"
+        options={{ presentation: "modal", headerShown: false }}
+      />
+      <Stack.Screen
         name="profile-modal"
         options={{ presentation: "fullScreenModal", headerShown: false }}
       />
