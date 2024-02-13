@@ -7,12 +7,46 @@ import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
 import { useUserStore } from "../../../store";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { ScrollView } from "react-native-gesture-handler";
+import TransactionItem from "../../../components/transaction-item";
 
 export default function Home() {
   const signer = useConnectedWallet();
   // const [refreshing, setRefreshing] = React.useState(false);
   const user = useUserStore((state) => state.user);
   // const { contract } = useContract(GHO_SEPOLIA_ADDRESS);
+  const transactions = [
+    {
+      receipt: null,
+      from: "frankc",
+      fromUsername: "frankc",
+      to: "orbulo",
+      toUsername: "orbulo",
+      amount: "18.46",
+      createdAt: new Date().toISOString(),
+      txHash: "1",
+    },
+    {
+      receipt: null,
+      from: "frankc",
+      fromUsername: "frankc",
+      to: "orbulo",
+      toUsername: "orbulo",
+      amount: "18.46",
+      createdAt: new Date().toISOString(),
+      txHash: "2",
+    },
+    {
+      receipt: null,
+      from: "frankc",
+      fromUsername: "frankc",
+      to: "orbulo",
+      toUsername: "orbulo",
+      amount: "18.46",
+      createdAt: new Date().toISOString(),
+      txHash: "3",
+    },
+  ];
 
   // const { data: balanceData = BigNumber.from(0), refetch: balanceRefetch } =
   //   useContractRead(contract, "balanceOf", [user?.address]);
@@ -103,7 +137,7 @@ export default function Home() {
       <View className="flex flex-col px-4 mt-2 bg-transparent">
         <View className="flex flex-row items-center justify-between">
           <View className="flex flex-row items-center space-x-4 pl-2">
-            <Link href={"./settings"}>
+            <Link href={"/app/profile-modal"}>
               <Avatar name={user.username.charAt(0).toUpperCase()} />
             </Link>
           </View>
@@ -114,38 +148,68 @@ export default function Home() {
             />
           </View>
         </View>
-        <View className="py-14 flex flex-col space-y-16">
-          <View className="flex flex-col space-y-6">
-            <Text className="text-white font-semibold text-center">
-              Main • USDC
-            </Text>
-            <Text className="text-white font-bold text-center text-5xl">
-              $83,00
+        <ScrollView className="px-2">
+          <View className="py-14 flex flex-col space-y-16">
+            <View className="flex flex-col space-y-6">
+              <Text className="text-white font-semibold text-center">
+                Main • USDC
+              </Text>
+              <Text className="text-white font-bold text-center text-5xl">
+                $83,00
+              </Text>
+            </View>
+            <View className="flex flex-row items-center justify-evenly w-full">
+              <CircularButton
+                text="Add money"
+                icon="plus"
+                onPress={() => router.push("/app/add-money-modal")}
+              />
+              <CircularButton
+                text="Request"
+                icon="download"
+                onPress={() => router.push("/app/request-modal")}
+              />
+              <CircularButton
+                text="Send"
+                icon="paper-plane"
+                onPress={() => router.push("/app/send")}
+              />
+              <CircularButton
+                text="Details"
+                icon="paper-plane"
+                onPress={() => router.push("/app/details-modal")}
+              />
+            </View>
+          </View>
+          <View className="bg-[#161618] h-[300px] w-full mx-auto rounded-lg p-4">
+            <TransactionItem transaction={transactions[0]} index={0} />
+            <TransactionItem transaction={transactions[1]} index={1} />
+            <TransactionItem transaction={transactions[2]} index={2} />
+            <Text className="text-[#667DFF] font-semibold text-center mt-2">
+              See all
             </Text>
           </View>
-          <View className="flex flex-row items-center justify-evenly w-full">
-            <CircularButton
-              text="Add money"
-              icon="plus"
-              onPress={() => router.push("/app/add-money-modal")}
-            />
-            <CircularButton
-              text="Request"
-              icon="paper-plane"
-              onPress={() => router.push("/app/request")}
-            />
-            <CircularButton
-              text="Send"
-              icon="paper-plane"
-              onPress={() => router.push("/app/send")}
-            />
-            <CircularButton
-              text="Details"
-              icon="paper-plane"
-              onPress={() => router.push("/app/details")}
-            />
+          <View className="bg-[#161618] h-[158px] w-full mx-auto rounded-lg mt-8 mb-24 p-4">
+            <View className="flex flex-row items-center space-x-2">
+              <Text className="text-gray-400">Recent payees</Text>
+              <Icon name="chevron-right" color="grey" size={14} />
+            </View>
+            <View className="flex flex-row justify-evenly w-full pt-6">
+              <View className="flex space-y-2">
+                <Avatar name="O" />
+                <Text className="text-white font-semibold">orbulo</Text>
+              </View>
+              <View className="flex space-y-2">
+                <Avatar name="O" />
+                <Text className="text-white font-semibold">orbulo</Text>
+              </View>
+              <View className="flex space-y-2">
+                <Avatar name="O" />
+                <Text className="text-white font-semibold">orbulo</Text>
+              </View>
+            </View>
           </View>
-        </View>
+        </ScrollView>
         {/* <TransactionsList
           transactions={transactions}
           loading={refreshing}

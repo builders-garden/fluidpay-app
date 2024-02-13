@@ -14,7 +14,7 @@ export interface DBUser {
 }
 
 export interface DBTransaction {
-  receipt: providers.TransactionReceipt;
+  receipt: providers.TransactionReceipt | null;
   from: string;
   fromUsername: string;
   to: string;

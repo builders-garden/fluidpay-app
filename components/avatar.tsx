@@ -1,9 +1,17 @@
 import { View, Text } from "react-native";
 
-export default function Avatar({ name }: { name: string }) {
+export default function Avatar({
+  name,
+  size = 12,
+}: {
+  name: string;
+  size?: number;
+}) {
   return (
-    <View className="h-12 w-12 rounded-full border-[#667DFF] border-2 flex items-center justify-center">
-      <Text className="text-[#667DFF] text-xl font-bold">{name}</Text>
+    <View
+      className={`h-12 w-12 rounded-full bg-[#B4B7B9] flex items-center justify-center`}
+    >
+      <Text className={`text-white text-xl font-bold`}>{name}</Text>
     </View>
   );
 }

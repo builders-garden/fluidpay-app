@@ -10,6 +10,7 @@ export default function AppTabsLayout() {
           backgroundColor: "#252526",
           borderColor: "#252526",
           borderTopWidth: 0,
+          minHeight: 94,
         },
       }}
     >

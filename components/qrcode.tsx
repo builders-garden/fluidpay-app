@@ -1,9 +1,9 @@
-import React, { ReactNode, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useUserStore } from "../store/use-user-store";
 import RNQRGenerator from "rn-qr-generator";
-import { Image, View, Text } from "react-native";
+import { Image, View } from "react-native";
 
-export default function QRCode({children}: {children: ReactNode}) {
+export default function QRCode() {
   const user = useUserStore((state) => state.user);
   const [qrText, setQRText] = React.useState("");
 
@@ -27,12 +27,11 @@ export default function QRCode({children}: {children: ReactNode}) {
   if (!qrText) return <></>;
 
   return (
-    <View className="flex flex-col items-center justify-center mt-8 space-y-8">
+    <View className="flex flex-col items-center justify-center space-y-8">
       <Image
-        className="h-[300px] w-[300px] rounded-lg"
+        className="h-[300px] w-[300px]"
         source={{ uri: `data:image/png;base64,${qrText}` }}
       />
-      {children}
     </View>
   );
 }

@@ -34,7 +34,7 @@ const Home = () => {
   }, [connectionStatus, address]);
 
   const handleConnection = async () => {
-    await SecureStore.deleteItemAsync(`onboarding-${address}`);
+    // await SecureStore.deleteItemAsync(`onboarding-${address}`);
     const onboarding = await SecureStore.getItemAsync(`onboarding-${address}`);
     if (!onboarding) {
       return router.push("/onboarding");

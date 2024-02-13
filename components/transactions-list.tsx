@@ -42,6 +42,7 @@ export default function TransactionsList({
       setLoading(false);
     }
   };
+
   return (
     <>
       <Text className="text-[#8F8F91] font-semibold mt-4 mb-2">

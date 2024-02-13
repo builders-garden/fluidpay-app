@@ -1,6 +1,5 @@
 import { Pressable, View, Text } from "react-native";
 import { DBTransaction } from "../store/interfaces";
-import { Divider } from "react-native-paper";
 import TimeAgo from "@andordavoti/react-native-timeago";
 import { sepolia } from "../constants/sepolia";
 import * as WebBrowser from "expo-web-browser";
@@ -58,7 +57,9 @@ export default function TransactionItem({
                 );
               }}
             >
-              <Text className="text-[#8F8F91]">Click to view detail</Text>
+              <Text className="text-[#8F8F91]">
+                <TimeAgo dateTo={new Date(createdAt)} />
+              </Text>
             </Pressable>
           </View>
         </View>
@@ -70,12 +71,8 @@ export default function TransactionItem({
           >
             {!isFrom ? "+" : "-"} ${amount.toFixed(2)}
           </Text>
-          <Text className="text-[#8F8F91]">
-            <TimeAgo dateTo={new Date(createdAt)} />
-          </Text>
         </View>
       </View>
-      <Divider />
     </View>
   );
 }

@@ -1,4 +1,4 @@
-import { Linking, Share, View, Text, Pressable } from "react-native";
+import { Linking, Text, View } from "react-native";
 import { Link, router } from "expo-router";
 import { Appbar } from "react-native-paper";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -8,67 +8,62 @@ import { Scanner } from "../../components/scanner";
 import QRCode from "../../components/qrcode";
 import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { useUserStore } from "../../store/use-user-store";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Avatar from "../../components/avatar";
 import { shortenAddress } from "@thirdweb-dev/react-native";
 
-type QRScreenOptions = "PAY ME" | "SCAN";
+type QRScreenOptions = "Pay me" | "Scan";
 
 export default function QRCodeModal({ option }: { option?: QRScreenOptions }) {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
-  const [tab, setTab] = useState<QRScreenOptions>(option || "PAY ME");
-  const tabs = useRef(["PAY ME", "SCAN"] as QRScreenOptions[]).current;
-  const title = tab === "PAY ME" ? "Display QR Code" : "Scan QR Code";
+  const [tab, setTab] = useState<QRScreenOptions>(option || "Pay me");
+  const tabs = useRef(["Scan", "Pay me"] as QRScreenOptions[]).current;
+  const title = tab === "Pay me" ? "Display QR Code" : "Scan QR Code";
+
   return (
-    <View className="flex-1 flex-col px-4 bg-[#201F2D]">
+    <SafeAreaView className="flex-1 flex-col px-4 bg-black">
       {!isPresented && <Link href="../">Dismiss</Link>}
-      <Appbar.Header className="bg-[#201F2D] text-white">
-        <Appbar.Content
-          title={title}
-          color="#fff"
-          titleStyle={{ fontWeight: "bold" }}
-        />
+      <Appbar.Header elevated={false} className="bg-black text-white">
         <Appbar.Action
-          icon={() => <Icon name="close" size={24} color="#FFF" />}
+          icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
           onPress={() => {
             router.back();
           }}
           color="#fff"
           size={20}
         />
-      </Appbar.Header>
-      <SegmentSlider {...{ tabs, tab, setTab }} />
-      {tab === "PAY ME" && (
-        <QRCode
-          children={
-            <View className="flex flex-row items-center space-x-4">
-              <View className="flex flex-col items-center">
-                <Text className="text-white font-semibold text-lg text-center">
-                  {user?.username}
-                </Text>
-                <Text className="text-[#8F8F91] font-semibold text-md">
-                  {shortenAddress(user?.address)}
-                </Text>
-              </View>
-              <Pressable
-                onPress={async () => {
-                  await Share.share({
-                    message: user!.address,
-                  });
-                }}
-              >
-                <Icon
-                  name="share-square-o"
-                  size={24}
-                  color="#FFFFFF"
-                  className="ml-auto"
-                ></Icon>
-              </Pressable>
-            </View>
-          }
+        <Appbar.Content
+          title={""}
+          color="#fff"
+          titleStyle={{ fontWeight: "bold" }}
         />
+      </Appbar.Header>
+      <View className="flex flex-row items-center justify-between px-4 pb-8">
+        <View className="flex space-y-2">
+          <Text className="text-3xl text-white font-bold">
+            {shortenAddress(user?.address)}
+          </Text>
+          <Text className="font-bold text-[#667DFF]">@{user?.username}</Text>
+        </View>
+        <Avatar name={user!.username.charAt(0).toUpperCase()} />
+      </View>
+      {tab === "Pay me" && (
+        <View className="bg-[#161618] mx-auto rounded-lg p-8">
+          <QRCode />
+        </View>
       )}
-      {tab === "SCAN" && <QRScan />}
-    </View>
+      {tab === "Scan" && <QRScan />}
+      <Text className="text-gray-400 text-center pt-4">
+        Get paid with{" "}
+        <Text className="font-bold text-[#667DFF]">
+          crumina.xyz/{user?.username}
+        </Text>
+      </Text>
+      <View className="mt-8">
+        <SegmentSlider {...{ tabs, tab, setTab }} />
+      </View>
+    </SafeAreaView>
   );
 }
 

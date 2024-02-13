@@ -13,9 +13,9 @@ export default function AppButton({
     return (
       <TouchableOpacity
         onPress={onPress}
-        className="bg-transparent border-2 border-[#667DFF] rounded-full flex items-center justify-center py-3"
+        className="bg-[#3F89FF]/20 rounded-full flex items-center justify-center py-3"
       >
-        <Text className="text-lg text-[#667DFF] font-semibold">{text}</Text>
+        <Text className="text-lg text-[#3F89FF] font-semibold">{text}</Text>
       </TouchableOpacity>
     );
   }
@@ -31,7 +31,7 @@ export default function AppButton({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="bg-[#667DFF] border-2 border-[#667DFF] rounded-full flex items-center justify-center py-3"
+      className="bg-[#3F89FF] border-2 border-[#3F89FF] rounded-full flex items-center justify-center py-3"
     >
       <Text className="text-lg text-white font-semibold">{text}</Text>
     </TouchableOpacity>
