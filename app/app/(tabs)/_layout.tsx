@@ -66,7 +66,7 @@ export default function AppTabsLayout() {
           tabBarBackground: () => <View className="bg-[#252526] flex-1" />,
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="settings"
         options={{
           tabBarIcon: ({ focused }) => (
@@ -82,7 +82,7 @@ export default function AppTabsLayout() {
           tabBarActiveTintColor: "#667DFF",
           tabBarBackground: () => <View className="bg-[#252526] flex-1" />,
         }}
-      />
+      /> */}
     </Tabs>
   );
 }

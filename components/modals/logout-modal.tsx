@@ -16,7 +16,7 @@ export default function LogoutModal({
   return (
     <Portal>
       <Modal visible={visible} onDismiss={hideModal}>
-        <View className="bg-[#201F2D] rounded-lg p-4 mx-4">
+        <View className="bg-black rounded-lg p-4 mx-4">
           <Text className="text-center text-white">
             Are you sure you want to logout?
           </Text>
@@ -24,7 +24,7 @@ export default function LogoutModal({
             You will need to login again if confirmed.
           </Text>
           <AppButton
-            text="CONFIRM LOGOUT"
+            text="Confirm logout"
             variant="ghost"
             onPress={async () => {
               await firebaseAuth.signOut();
@@ -33,7 +33,7 @@ export default function LogoutModal({
           />
           <Spacer h={16} />
           <AppButton
-            text="CANCEL"
+            text="Cancel"
             variant="primary"
             onPress={() => {
               hideModal();

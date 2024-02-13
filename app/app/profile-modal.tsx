@@ -4,7 +4,6 @@ import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "@thirdweb-dev/react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { SafeAreaView } from "react-native-safe-area-context";
 import CircularButton from "../../components/circular-button";
 import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../components/transaction-item";
@@ -103,9 +102,13 @@ export default function ProfileModal() {
   }
 
   return (
-    <SafeAreaView className="flex-1 flex-col bg-black" edges={{ top: "off" }}>
+    <View className="flex-1 flex-col bg-black">
       {!isPresented && <Link href="../">Dismiss</Link>}
-      <Appbar.Header elevated={false} className="bg-black text-white">
+      <Appbar.Header
+        elevated={false}
+        statusBarHeight={48}
+        className="bg-black text-white"
+      >
         <Appbar.Action
           icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
           onPress={() => {
@@ -209,6 +212,6 @@ export default function ProfileModal() {
           withAddress={profileUser.address}
         /> */}
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
