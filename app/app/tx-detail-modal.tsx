@@ -2,10 +2,10 @@ import { Link, router } from "expo-router";
 import { Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useUserStore } from "../../store";
 import Avatar from "../../components/avatar";
 import TimeAgo from "@andordavoti/react-native-timeago";
+import { ArrowLeft, Share } from "lucide-react-native";
 
 export default function TransactionDetailModal() {
   const isPresented = router.canGoBack();
@@ -20,7 +20,7 @@ export default function TransactionDetailModal() {
         className="bg-black text-white"
       >
         <Appbar.Action
-          icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
+          icon={() => <ArrowLeft size={24} color="#FFF" />}
           onPress={() => {
             router.back();
           }}
@@ -32,8 +32,16 @@ export default function TransactionDetailModal() {
           color="#fff"
           titleStyle={{ fontWeight: "bold" }}
         />
+        <Appbar.Action
+          icon={() => <Share size={24} color="#FFF" />}
+          onPress={() => {
+            router.back();
+          }}
+          color="#fff"
+          size={20}
+        />
       </Appbar.Header>
-      <View className="flex px-4 h-full space-y-8">
+      <View className="flex px-4 h-full space-y-8 mt-6">
         <View className="flex">
           <View className="flex flex-row items-center justify-between space-x-2">
             <Text className="text-3xl text-white font-bold">-$18,46</Text>

@@ -6,7 +6,14 @@ import { shortenAddress, useConnectedWallet } from "@thirdweb-dev/react-native";
 import { useState } from "react";
 import { useUserStore } from "../../store";
 import React from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
+import {
+  QrCode,
+  Bell,
+  LifeBuoy,
+  Shield,
+  LogOut,
+  ArrowLeft,
+} from "lucide-react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
 import LogoutModal from "../../components/modals/logout-modal";
@@ -37,7 +44,7 @@ export default function Settings() {
             className="bg-transparent text-white"
           >
             <Appbar.Action
-              icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
+              icon={() => <ArrowLeft size={20} color="#FFF" />}
               onPress={() => {
                 router.back();
               }}
@@ -60,11 +67,10 @@ export default function Settings() {
                 <Text className="text-[#8F8F91] text-xl text-ellipsis">
                   {shortenAddress(user?.address, false)}
                 </Text>
-                <Icon
+                <QrCode
                   onPress={() => {
                     router.push("/app/qrcode");
                   }}
-                  name="qrcode"
                   size={24}
                   color="#FFF"
                 />
@@ -72,7 +78,7 @@ export default function Settings() {
             </View>
             <View className="bg-white/20 w-full mx-auto rounded-2xl p-6 flex flex-col space-y-8">
               <View className="flex flex-row items-center space-x-4">
-                <Icon name="bell" size={24} color="#FFF" />
+                <LifeBuoy size={24} color="#FFF" />
                 <Text className="text-white text-xl">Help</Text>
               </View>
               <Pressable
@@ -81,7 +87,7 @@ export default function Settings() {
                 }}
               >
                 <View className="flex flex-row items-center space-x-4">
-                  <Icon name="bell" size={24} color="#FFF" />
+                  <Shield size={24} color="#FFF" />
                   <Text className="text-white text-xl">Security & privacy</Text>
                 </View>
               </Pressable>
@@ -91,7 +97,7 @@ export default function Settings() {
                 }}
               >
                 <View className="flex flex-row items-center space-x-4">
-                  <Icon name="bell" size={24} color="#FFF" />
+                  <Bell size={24} color="#FFF" />
                   <Text className="text-white text-xl">
                     Notification settings
                   </Text>
@@ -106,7 +112,7 @@ export default function Settings() {
                 }}
               >
                 <View className="flex flex-row items-center space-x-4">
-                  <Icon name="sign-out" size={24} color="#FFF" />
+                  <LogOut size={24} color="#FFF" />
                   <Text className="text-white text-xl">Logout</Text>
                 </View>
               </Pressable>

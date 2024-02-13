@@ -6,11 +6,11 @@ import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
 import { useUserStore } from "../../../store";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
 import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
+import { Bell, ChevronRight } from "lucide-react-native";
 
 export default function Home() {
   const signer = useConnectedWallet();
@@ -150,7 +150,7 @@ export default function Home() {
             </View>
             <View className="flex flex-row items-center space-x-0">
               <IconButton
-                icon={() => <Icon name="bell" color="#FFF" size={24} />}
+                icon={() => <Bell size={24} color={"white"} />}
                 onPress={() => router.push("/app/qrcode")}
               />
             </View>
@@ -168,22 +168,22 @@ export default function Home() {
               <View className="flex flex-row items-center justify-evenly w-full">
                 <CircularButton
                   text="Add money"
-                  icon="plus"
+                  icon="Plus"
                   onPress={() => router.push("/app/add-money-modal")}
                 />
                 <CircularButton
                   text="Request"
-                  icon="download"
+                  icon="Download"
                   onPress={() => router.push("/app/request-modal")}
                 />
                 <CircularButton
                   text="Send"
-                  icon="paper-plane"
+                  icon="Send"
                   onPress={() => router.push("/app/send")}
                 />
                 <CircularButton
                   text="Details"
-                  icon="paper-plane"
+                  icon="Server"
                   onPress={() => router.push("/app/details-modal")}
                 />
               </View>
@@ -197,9 +197,9 @@ export default function Home() {
               </Text>
             </View>
             <View className="bg-[#161618] h-[158px] w-full mx-auto rounded-2xl mt-8 mb-36 p-4">
-              <View className="flex flex-row items-center space-x-2">
+              <View className="flex flex-row items-center">
                 <Text className="text-gray-400">Recent payees</Text>
-                <Icon name="chevron-right" color="grey" size={14} />
+                <ChevronRight color="grey" size={14} />
               </View>
               <View className="flex flex-row justify-evenly w-full pt-6">
                 <Pressable

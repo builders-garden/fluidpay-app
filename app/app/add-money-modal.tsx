@@ -5,8 +5,8 @@ import * as Clipboard from "expo-clipboard";
 import React from "react";
 import { useUserStore } from "../../store";
 import { shortenAddress } from "@thirdweb-dev/react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import QRCode from "../../components/qrcode";
+import { ArrowLeft, Check, Copy } from "lucide-react-native";
 
 export default function AddMoneyModal() {
   const isPresented = router.canGoBack();
@@ -14,58 +14,57 @@ export default function AddMoneyModal() {
   const [copied, setCopied] = React.useState(false);
 
   return (
-    <View className="flex-1 flex-col px-4 bg-[#201F2D]">
+    <View className="flex-1 flex-col bg-black">
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#201F2D] text-white"
+        className="bg-black text-white"
       >
-        <Appbar.Content
-          title="Add money"
-          color="#fff"
-          titleStyle={{ fontWeight: "bold" }}
-        />
         <Appbar.Action
-          icon={() => <Icon name="close" size={24} color="#FFF" />}
+          icon={() => <ArrowLeft size={24} color="#FFF" />}
           onPress={() => router.back()}
           color="#fff"
           size={20}
         />
+        <Appbar.Content
+          title=""
+          color="#fff"
+          titleStyle={{ fontWeight: "bold" }}
+        />
       </Appbar.Header>
-      <Text className="text-[#8F8F91] font-semibold mt-8">
-        Add money to account
-      </Text>
-      <Text className="text-white font-semibold mt-2">
-        Send GHO, USDC, USDT to your address below.
-      </Text>
-      <View className="bg-[#292836] rounded-lg flex flex-row justify-between mt-4 px-4 py-2">
-        <Text className="text-[#8F8F91] text-ellipsis">
-          {shortenAddress(user?.address)}
+      <View className="flex px-4 space-y-4">
+        <Text className="text-3xl text-white font-bold">Add money</Text>
+        <Text className="text-[#8F8F91] font-semibold mt-8">
+          Add money to account
         </Text>
-        <Pressable
-          onPress={async () => {
-            await Clipboard.setStringAsync(user!.address);
-            setCopied(true);
-            setTimeout(() => {
-              setCopied(false);
-            }, 1500);
-          }}
-        >
-          <Icon
-            name={!copied ? "clipboard" : "check"}
-            size={16}
-            color={!copied ? "#8F8F91" : "green"}
-          />
-        </Pressable>
-      </View>
-      <QRCode
-        children={
-          <Text className="text-white font-semibold mt-4">
-            Scan QR code to receive money
+        <Text className="text-white font-semibold mt-2">
+          Send USDC to your address below.
+        </Text>
+        <View className="bg-[#161618] rounded-lg flex flex-row justify-between mt-4 px-4 py-2">
+          <Text className="text-[#8F8F91] text-ellipsis">
+            {shortenAddress(user?.address)}
           </Text>
-        }
-      />
+          <Pressable
+            onPress={async () => {
+              await Clipboard.setStringAsync(user!.address);
+              setCopied(true);
+              setTimeout(() => {
+                setCopied(false);
+              }, 1500);
+            }}
+          >
+            {copied ? (
+              <Check size={16} color={"green"} />
+            ) : (
+              <Copy size={16} color={"#8F8F91"} />
+            )}
+          </Pressable>
+        </View>
+        <View className="bg-[#161618] mx-auto rounded-lg p-8">
+          <QRCode />
+        </View>
+      </View>
     </View>
   );
 }

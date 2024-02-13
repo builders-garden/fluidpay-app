@@ -3,11 +3,11 @@ import { View, Text } from "react-native";
 import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "@thirdweb-dev/react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
 import CircularButton from "../../components/circular-button";
 import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../components/transaction-item";
 import { useProfileStore } from "../../store/use-profile-store";
+import { ArrowLeft } from "lucide-react-native";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
@@ -110,7 +110,7 @@ export default function ProfileModal() {
         className="bg-black text-white"
       >
         <Appbar.Action
-          icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
+          icon={() => <ArrowLeft size={20} color="#FFF" />}
           onPress={() => {
             setProfileUser(undefined);
             router.back();
@@ -139,14 +139,14 @@ export default function ProfileModal() {
           <View>
             <CircularButton
               text="Request"
-              icon="download"
+              icon="Download"
               onPress={() => router.push("/app/request-modal")}
             />
           </View>
           <View>
             <CircularButton
               text="Send"
-              icon="paper-plane"
+              icon="Send"
               onPress={() => router.push("/app/send")}
             />
           </View>

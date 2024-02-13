@@ -2,9 +2,9 @@ import { Link, router } from "expo-router";
 import { Image, Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useUserStore } from "../../store";
 import { shortenAddress } from "@thirdweb-dev/react-native";
+import { ArrowLeft, Copy } from "lucide-react-native";
 
 export default function DetailsModal() {
   const isPresented = router.canGoBack();
@@ -18,18 +18,18 @@ export default function DetailsModal() {
         statusBarHeight={0}
         className="bg-black text-white"
       >
-        <Appbar.Content
-          title=""
-          color="#fff"
-          titleStyle={{ fontWeight: "bold" }}
-        />
         <Appbar.Action
-          icon={() => <Icon name="close" size={24} color="#FFF" />}
+          icon={() => <ArrowLeft size={20} color="#FFF" />}
           onPress={() => {
             router.back();
           }}
           color="#fff"
           size={20}
+        />
+        <Appbar.Content
+          title=""
+          color="#fff"
+          titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
       <View className="flex px-4 h-full space-y-8">
@@ -48,9 +48,9 @@ export default function DetailsModal() {
             source={require("../../images/usdc.png")}
           />
         </View>
-        <View className="bg-[#161618] w-full mx-auto rounded-lg p-4 space-y-4">
+        <View className="bg-[#161618] w-full mx-auto rounded-xl p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
-            <View className="flex space-y-3">
+            <View className="flex space-y-2">
               <Text className="text-gray-400 text-lg font-medium">
                 Beneficiary
               </Text>
@@ -59,17 +59,17 @@ export default function DetailsModal() {
               </Text>
             </View>
 
-            <Icon name="copy" size={20} color="#667DFF" />
+            <Copy size={20} color="#667DFF" />
           </View>
           <View className="flex flex-row items-center justify-between">
-            <View className="flex space-y-3">
+            <View className="flex space-y-2">
               <Text className="text-gray-400 text-lg font-medium">Address</Text>
               <Text className="text-[#667DFF] text-lg font-medium">
                 {shortenAddress(user?.address)}
               </Text>
             </View>
 
-            <Icon name="copy" size={20} color="#667DFF" />
+            <Copy size={20} color="#667DFF" />
           </View>
         </View>
       </View>

@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { router } from "expo-router";
 import { Appbar, Switch } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { ArrowLeft, Users2, Banknote, Receipt } from "lucide-react-native";
 
 export default function NotificationSettings() {
   return (
@@ -12,7 +12,7 @@ export default function NotificationSettings() {
         className="bg-black text-white"
       >
         <Appbar.Action
-          icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
+          icon={() => <ArrowLeft size={20} color="#FFF" />}
           onPress={() => {
             router.back();
           }}
@@ -32,7 +32,7 @@ export default function NotificationSettings() {
         <View className="bg-[#161618] w-full mx-auto rounded-2xl mt-8 p-4 flex flex-col space-y-6">
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center space-x-4">
-              <Icon name="sign-in" size={24} color="#FFF" />
+              <Receipt size={24} color="#3F89FF" />
               <View className="flex flex-col">
                 <Text className="text-white font-semibold">
                   Payment requests
@@ -43,7 +43,7 @@ export default function NotificationSettings() {
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center space-x-4">
-              <Icon name="sign-in" size={24} color="#FFF" />
+              <Users2 size={24} color="#3F89FF" />
               <View className="flex flex-col">
                 <Text className="text-white font-semibold">Group invites</Text>
               </View>
@@ -52,7 +52,7 @@ export default function NotificationSettings() {
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center space-x-4">
-              <Icon name="sign-in" size={24} color="#FFF" />
+              <Banknote size={24} color="#3F89FF" />
               <View className="flex flex-col">
                 <Text className="text-white font-semibold">
                   New expense in group

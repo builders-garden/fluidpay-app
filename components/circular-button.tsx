@@ -1,5 +1,24 @@
 import { Pressable, View, Text } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
+import RNIcon from "react-native-vector-icons/FontAwesome";
+import { icons } from "lucide-react-native";
+
+const Icon = ({
+  name,
+  color,
+  size,
+}: {
+  name: string;
+  color: string;
+  size: number;
+}) => {
+  const LucideIcon = icons[name as keyof typeof icons];
+
+  if (!LucideIcon) {
+    return <RNIcon name={name} color={color} size={size} />;
+  }
+
+  return <LucideIcon color={color} size={size} />;
+};
 
 export default function CircularButton({
   text,

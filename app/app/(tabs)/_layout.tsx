@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import { View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
+import { Home, ArrowLeftRight, LayoutGrid } from "lucide-react-native";
 
 export default function AppTabsLayout() {
   return (
@@ -18,11 +18,7 @@ export default function AppTabsLayout() {
         name="home"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name="home"
-              color={focused ? "#667DFF" : "#8F8F91"}
-              size={24}
-            />
+            <Home color={focused ? "#667DFF" : "#8F8F91"} size={24} />
           ),
           headerShown: false,
           title: "Home",
@@ -35,12 +31,7 @@ export default function AppTabsLayout() {
         name="send"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name="paper-plane"
-              solid={true}
-              color={focused ? "#667DFF" : "#8F8F91"}
-              size={24}
-            />
+            <ArrowLeftRight color={focused ? "#667DFF" : "#8F8F91"} size={24} />
           ),
           headerShown: false,
           title: "Transfers",
@@ -53,11 +44,7 @@ export default function AppTabsLayout() {
         name="pocket"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Icon
-              name="piggy-bank"
-              color={focused ? "#667DFF" : "#8F8F91"}
-              size={24}
-            />
+            <LayoutGrid color={focused ? "#667DFF" : "#8F8F91"} size={24} />
           ),
           headerShown: false,
           title: "Groups",
