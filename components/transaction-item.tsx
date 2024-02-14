@@ -23,7 +23,7 @@ export default function TransactionItem({
   const isFrom = from === user?.address;
   return (
     <View key={`transaction-${index}`}>
-      <View className="flex flex-row items-center justify-between py-4">
+      <View className="flex flex-row items-center justify-between py-3">
         <View className="flex flex-row items-center space-x-4">
           <Pressable
             key={`profile-event-${index}`}

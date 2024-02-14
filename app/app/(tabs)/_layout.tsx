@@ -28,7 +28,7 @@ export default function AppTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="send"
+        name="transfers"
         options={{
           tabBarIcon: ({ focused }) => (
             <ArrowLeftRight color={focused ? "#667DFF" : "#8F8F91"} size={24} />
@@ -41,7 +41,7 @@ export default function AppTabsLayout() {
         }}
       />
       <Tabs.Screen
-        name="pocket"
+        name="groups"
         options={{
           tabBarIcon: ({ focused }) => (
             <LayoutGrid color={focused ? "#667DFF" : "#8F8F91"} size={24} />

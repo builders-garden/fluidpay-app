@@ -8,11 +8,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../components/transaction-item";
 import { useProfileStore } from "../../store/use-profile-store";
 import { ArrowLeft } from "lucide-react-native";
+import { useSendStore } from "../../store";
+import { DBUser } from "../../store/interfaces";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
   const user = useProfileStore((state) => state.user);
   const setProfileUser = useProfileStore((state) => state.setProfileUser);
+  const setSendUser = useSendStore((state) => state.setSendUser);
 
   const transactions = [
     {
@@ -147,7 +150,10 @@ export default function ProfileModal() {
             <CircularButton
               text="Send"
               icon="Send"
-              onPress={() => router.push("/app/send")}
+              onPress={() => {
+                setSendUser({ address: "0x123", username: "orbulo" } as DBUser);
+                router.push("/app/send-modal");
+              }}
             />
           </View>
         </View>
