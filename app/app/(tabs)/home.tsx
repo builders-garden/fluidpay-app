@@ -11,6 +11,7 @@ import TransactionItem from "../../../components/transaction-item";
 import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
 import { Bell, ChevronRight } from "lucide-react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home() {
   const signer = useConnectedWallet();
@@ -139,9 +140,13 @@ export default function Home() {
   }
 
   return (
-    <View className="bg-black flex-1">
-      <LinearGradient colors={["#3500B7", "#1B005E", "#000000"]} style={{}}>
-        <View className="flex flex-col mt-2 bg-transparent pt-12">
+    <LinearGradient
+      colors={["#3500B7", "#1B005E", "#000000"]}
+      className="h-full"
+      style={{}}
+    >
+      <SafeAreaView className="bg-transparent flex-1">
+        <View className="flex flex-col bg-transparent">
           <View className="flex flex-row items-center justify-between px-4">
             <View className="flex flex-row items-center space-x-4 pl-2">
               <Link href={"/app/settings"}>
@@ -188,15 +193,18 @@ export default function Home() {
                 />
               </View>
             </View>
-            <View className="bg-[#161618] h-[300px] w-full mx-auto rounded-2xl p-4">
+            <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
               <TransactionItem transaction={transactions[0]} index={0} />
               <TransactionItem transaction={transactions[1]} index={1} />
               <TransactionItem transaction={transactions[2]} index={2} />
-              <Text className="text-[#667DFF] font-semibold text-center mt-2">
+              <Text
+                onPress={() => router.push("/app/send")}
+                className="text-[#667DFF] font-semibold text-center"
+              >
                 See all
               </Text>
             </View>
-            <View className="bg-[#161618] h-[158px] w-full mx-auto rounded-2xl mt-8 mb-36 p-4">
+            <View className="bg-[#161618] h-[158px] w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
               <View className="flex flex-row items-center">
                 <Text className="text-gray-400">Recent payees</Text>
                 <ChevronRight color="grey" size={14} />
@@ -212,7 +220,7 @@ export default function Home() {
                     router.push("/app/profile-modal");
                   }}
                 >
-                  <View className="flex space-y-2">
+                  <View className="flex space-y-2 items-center">
                     <Avatar name="O" />
                     <Text className="text-white font-semibold">orbulo</Text>
                   </View>
@@ -227,7 +235,7 @@ export default function Home() {
                     router.push("/app/profile-modal");
                   }}
                 >
-                  <View className="flex space-y-2">
+                  <View className="flex space-y-2 items-center">
                     <Avatar name="O" />
                     <Text className="text-white font-semibold">orbulo</Text>
                   </View>
@@ -242,7 +250,7 @@ export default function Home() {
                     router.push("/app/profile-modal");
                   }}
                 >
-                  <View className="flex space-y-2">
+                  <View className="flex space-y-2 items-center">
                     <Avatar name="O" />
                     <Text className="text-white font-semibold">orbulo</Text>
                   </View>
@@ -258,7 +266,7 @@ export default function Home() {
           getTransactions={getUserTransactions}
         /> */}
         </View>
-      </LinearGradient>
-    </View>
+      </SafeAreaView>
+    </LinearGradient>
   );
 }

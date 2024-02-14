@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import {
   and,
   collection,
@@ -11,17 +11,52 @@ import {
 } from "firebase/firestore";
 import { useState } from "react";
 import { View, Text, Pressable } from "react-native";
-import { Appbar, Searchbar } from "react-native-paper";
+import { Searchbar } from "react-native-paper";
 import { firebaseFirestore } from "../../../firebaseConfig";
 import Avatar from "../../../components/avatar";
 import { useSendStore, useUserStore } from "../../../store";
-import Icon from "react-native-vector-icons/FontAwesome";
+import { ChevronRight, QrCode, Search, Plus } from "lucide-react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import TransactionItem from "../../../components/transaction-item";
 
 export default function Send() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const user = useUserStore((state) => state.user);
   const setSendUser = useSendStore((state) => state.setSendUser);
+  const transactions = [
+    {
+      receipt: null,
+      from: "frankc",
+      fromUsername: "frankc",
+      to: "orbulo",
+      toUsername: "orbulo",
+      amount: "18.46",
+      createdAt: new Date().toISOString(),
+      txHash: "1",
+    },
+    {
+      receipt: null,
+      from: "frankc",
+      fromUsername: "frankc",
+      to: "orbulo",
+      toUsername: "orbulo",
+      amount: "18.46",
+      createdAt: new Date().toISOString(),
+      txHash: "2",
+    },
+    {
+      receipt: null,
+      from: "frankc",
+      fromUsername: "frankc",
+      to: "orbulo",
+      toUsername: "orbulo",
+      amount: "18.46",
+      createdAt: new Date().toISOString(),
+      txHash: "3",
+    },
+  ];
 
   const onChangeText = async (text: string) => {
     setSearchQuery(text);
@@ -54,33 +89,35 @@ export default function Send() {
   };
 
   return (
-    <>
-      <Appbar.Header className="bg-[#201F2D] text-white">
-        <Appbar.BackAction
-          onPress={() => router.back()}
-          color="#fff"
-          size={20}
-        />
-        <Appbar.Content
-          title="Send"
-          color="#fff"
-          titleStyle={{ fontWeight: "bold" }}
-        />
-      </Appbar.Header>
-      <View className="flex-1 flex-col px-4 bg-[#201F2D]">
+    <SafeAreaView className="bg-black flex-1">
+      <View className="flex flex-row items-center justify-between px-4 max-w-screen">
+        <View className="flex flex-row items-center space-x-4 pl-2">
+          <Link href={"/app/settings"}>
+            <Avatar name={user!.username.charAt(0).toUpperCase()} />
+          </Link>
+        </View>
         <Searchbar
-          placeholder="Search user, ENS or address..."
+          placeholder="@username"
           onChangeText={onChangeText}
           value={searchQuery}
-          className="bg-transparent border border-[#8F8F91] !text-white"
-          iconColor="#667DFF"
+          className="bg-white/10 !text-white w-1/2 mb-1"
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect={false}
           placeholderTextColor={"#8F8F91"}
+          icon={() => <Search size={20} color={"white"} />}
+          traileringIcon={() => <QrCode size={20} color={"white"} />}
           theme={{ colors: { onSurfaceVariant: "#FFF" } }}
         />
-        {searchQuery !== "" && (
+        <TouchableOpacity onPress={() => {}}>
+          <View className="flex flex-row items-center py-2 px-4 bg-[#3F89FF] border-2 border-[#3F89FF] rounded-full">
+            <Plus size={24} color={"white"} />
+            <Text className="text-lg text-white font-semibold ">New</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+      <View className="flex-1 flex-col px-4 bg-black">
+        {searchQuery !== "" ? (
           <>
             <Text className="text-[#8F8F91] font-semibold mt-8">
               Search results
@@ -104,13 +141,19 @@ export default function Send() {
                       {result.username}
                     </Text>
                   </View>
-                  <Icon name="chevron-right" size={16} color="#FFF" />
+                  <ChevronRight size={16} color="#FFF" />
                 </Pressable>
               ))}
             </View>
           </>
+        ) : (
+          <View className="bg-[#161618] w-full mx-auto rounded-2xl px-4 mt-8">
+            <TransactionItem transaction={transactions[0]} index={0} />
+            <TransactionItem transaction={transactions[1]} index={1} />
+            <TransactionItem transaction={transactions[2]} index={2} />
+          </View>
         )}
       </View>
-    </>
+    </SafeAreaView>
   );
 }

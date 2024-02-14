@@ -9,7 +9,7 @@ export default function Avatar({
 }) {
   return (
     <View
-      className={`h-12 w-12 rounded-full bg-[#B4B7B9] flex items-center justify-center`}
+      className={`h-14 w-14 rounded-full bg-[#B4B7B9] flex items-center justify-center`}
     >
       <Text className={`text-white text-xl font-bold`}>{name}</Text>
     </View>
