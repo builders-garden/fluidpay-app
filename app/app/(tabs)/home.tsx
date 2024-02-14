@@ -184,7 +184,7 @@ export default function Home() {
                 <CircularButton
                   text="Send"
                   icon="Send"
-                  onPress={() => router.push("/app/send")}
+                  onPress={() => router.push("/app/transfers")}
                 />
                 <CircularButton
                   text="Details"
@@ -198,7 +198,7 @@ export default function Home() {
               <TransactionItem transaction={transactions[1]} index={1} />
               <TransactionItem transaction={transactions[2]} index={2} />
               <Text
-                onPress={() => router.push("/app/send")}
+                onPress={() => router.push("/app/transfers")}
                 className="text-[#667DFF] font-semibold text-center"
               >
                 See all
