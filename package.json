@@ -36,6 +36,7 @@
     "lucide-react-native": "^0.330.0",
     "nativewind": "^2.0.11",
     "node-libs-browser": "^2.2.1",
+    "prettier": "^3.2.5",
     "react": "18.2.0",
     "react-native": "0.72.4",
     "react-native-aes-gcm-crypto": "^0.2.2",
