@@ -147,3 +147,143 @@ export const getUsers = async (
   query: GetUsersQuery
 ): Promise<UsersByIdUsernameOrAddressResponse[]> =>
   ky.get("http://localhost:3000/users", { searchParams: query }).json();
+
+/**
+ * GROUP API
+ */
+export type CreateGroupBody = {
+  name: string;
+  memberIds: number[];
+};
+
+export type UpdateGroupParams = {
+  id: number;
+};
+
+export type AddUsersToGroupBody = {
+  memberIds?: number[];
+};
+
+export type UpdateGroupBody = {
+  name?: string;
+  memberIds?: number[];
+};
+
+export type GetGroupByIdParams = {
+  id: number;
+};
+
+export type GetUserExpensesInGroupParams = {
+  id: number;
+};
+
+export type GetGroupExpensesByIdParams = {
+  id: number;
+};
+
+export type GetExpenseByIdParams = {
+  expenseId: number;
+};
+
+export type GetGroupByIdResponse = {
+  id: number;
+  name: string;
+  creatorId: number;
+  members: {
+    id: number;
+    displayName: string;
+    avatarUrl: string;
+  }[];
+};
+
+export type GetGroupsQueryResponse = {
+  id: number;
+  name: string;
+  members: {
+    id: number;
+    displayName: string;
+    avatarUrl: string;
+  }[];
+};
+
+export type CreateGroupExpenseBody = {
+  paidById: number;
+  amount: number;
+  description: string;
+  category: string;
+  date: string;
+  splitAmong: {
+    userId: number;
+    amount: number;
+    type: 'PERCENTAGE' | 'AMOUNT';
+  }[];
+};
+
+export type UpdateGroupExpenseBody = {
+  paidById: number;
+  amount: number;
+  description: string;
+  splitAmong: {
+    userId: number;
+    amount: number;
+    type: 'PERCENTAGE' | 'AMOUNT';
+  }[];
+};
+
+export const getGroupById = async (params: GetGroupByIdParams): Promise<GetGroupByIdResponse> =>
+  ky.get(`http://localhost:3000/groups/${params.id}`).json();
+
+export const getGroups = async (): Promise<GetGroupsQueryResponse[]> =>
+  ky.get("http://localhost:3000/groups").json();
+
+export const createGroup = async (body: CreateGroupBody): Promise<GetGroupByIdResponse> =>
+  ky.post("http://localhost:3000/groups", { json: body }).json();
+
+export const addUsersToGroup = async (params: UpdateGroupParams, body: AddUsersToGroupBody): Promise<{ message: string }> =>
+  ky.post(`http://localhost:3000/groups/${params.id}/users`, { json: body }).json();
+
+export const removeUsersFromGroup = async (params: UpdateGroupParams, body: AddUsersToGroupBody): Promise<{ message: string }> =>
+  ky.delete(`http://localhost:3000/groups/${params.id}/users`, { json: body }).json();
+
+export const updateGroup = async (params: UpdateGroupParams, body: UpdateGroupBody): Promise<GetGroupByIdResponse> =>
+  ky.post(`http://localhost:3000/groups/${params.id}`, { json: body }).json();
+
+export const deleteGroup = async (params: GetGroupByIdParams): Promise<GetGroupByIdResponse> =>
+  ky.delete(`http://localhost:3000/groups/${params.id}`).json();
+
+export const deleteGroupExpense = async (params: GetExpenseByIdParams): Promise<any> =>
+  ky.delete(`http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`).json();
+
+export const getGroupExpenses = async (params: GetGroupExpensesByIdParams): Promise<any> =>
+  ky.get(`http://localhost:3000/groups/${params.id}/expenses`).json();
+
+export const getGroupExpenseById = async (params: GetExpenseByIdParams): Promise<any> =>
+  ky.get(`http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`).json();
+
+export const getGroupBalances = async (params: GetUserExpensesInGroupParams): Promise<any> =>
+  ky.get(`http://localhost:3000/groups/${params.id}/balances`).json();
+
+export const createGroupExpense = async (params: GetGroupByIdParams, body: CreateGroupExpenseBody): Promise<any> =>
+  ky.post(`http://localhost:3000/groups/${params.id}/expenses`, { json: body }).json();
+
+export const updateGroupExpense = async (params: GetExpenseByIdParams, body: UpdateGroupExpenseBody): Promise<any> =>
+  ky.put(`http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`, { json: body }).json();
+
+/**
+ * NOTIFICATIONS API
+ */
+
+export type UpdateNotificationBody = {
+  read: boolean;
+};
+
+export type GetNotificationsQuery = {
+  limit: number;
+  page: number;
+};
+
+export const getNotifications = async (query: GetNotificationsQuery): Promise<any> =>
+  ky.get("http://localhost:3000/notifications", { searchParams: query }).json();
+
+export const updateNotification = async (id: number, body: UpdateNotificationBody): Promise<any> =>
+  ky.put(`http://localhost:3000/notifications/${id}`, { json: body }).json();
