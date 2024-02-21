@@ -7,10 +7,15 @@ export interface SimpleUser {
 
 export interface DBUser {
   address: string;
-  // smartWalletAddress: string;
+  avatarUrl: string | null;
   createdAt: string;
-  rounding: boolean;
+  displayName: string;
+  id: number;
+  isDiscoverable: boolean;
+  subscription: string | null;
+  updatedAt: string;
   username: string;
+  token: string;
 }
 
 export interface DBTransaction {

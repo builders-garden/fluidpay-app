@@ -9,10 +9,6 @@ export default function AppLayout() {
         options={{ presentation: "modal", headerShown: false }}
       />
       <Stack.Screen
-        name="borrow-modal"
-        options={{ presentation: "modal", headerShown: false }}
-      />
-      <Stack.Screen
         name="export-private-key-modal"
         options={{ presentation: "modal", headerShown: false }}
       />
@@ -25,23 +21,27 @@ export default function AppLayout() {
         options={{ presentation: "modal", headerShown: false }}
       />
       <Stack.Screen
-        name="pocket-info-modal"
-        options={{ presentation: "modal", headerShown: false }}
-      />
-      <Stack.Screen
         name="send-modal"
         options={{ presentation: "modal", headerShown: false }}
       />
       <Stack.Screen
-        name="vault-modal"
-        options={{ presentation: "modal", headerShown: false }}
-      />
-      <Stack.Screen
-        name="aave-lending-modal"
-        options={{ presentation: "modal", headerShown: false }}
-      />
-      <Stack.Screen
         name="tx-detail-modal"
+        options={{ presentation: "modal", headerShown: false }}
+      />
+      <Stack.Screen
+        name="create-expense-modal"
+        options={{ presentation: "modal", headerShown: false }}
+      />
+      <Stack.Screen
+        name="detail-expense-modal"
+        options={{ presentation: "modal", headerShown: false }}
+      />
+      <Stack.Screen
+        name="edit-expense-modal"
+        options={{ presentation: "modal", headerShown: false }}
+      />
+      <Stack.Screen
+        name="group-settings-modal"
         options={{ presentation: "modal", headerShown: false }}
       />
       <Stack.Screen
@@ -54,6 +54,8 @@ export default function AppLayout() {
         name="notification-settings"
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="create-group" options={{ headerShown: false }} />
+      <Stack.Screen name="group" options={{ headerShown: false }} />
       <Stack.Screen name="qrcode" options={{ headerShown: false }} />
     </Stack>
   );

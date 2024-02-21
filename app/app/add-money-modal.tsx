@@ -14,12 +14,12 @@ export default function AddMoneyModal() {
   const [copied, setCopied] = React.useState(false);
 
   return (
-    <View className="flex-1 flex-col bg-black">
+    <View className="flex-1 flex-col bg-[#161618]">
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-black text-white"
+        className="bg-[#161618] text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}

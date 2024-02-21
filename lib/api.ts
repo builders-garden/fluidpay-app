@@ -16,8 +16,8 @@ export type AuthSignInBody = {
 };
 
 export type AuthSignResponse = {
-  message: string;
-  nonce: number;
+  token: string;
+  isNewUser: boolean;
 };
 
 /**
@@ -29,7 +29,7 @@ export const getAuthNonce = async (): Promise<AuthNonceResponse> =>
 
 export const signIn = async (body: AuthSignInBody): Promise<AuthSignResponse> =>
   ky
-    .post("http://localhost:3000/auth/sign", { json: body })
+    .post("http://localhost:3000/auth/sign-in", { json: body })
     .json<AuthSignResponse>();
 
 /**
@@ -71,26 +71,40 @@ export type PaymentsQuery = {
   fromDate?: string;
   toDate?: string;
   direction?: string;
+  limit?: number;
 };
 
 export const createPayment = async (
-  body: CreatePaymentBody
+  token: string,
+  body: CreatePaymentBody,
 ): Promise<PaymentByIdResponse> =>
   ky
-    .post("http://localhost:3000/payments", { json: body })
+    .post("http://localhost:3000/payments", {
+      json: body,
+      headers: { Authorization: `Bearer ${token}` },
+    })
     .json<PaymentByIdResponse>();
 
 export const getPaymentById = async (
-  params: PaymentByIdParams
+  token: string,
+  params: PaymentByIdParams,
 ): Promise<PaymentByIdResponse> =>
   ky
-    .get(`http://localhost:3000/payments/${params.id}`)
+    .get(`http://localhost:3000/payments/${params.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
     .json<PaymentByIdResponse>();
 
 export const getPayments = async (
-  query: PaymentsQuery
+  token: string,
+  query: PaymentsQuery,
 ): Promise<PaymentsQueryResponse[]> =>
-  ky.get("http://localhost:3000/payments", { searchParams: query }).json();
+  ky
+    .get("http://localhost:3000/payments", {
+      searchParams: query,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
 /**
  * USERS API
@@ -128,25 +142,44 @@ export type GetUsersQuery = {
   page?: number;
 };
 
-export const getMe = async (): Promise<UsersMeResponse> =>
-  ky.get("http://localhost:3000/users/me").json<UsersMeResponse>();
-
-export const updateMe = async (body: UpdateMeBody): Promise<UsersMeResponse> =>
+export const getMe = async (token: string): Promise<UsersMeResponse> =>
   ky
-    .put("http://localhost:3000/users/me", { json: body })
+    .get("http://localhost:3000/users/me", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json<UsersMeResponse>();
+
+export const updateMe = async (
+  token: string,
+  body: UpdateMeBody,
+): Promise<UsersMeResponse> =>
+  ky
+    .put("http://localhost:3000/users/me", {
+      json: body,
+      headers: { Authorization: `Bearer ${token}` },
+    })
     .json<UsersMeResponse>();
 
 export const getUserByIdUsernameOrAddress = async (
-  params: UsersByIdUsernameOrAddressParams
+  token: string,
+  params: UsersByIdUsernameOrAddressParams,
 ): Promise<UsersByIdUsernameOrAddressResponse> =>
   ky
-    .get(`http://localhost:3000/users/${params.idOrUsernameOrAddress}`)
+    .get(`http://localhost:3000/users/${params.idOrUsernameOrAddress}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
     .json<UsersByIdUsernameOrAddressResponse>();
 
 export const getUsers = async (
-  query: GetUsersQuery
+  token: string,
+  query: GetUsersQuery,
 ): Promise<UsersByIdUsernameOrAddressResponse[]> =>
-  ky.get("http://localhost:3000/users", { searchParams: query }).json();
+  ky
+    .get("http://localhost:3000/users", {
+      searchParams: query,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
 /**
  * GROUP API
@@ -215,7 +248,7 @@ export type CreateGroupExpenseBody = {
   splitAmong: {
     userId: number;
     amount: number;
-    type: 'PERCENTAGE' | 'AMOUNT';
+    type: "PERCENTAGE" | "AMOUNT";
   }[];
 };
 
@@ -226,48 +259,132 @@ export type UpdateGroupExpenseBody = {
   splitAmong: {
     userId: number;
     amount: number;
-    type: 'PERCENTAGE' | 'AMOUNT';
+    type: "PERCENTAGE" | "AMOUNT";
   }[];
 };
 
-export const getGroupById = async (params: GetGroupByIdParams): Promise<GetGroupByIdResponse> =>
-  ky.get(`http://localhost:3000/groups/${params.id}`).json();
+export const getGroupById = async (
+  token: string,
+  params: GetGroupByIdParams,
+): Promise<GetGroupByIdResponse> =>
+  ky
+    .get(`http://localhost:3000/groups/${params.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
-export const getGroups = async (): Promise<GetGroupsQueryResponse[]> =>
-  ky.get("http://localhost:3000/groups").json();
+export const getGroups = async (
+  token: string,
+): Promise<GetGroupsQueryResponse[]> =>
+  ky
+    .get("http://localhost:3000/groups", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
-export const createGroup = async (body: CreateGroupBody): Promise<GetGroupByIdResponse> =>
-  ky.post("http://localhost:3000/groups", { json: body }).json();
+export const createGroup = async (
+  token: string,
+  body: CreateGroupBody,
+): Promise<GetGroupByIdResponse> =>
+  ky
+    .post("http://localhost:3000/groups", {
+      json: body,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
-export const addUsersToGroup = async (params: UpdateGroupParams, body: AddUsersToGroupBody): Promise<{ message: string }> =>
-  ky.post(`http://localhost:3000/groups/${params.id}/users`, { json: body }).json();
+export const addUsersToGroup = async (
+  token: string,
+  params: UpdateGroupParams,
+  body: AddUsersToGroupBody,
+): Promise<{ message: string }> =>
+  ky
+    .post(`http://localhost:3000/groups/${params.id}/users`, {
+      json: body,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
-export const removeUsersFromGroup = async (params: UpdateGroupParams, body: AddUsersToGroupBody): Promise<{ message: string }> =>
-  ky.delete(`http://localhost:3000/groups/${params.id}/users`, { json: body }).json();
+export const removeUsersFromGroup = async (
+  token: string,
+  params: UpdateGroupParams,
+  body: AddUsersToGroupBody,
+): Promise<{ message: string }> =>
+  ky
+    .delete(`http://localhost:3000/groups/${params.id}/users`, {
+      json: body,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
-export const updateGroup = async (params: UpdateGroupParams, body: UpdateGroupBody): Promise<GetGroupByIdResponse> =>
-  ky.post(`http://localhost:3000/groups/${params.id}`, { json: body }).json();
+export const updateGroup = async (
+  token: string,
+  params: UpdateGroupParams,
+  body: UpdateGroupBody,
+): Promise<GetGroupByIdResponse> =>
+  ky
+    .post(`http://localhost:3000/groups/${params.id}`, {
+      json: body,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
-export const deleteGroup = async (params: GetGroupByIdParams): Promise<GetGroupByIdResponse> =>
-  ky.delete(`http://localhost:3000/groups/${params.id}`).json();
+export const deleteGroup = async (
+  token: string,
+  params: GetGroupByIdParams,
+): Promise<GetGroupByIdResponse> =>
+  ky
+    .delete(`http://localhost:3000/groups/${params.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    .json();
 
-export const deleteGroupExpense = async (params: GetExpenseByIdParams): Promise<any> =>
-  ky.delete(`http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`).json();
+export const deleteGroupExpense = async (
+  params: GetExpenseByIdParams,
+): Promise<any> =>
+  ky
+    .delete(
+      `http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`,
+    )
+    .json();
 
-export const getGroupExpenses = async (params: GetGroupExpensesByIdParams): Promise<any> =>
+export const getGroupExpenses = async (
+  params: GetGroupExpensesByIdParams,
+): Promise<any> =>
   ky.get(`http://localhost:3000/groups/${params.id}/expenses`).json();
 
-export const getGroupExpenseById = async (params: GetExpenseByIdParams): Promise<any> =>
-  ky.get(`http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`).json();
+export const getGroupExpenseById = async (
+  params: GetExpenseByIdParams,
+): Promise<any> =>
+  ky
+    .get(
+      `http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`,
+    )
+    .json();
 
-export const getGroupBalances = async (params: GetUserExpensesInGroupParams): Promise<any> =>
+export const getGroupBalances = async (
+  params: GetUserExpensesInGroupParams,
+): Promise<any> =>
   ky.get(`http://localhost:3000/groups/${params.id}/balances`).json();
 
-export const createGroupExpense = async (params: GetGroupByIdParams, body: CreateGroupExpenseBody): Promise<any> =>
-  ky.post(`http://localhost:3000/groups/${params.id}/expenses`, { json: body }).json();
+export const createGroupExpense = async (
+  params: GetGroupByIdParams,
+  body: CreateGroupExpenseBody,
+): Promise<any> =>
+  ky
+    .post(`http://localhost:3000/groups/${params.id}/expenses`, { json: body })
+    .json();
 
-export const updateGroupExpense = async (params: GetExpenseByIdParams, body: UpdateGroupExpenseBody): Promise<any> =>
-  ky.put(`http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`, { json: body }).json();
+export const updateGroupExpense = async (
+  params: GetExpenseByIdParams,
+  body: UpdateGroupExpenseBody,
+): Promise<any> =>
+  ky
+    .put(
+      `http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`,
+      { json: body },
+    )
+    .json();
 
 /**
  * NOTIFICATIONS API
@@ -282,8 +399,13 @@ export type GetNotificationsQuery = {
   page: number;
 };
 
-export const getNotifications = async (query: GetNotificationsQuery): Promise<any> =>
+export const getNotifications = async (
+  query: GetNotificationsQuery,
+): Promise<any> =>
   ky.get("http://localhost:3000/notifications", { searchParams: query }).json();
 
-export const updateNotification = async (id: number, body: UpdateNotificationBody): Promise<any> =>
+export const updateNotification = async (
+  id: number,
+  body: UpdateNotificationBody,
+): Promise<any> =>
   ky.put(`http://localhost:3000/notifications/${id}`, { json: body }).json();

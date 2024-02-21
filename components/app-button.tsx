@@ -7,13 +7,13 @@ export default function AppButton({
 }: {
   text: string;
   onPress: () => void;
-  variant?: "primary" | "ghost" | "disabled";
+  variant?: "primary" | "ghost" | "disabled" | "secondary";
 }) {
   if (variant === "ghost") {
     return (
       <TouchableOpacity
         onPress={onPress}
-        className="bg-[#3F89FF]/20 rounded-full flex items-center justify-center py-3"
+        className="bg-[#0061FF]/20 rounded-full flex items-center justify-center py-3"
       >
         <Text className="text-lg text-[#3F89FF] font-semibold">{text}</Text>
       </TouchableOpacity>
@@ -22,16 +22,27 @@ export default function AppButton({
 
   if (variant === "disabled") {
     return (
-      <View className="bg-[#667DFF] border-2 opacity-50 border-[#667DFF] rounded-full flex items-center justify-center py-3">
+      <View className="bg-[#0061FF] border-2 opacity-50 border-[#0061FF] rounded-full flex items-center justify-center py-3">
         <Text className="text-lg text-white font-semibold">{text}</Text>
       </View>
+    );
+  }
+
+  if (variant === "secondary") {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        className="bg-white border-2 border-white rounded-full flex items-center justify-center py-3 px-4"
+      >
+        <Text className="text-lg text-black font-semibold">{text}</Text>
+      </TouchableOpacity>
     );
   }
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="bg-[#3F89FF] border-2 border-[#3F89FF] rounded-full flex items-center justify-center py-3"
+      className="bg-[#0061FF] border-2 border-[#0061FF] rounded-full flex items-center justify-center py-3"
     >
       <Text className="text-lg text-white font-semibold">{text}</Text>
     </TouchableOpacity>

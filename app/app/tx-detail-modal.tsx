@@ -12,12 +12,15 @@ export default function TransactionDetailModal() {
   const user = useUserStore((state) => state.user);
 
   return (
-    <SafeAreaView className="flex-1 flex-col bg-black" edges={{ top: "off" }}>
+    <SafeAreaView
+      className="flex-1 flex-col bg-[#161618]"
+      edges={{ top: "off" }}
+    >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-black text-white"
+        className="bg-[#161618] text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}
@@ -25,7 +28,7 @@ export default function TransactionDetailModal() {
             router.back();
           }}
           color="#fff"
-          size={20}
+          size={24}
         />
         <Appbar.Content
           title=""
@@ -38,7 +41,7 @@ export default function TransactionDetailModal() {
             router.back();
           }}
           color="#fff"
-          size={20}
+          size={24}
         />
       </Appbar.Header>
       <View className="flex px-4 h-full space-y-8 mt-6">
@@ -48,7 +51,7 @@ export default function TransactionDetailModal() {
             <Avatar name="F" />
           </View>
           <View className="flex">
-            <Text className="text-[#667DFF] text-lg font-semibold">
+            <Text className="text-[#0061FF] text-lg font-semibold">
               frankc - @frankcc
             </Text>
             <Text className="text-[#8F8F91]">
@@ -68,7 +71,7 @@ export default function TransactionDetailModal() {
               Block explorer
             </Text>
 
-            <Text className="text-[#667DFF] text-lg font-medium">View</Text>
+            <Text className="text-[#0061FF] text-lg font-medium">View</Text>
           </View>
         </View>
       </View>

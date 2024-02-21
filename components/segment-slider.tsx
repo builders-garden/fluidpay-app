@@ -14,11 +14,11 @@ export function SegmentSlider<T extends string>({
       values={tabs}
       onValueChange={setTab as (tab: string) => void}
       selectedIndex={tabs.indexOf(tab)}
-      backgroundColor="#292836"
-      tintColor="#201F2D"
+      backgroundColor="#161618"
+      tintColor="#343434"
       fontStyle={{ fontSize: 14, color: "#FFFFFF" }}
       activeFontStyle={{ fontSize: 14, color: "#FFFFFF", fontWeight: "600" }}
-      style={{ height: 48 }}
+      style={{ height: 36, borderRadius: 12 }}
     />
   );
 }

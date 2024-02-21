@@ -10,6 +10,7 @@ import { BarCodeScannedCallback } from "expo-barcode-scanner";
 import { useUserStore } from "../../store/use-user-store";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "@thirdweb-dev/react-native";
+import { ArrowLeft } from "lucide-react-native";
 
 type QRScreenOptions = "Pay me" | "Scan";
 
@@ -26,12 +27,12 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
         className="bg-black text-white"
       >
         <Appbar.Action
-          icon={() => <Icon name="arrow-left" size={20} color="#FFF" />}
+          icon={() => <ArrowLeft size={24} color="#FFF" />}
           onPress={() => {
             router.back();
           }}
           color="#fff"
-          size={20}
+          size={24}
         />
         <Appbar.Content
           title={""}
@@ -44,7 +45,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
           <Text className="text-3xl text-white font-bold">
             {shortenAddress(user?.address)}
           </Text>
-          <Text className="font-bold text-[#667DFF]">@{user?.username}</Text>
+          <Text className="font-bold text-[#0061FF]">@{user?.username}</Text>
         </View>
         <Avatar name={user!.username.charAt(0).toUpperCase()} />
       </View>
@@ -56,7 +57,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
       {tab === "Scan" && <QRScan />}
       <Text className="text-gray-400 text-center pt-4">
         Get paid with{" "}
-        <Text className="font-bold text-[#667DFF]">
+        <Text className="font-bold text-[#0061FF]">
           crumina.xyz/{user?.username}
         </Text>
       </Text>

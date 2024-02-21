@@ -14,75 +14,34 @@ import { View, Text, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { firebaseFirestore } from "../../../firebaseConfig";
 import Avatar from "../../../components/avatar";
-import { useSendStore, useUserStore } from "../../../store";
+import {
+  useSendStore,
+  useTransactionsStore,
+  useUserStore,
+} from "../../../store";
 import { ChevronRight, QrCode, Search, Plus } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
+import { getUsers } from "../../../lib/api";
 
 export default function Send() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const user = useUserStore((state) => state.user);
   const setSendUser = useSendStore((state) => state.setSendUser);
-  const transactions = [
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "1",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "2",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-  ];
+  const transactions = useTransactionsStore((state) => state.transactions);
 
   const onChangeText = async (text: string) => {
     setSearchQuery(text);
     if (text) {
       // const docs = await getDocs()
-      const q = query(
-        collection(firebaseFirestore, "users"),
-        or(
-          and(
-            where("username", ">=", text),
-            where("username", "<=", text + "\uf8ff"),
-            where("username", "!=", user?.username)
-          )
-          // and(
-          //   where("address", ">=", text),
-          //   where("address", "<=", text + "\uf8ff")
-          // )
-        ),
-        orderBy("username", "desc"),
-        limit(10)
-      );
-      const querySnapshot = await getDocs(q);
-      const result = querySnapshot.docs.map((doc) => {
-        return { ...doc.data(), id: doc.id };
+      const users = await getUsers(user!.token, {
+        limit: 10,
+        query: text,
+        page: 0,
       });
-      setResults(result);
+      setResults(users);
     } else {
       setResults([]);
     }
@@ -100,21 +59,15 @@ export default function Send() {
           placeholder="@username"
           onChangeText={onChangeText}
           value={searchQuery}
-          className="bg-white/10 !text-white w-1/2 mb-1"
+          className="bg-white/10 !text-white w-3/4 mb-1"
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect={false}
           placeholderTextColor={"#8F8F91"}
           icon={() => <Search size={20} color={"white"} />}
-          traileringIcon={() => <QrCode size={20} color={"white"} />}
+          // traileringIcon={() => <QrCode size={20} color={"white"} />}
           theme={{ colors: { onSurfaceVariant: "#FFF" } }}
         />
-        <TouchableOpacity onPress={() => {}}>
-          <View className="flex flex-row items-center py-2 px-4 bg-[#3F89FF] border-2 border-[#3F89FF] rounded-full">
-            <Plus size={24} color={"white"} />
-            <Text className="text-lg text-white font-semibold ">New</Text>
-          </View>
-        </TouchableOpacity>
       </View>
       <View className="flex-1 flex-col px-4 bg-black">
         {searchQuery !== "" ? (
@@ -146,11 +99,17 @@ export default function Send() {
               ))}
             </View>
           </>
-        ) : (
+        ) : transactions.length > 0 ? (
           <View className="bg-[#161618] w-full mx-auto rounded-2xl px-4 mt-8">
-            <TransactionItem transaction={transactions[0]} index={0} />
-            <TransactionItem transaction={transactions[1]} index={1} />
-            <TransactionItem transaction={transactions[2]} index={2} />
+            {transactions.map((transaction, index) => (
+              <TransactionItem transaction={transaction} index={index} />
+            ))}
+          </View>
+        ) : (
+          <View className="flex-1 flex-col items-center justify-center">
+            <Text className="text-white font-semibold text-lg">
+              No recent transactions
+            </Text>
           </View>
         )}
       </View>

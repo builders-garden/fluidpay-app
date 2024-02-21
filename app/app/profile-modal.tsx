@@ -113,13 +113,13 @@ export default function ProfileModal() {
         className="bg-black text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={20} color="#FFF" />}
+          icon={() => <ArrowLeft size={24} color="#FFF" />}
           onPress={() => {
             setProfileUser(undefined);
             router.back();
           }}
           color="#fff"
-          size={20}
+          size={24}
         />
         <Appbar.Content
           title=""
@@ -129,7 +129,7 @@ export default function ProfileModal() {
       </Appbar.Header>
       <View className="flex flex-col justify-between px-4">
         <View className="flex flex-col items-center mt-4 space-y-3">
-          <Avatar name={user?.username.charAt(0).toUpperCase()} />
+          <Avatar name={user?.username.charAt(0).toUpperCase()} size={64} />
           <Text className="text-white text-4xl text-center font-semibold">
             @{user?.username}
           </Text>

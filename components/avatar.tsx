@@ -1,17 +1,21 @@
 import { View, Text } from "react-native";
+import { Avatar } from "react-native-paper";
 
-export default function Avatar({
+export default function CruminaAvatar({
   name,
-  size = 12,
+  size = 48,
+  color = "#B4B7B9",
 }: {
   name: string;
   size?: number;
+  color?: string;
 }) {
   return (
-    <View
-      className={`h-14 w-14 rounded-full bg-[#B4B7B9] flex items-center justify-center`}
-    >
-      <Text className={`text-white text-xl font-bold`}>{name}</Text>
-    </View>
+    <Avatar.Text
+      label={name}
+      size={size}
+      labelStyle={{ fontWeight: "bold", color: "white" }}
+      color={color}
+    />
   );
 }

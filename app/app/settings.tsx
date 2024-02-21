@@ -44,12 +44,12 @@ export default function Settings() {
             className="bg-transparent text-white"
           >
             <Appbar.Action
-              icon={() => <ArrowLeft size={20} color="#FFF" />}
+              icon={() => <ArrowLeft size={24} color="#FFF" />}
               onPress={() => {
                 router.back();
               }}
               color="#fff"
-              size={20}
+              size={24}
             />
             <Appbar.Content
               title=""
@@ -59,7 +59,7 @@ export default function Settings() {
           </Appbar.Header>
           <View className="flex-1 flex-col px-4 bg-transparent space-y-8">
             <View className="flex flex-col items-center mt-4 space-y-3">
-              <Avatar name={user?.username.charAt(0).toUpperCase()} />
+              <Avatar name={user?.username.charAt(0).toUpperCase()} size={64} />
               <Text className="text-white text-4xl text-center font-semibold">
                 @{user?.username}
               </Text>

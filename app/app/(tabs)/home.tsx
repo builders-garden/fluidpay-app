@@ -1,17 +1,25 @@
-import { useConnectedWallet } from "@thirdweb-dev/react-native";
+import {
+  useConnectedWallet,
+  useContract,
+  useContractRead,
+} from "@thirdweb-dev/react-native";
 import { Link, Redirect } from "expo-router";
 import { View, Text, Pressable } from "react-native";
 import { IconButton } from "react-native-paper";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
-import { useUserStore } from "../../../store";
+import { useTransactionsStore, useUserStore } from "../../../store";
 import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
 import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
 import { Bell, ChevronRight } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useEffect, useState } from "react";
+import { getPayments } from "../../../lib/api";
+import { USDC_ADDRESS } from "../../../constants/sepolia";
+import { BigNumber } from "ethers";
 
 export default function Home() {
   const signer = useConnectedWallet();
@@ -19,41 +27,30 @@ export default function Home() {
   const user = useUserStore((state) => state.user);
   const setProfileUser = useProfileStore((state) => state.setProfileUser);
   const setProfileUserTransactions = useProfileStore(
-    (state) => state.setProfileUserTransactions
+    (state) => state.setProfileUserTransactions,
   );
-  // const { contract } = useContract(GHO_SEPOLIA_ADDRESS);
-  const transactions = [
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "1",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "2",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-  ];
+  const transactions = useTransactionsStore((state) => state.transactions);
+  const setTransactions = useTransactionsStore(
+    (state) => state.setTransactions,
+  );
+  const { contract } = useContract(USDC_ADDRESS);
+  const { data: balanceData = BigNumber.from(0) } = useContractRead(
+    contract,
+    "balanceOf",
+    [user?.address],
+  );
+
+  useEffect(() => {
+    if (user) {
+      fetchPayments();
+    }
+  }, [user]);
+
+  const fetchPayments = async () => {
+    if (!user) return;
+    const res = await getPayments(user!.token, { limit: 3 });
+    setTransactions(res as any[]);
+  };
 
   // const { data: balanceData = BigNumber.from(0), refetch: balanceRefetch } =
   //   useContractRead(contract, "balanceOf", [user?.address]);
@@ -160,14 +157,18 @@ export default function Home() {
               />
             </View>
           </View>
-          <ScrollView className="px-4">
+          <ScrollView className="px-4" scrollEnabled={transactions.length > 0}>
             <View className="py-8 flex flex-col space-y-16">
               <View className="flex flex-col space-y-6">
                 <Text className="text-white font-semibold text-center">
                   Main • USDC
                 </Text>
                 <Text className="text-white font-bold text-center text-5xl">
-                  $83,00
+                  $
+                  {balanceData
+                    .div(10 ** 6)
+                    .toNumber()
+                    .toFixed(2)}
                 </Text>
               </View>
               <View className="flex flex-row items-center justify-evenly w-full">
@@ -194,67 +195,92 @@ export default function Home() {
               </View>
             </View>
             <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
-              <TransactionItem transaction={transactions[0]} index={0} />
-              <TransactionItem transaction={transactions[1]} index={1} />
-              <TransactionItem transaction={transactions[2]} index={2} />
-              <Text
-                onPress={() => router.push("/app/transfers")}
-                className="text-[#667DFF] font-semibold text-center"
-              >
-                See all
-              </Text>
+              {transactions.length > 0 && (
+                <>
+                  {transactions.map((payment, index) => (
+                    <TransactionItem transaction={payment} index={index} />
+                  ))}
+                  <Text
+                    onPress={() => router.push("/app/transfers")}
+                    className="text-[#0061FF] font-semibold text-center"
+                  >
+                    See all
+                  </Text>
+                </>
+              )}
+              {transactions.length === 0 && (
+                <View className="flex flex-col items-center justify-center">
+                  <Text className="text-gray-400 text-center">
+                    No recent transactions available.
+                  </Text>
+                </View>
+              )}
             </View>
-            <View className="bg-[#161618] h-[158px] w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
-              <View className="flex flex-row items-center">
-                <Text className="text-gray-400">Recent payees</Text>
-                <ChevronRight color="grey" size={14} />
-              </View>
-              <View className="flex flex-row justify-evenly w-full pt-6">
-                <Pressable
-                  onPress={() => {
-                    setProfileUser({
-                      address: "0x123",
-                      username: "orbulo",
-                    });
-                    setProfileUserTransactions([]);
-                    router.push("/app/profile-modal");
-                  }}
-                >
-                  <View className="flex space-y-2 items-center">
-                    <Avatar name="O" />
-                    <Text className="text-white font-semibold">orbulo</Text>
+            <View className="bg-[#161618] w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
+              {transactions.length > 0 && (
+                <View className="flex flex-row items-center pb-6">
+                  <Text className="text-gray-400">Recent payees</Text>
+                  <ChevronRight color="grey" size={14} />
+                </View>
+              )}
+              <View className="flex flex-row justify-evenly w-full">
+                {transactions.length > 0 && (
+                  <>
+                    <Pressable
+                      onPress={() => {
+                        setProfileUser({
+                          address: "0x123",
+                          username: "orbulo",
+                        });
+                        setProfileUserTransactions([]);
+                        router.push("/app/profile-modal");
+                      }}
+                    >
+                      <View className="flex space-y-2 items-center">
+                        <Avatar name="O" />
+                        <Text className="text-white font-semibold">orbulo</Text>
+                      </View>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => {
+                        setProfileUser({
+                          address: "0x123",
+                          username: "orbulo",
+                        });
+                        setProfileUserTransactions([]);
+                        router.push("/app/profile-modal");
+                      }}
+                    >
+                      <View className="flex space-y-2 items-center">
+                        <Avatar name="O" />
+                        <Text className="text-white font-semibold">orbulo</Text>
+                      </View>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => {
+                        setProfileUser({
+                          address: "0x123",
+                          username: "orbulo",
+                        });
+                        setProfileUserTransactions([]);
+                        router.push("/app/profile-modal");
+                      }}
+                    >
+                      <View className="flex space-y-2 items-center">
+                        <Avatar name="O" />
+                        <Text className="text-white font-semibold">orbulo</Text>
+                      </View>
+                    </Pressable>
+                  </>
+                )}
+
+                {transactions.length === 0 && (
+                  <View className="flex flex-col items-center justify-center">
+                    <Text className="text-gray-400 text-center">
+                      No recent payees available.
+                    </Text>
                   </View>
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    setProfileUser({
-                      address: "0x123",
-                      username: "orbulo",
-                    });
-                    setProfileUserTransactions([]);
-                    router.push("/app/profile-modal");
-                  }}
-                >
-                  <View className="flex space-y-2 items-center">
-                    <Avatar name="O" />
-                    <Text className="text-white font-semibold">orbulo</Text>
-                  </View>
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    setProfileUser({
-                      address: "0x123",
-                      username: "orbulo",
-                    });
-                    setProfileUserTransactions([]);
-                    router.push("/app/profile-modal");
-                  }}
-                >
-                  <View className="flex space-y-2 items-center">
-                    <Avatar name="O" />
-                    <Text className="text-white font-semibold">orbulo</Text>
-                  </View>
-                </Pressable>
+                )}
               </View>
             </View>
           </ScrollView>

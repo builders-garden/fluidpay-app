@@ -1,159 +1,85 @@
-import { Redirect, router, useNavigation } from "expo-router";
-import { View, Text, Image, Pressable } from "react-native";
-import { Appbar } from "react-native-paper";
-import { useUserStore } from "../../../store";
-import { useContract, useContractRead } from "@thirdweb-dev/react-native";
-import { AAVE_BORROW_ADDRESS, VAULT_ADDRESS } from "../../../constants/sepolia";
-import { BigNumber } from "ethers";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { formatUnits } from "viem";
-import { useEffect } from "react";
+import { Redirect, router } from "expo-router";
+import { useGroupsStore, useUserStore } from "../../../store";
+import { LinearGradient } from "expo-linear-gradient";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, View, Pressable } from "react-native";
+import AppButton from "../../../components/app-button";
+import { ScrollView } from "react-native-gesture-handler";
+import Avatar from "../../../components/avatar";
 
 export default function Pocket() {
   const user = useUserStore((state) => state.user);
-  const { contract } = useContract(AAVE_BORROW_ADDRESS);
-  const {
-    data: userData = [BigNumber.from(0), BigNumber.from(0), BigNumber.from(0)],
-    isLoading,
-    refetch,
-  } = useContractRead(contract, "getUserAccountData", [user?.address]);
-
-  const { contract: vaultContract } = useContract(VAULT_ADDRESS);
-  const {
-    data: userVaultBalance = BigNumber.from(0),
-    refetch: refetchVaultBalance,
-  } = useContractRead(vaultContract, "totalAssetsOfUser", [user?.address]);
-
-  const vaultBalance = parseFloat(formatUnits(userVaultBalance.toString(), 18));
-  const aaveLendingBalance = parseFloat(formatUnits(userData[0], 8));
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    const refresh = () => {
-      refetch();
-      refetchVaultBalance();
-    };
-
-    navigation.addListener("focus", refresh);
-
-    return () => {
-      navigation.removeListener("focus", refresh);
-    };
-  }, []);
+  const groups = useGroupsStore((state) => state.groups);
 
   if (!user) {
     return <Redirect href={"/"} />;
   }
 
-  return (
-    <>
-      <Appbar.Header className="bg-[#201F2D] text-white">
-        <Appbar.BackAction
-          onPress={() => router.back()}
-          color="#fff"
-          size={20}
-        />
-        <Appbar.Content
-          title="Pocket"
-          color="#fff"
-          titleStyle={{ fontWeight: "bold" }}
-        />
-        <Appbar.Action
-          icon={() => <Icon name="info-circle" size={24} color="#FFF" />}
-          onPress={() => router.push("/app/pocket-info-modal")}
-        />
-      </Appbar.Header>
-      <View className="flex-1 flex-col items-center w-full px-4 bg-[#201F2D]">
-        <View className="px-14">
-          <View className="flex flex-col space-y-4 pb-8 pt-4">
-            <Text className="text-white font-semibold text-center">
-              Pocket balance
-            </Text>
-            <Text className="text-white font-bold text-center text-5xl">
-              ${(vaultBalance + aaveLendingBalance).toFixed(2)}
-            </Text>
-          </View>
-        </View>
-        <Pressable
-          className="border-2 border-[#667DFF] w-full p-3 rounded-lg flex flex-row items-center justify-between mt-4"
-          onPress={() => router.push("/app/aave-lending-modal")}
-        >
-          <View className="flex flex-row space-x-2 items-center">
-            <Image
-              source={require("../../../images/ghost.png")}
-              className="h-14 w-14"
-            />
-            <View className="flex flex-col items-start">
-              <Text className="text-white text-lg font-black text-center">
-                AAVE Lending
-              </Text>
-              <Text className="text-white/80 font-semibold">
-                ${aaveLendingBalance.toFixed(2)}
-              </Text>
-            </View>
-          </View>
-          <View className="flex flex-row items-center space-x-4 justify-between">
-            <View className="flex flex-col mr-6 items-end">
-              <Text className="text-lg text-emerald-500 font-semibold">
-                1.50%
-              </Text>
-              <Text className="text-[#8F8F91]">APY</Text>
-            </View>
-            <Icon name="chevron-right" size={16} color="#667DFF" />
-          </View>
-        </Pressable>
-        <Pressable
-          className="border-2 border-[#667DFF] w-full p-3 rounded-lg flex flex-row items-center justify-between mt-4"
-          onPress={() => router.push("/app/vault-modal")}
-        >
-          <View className="flex flex-row space-x-2 items-center">
-            <Image
-              source={require("../../../images/ghost.png")}
-              className="h-14 w-14"
-            />
-            <View className="flex flex-col items-start">
-              <Text className="text-white text-lg font-black text-center">
-                GHO Vault
-              </Text>
-              <Text className="text-white/80 font-semibold">
-                ${vaultBalance.toFixed(2)}
-              </Text>
-            </View>
-          </View>
-          <View className="flex flex-row items-center space-x-4 justify-between">
-            <View className="flex flex-col mr-6 items-end">
-              <Text className="text-lg text-emerald-500 font-semibold">
-                3.00%
-              </Text>
-              <Text className="text-[#8F8F91]">APY</Text>
-            </View>
-            <Icon name="chevron-right" size={16} color="#667DFF" />
-          </View>
-        </Pressable>
-        {/* <View className="my-8 flex items-center w-full">
-          <View className="px-14">
-            <View className="flex flex-col space-y-4 pb-8 pt-4">
-              <Text className="text-white font-semibold text-center">
-                Borrow balance
-              </Text>
-              <Text className="text-white font-bold text-center text-5xl">
-                $
-                {userData && userData[1]
-                  ? parseFloat(
-                      userData[1].div(GHO_ASSET_PRICE).toString()
-                    ).toFixed(2)
-                  : "0.00"}
-              </Text>
-            </View>
-          </View>
-          <View className="w-full">
+  if (groups.length === 0) {
+    return (
+      <LinearGradient
+        colors={["#3500B7", "#000000"]}
+        className="h-full"
+        style={{}}
+      >
+        <SafeAreaView className="bg-transparent flex-1 items-center py-24 px-16 space-y-4">
+          <Text className="text-white text-4xl font-semibold text-center">
+            Start sharing expenses
+          </Text>
+          <Text className="text-white text-center">
+            Everything you need to split expenses with your frens
+          </Text>
+          <View>
             <AppButton
-              text="Borrow GHO"
-              onPress={() => router.push("/app/borrow-modal")}
+              variant="secondary"
+              onPress={() => router.push("/app/create-group")}
+              text="Create group"
             />
           </View>
-        </View> */}
-      </View>
-    </>
+        </SafeAreaView>
+      </LinearGradient>
+    );
+  }
+
+  return (
+    <SafeAreaView className="bg-black flex-1 px-4">
+      <Text className="text-4xl text-white font-bold mb-4">Groups</Text>
+      <ScrollView>
+        {groups.map((group, index) => (
+          <Pressable
+            key={`group-${index}`}
+            onPress={() =>
+              router.push({
+                pathname: "/app/group",
+                params: { group: JSON.stringify(group) },
+              })
+            }
+          >
+            <View className="bg-[#232324] rounded-xl mb-4 flex flex-col space-y-4 p-4">
+              <Text className="text-white font-semibold text-2xl">
+                {group.name}
+              </Text>
+              <View className="flex flex-row">
+                {group.members.map((member: any, index: number) => (
+                  <View
+                    className={index === 0 ? "" : "-ml-6"}
+                    key={`member-${index}-${group.name}`}
+                  >
+                    <Avatar
+                      name={member.username.charAt(0).toUpperCase()}
+                      // color="#FFFFFF"
+                    />
+                  </View>
+                ))}
+              </View>
+            </View>
+          </Pressable>
+        ))}
+      </ScrollView>
+      <AppButton
+        onPress={() => router.push("/app/create-group")}
+        text="Create group"
+      />
+    </SafeAreaView>
   );
 }

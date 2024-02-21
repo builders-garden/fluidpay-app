@@ -16,15 +16,18 @@ export default function RequestModal() {
   }
 
   return (
-    <SafeAreaView className="flex-1 flex-col bg-black" edges={{ top: "off" }}>
+    <SafeAreaView
+      className="flex-1 flex-col bg-[#161618]"
+      edges={{ top: "off" }}
+    >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-black text-white"
+        className="bg-[#161618] text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={20} color="#FFF" />}
+          icon={() => <ArrowLeft size={24} color="#FFF" />}
           onPress={() => {
             router.back();
           }}
@@ -40,7 +43,7 @@ export default function RequestModal() {
       <View className="flex px-4 space-y-4 h-full">
         <Text className="text-3xl text-white font-bold">Request via link</Text>
         <View className="flex items-center space-y-2 mt-4">
-          <Avatar name={user?.username.charAt(0)} size={16} />
+          <Avatar name={user?.username.charAt(0)} size={64} />
           <Text className="text-white font-semibold text-lg">
             {user?.username}
           </Text>
@@ -48,8 +51,8 @@ export default function RequestModal() {
             Share your link so anyone can pay you
           </Text>
           <View className="flex flex-row items-center space-x-2">
-            <Copy size={20} color="#667DFF" />
-            <Text className="text-[#667DFF] font-bold text-lg">
+            <Copy size={20} color="#0061FF" />
+            <Text className="text-[#0061FF] font-bold text-lg">
               crumina.xyz/{user?.username}
             </Text>
           </View>
