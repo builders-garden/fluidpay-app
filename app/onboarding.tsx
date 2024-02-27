@@ -1,19 +1,12 @@
 import { useAddress } from "@thirdweb-dev/react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { View, Text, TextInput } from "react-native";
-import { Appbar, ActivityIndicator } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { firebaseAuth, firebaseFirestore } from "../firebaseConfig";
 import AppButton from "../components/app-button";
 import { router } from "expo-router";
-import { doc, setDoc } from "firebase/firestore";
-import { useUserStore } from "../store";
+import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getMe, updateMe } from "../lib/api";
+import { getGroups, getPayments, updateMe } from "../lib/api";
 import { DBUser } from "../store/interfaces";
 
 const generatePassword = () => {
@@ -34,11 +27,12 @@ export default function Onboarding() {
   const [name, setName] = useState("");
   const address = useAddress();
   const setUser = useUserStore((state) => state.setUser);
+  const setTransactions = useTransactionsStore(
+    (state) => state.setTransactions
+  );
+  const setGroups = useGroupsStore((state) => state.setGroups);
 
   const finishOnboarding = async () => {
-    // await setFirebaseUsername();
-    // await SecureStore.setItemAsync(`onboarding-${address}`, "true");
-    console.log("set user 2");
     const data = {
       displayName: name,
       username,
@@ -46,8 +40,15 @@ export default function Onboarding() {
     const token = await SecureStore.getItemAsync(`token-${address}`);
     if (token) {
       const res = await updateMe(token, data);
-      console.log(res);
+
+      const [payments, groups] = await Promise.all([
+        getPayments(token, { limit: 10 }),
+        getGroups(token),
+      ]);
       setUser({ ...res, token } as DBUser);
+      setTransactions(payments as any[]);
+      setGroups(groups);
+      router.push("/app/home");
       router.push("/app/home");
     }
   };

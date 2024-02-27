@@ -5,7 +5,6 @@ import {
 } from "@thirdweb-dev/react-native";
 import { Link, Redirect } from "expo-router";
 import { View, Text, Pressable } from "react-native";
-import { IconButton } from "react-native-paper";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
@@ -14,9 +13,9 @@ import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
 import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
-import { Bell, ChevronRight } from "lucide-react-native";
+import { ChevronRight } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getPayments } from "../../../lib/api";
 import { USDC_ADDRESS } from "../../../constants/sepolia";
 import { BigNumber } from "ethers";
@@ -27,17 +26,17 @@ export default function Home() {
   const user = useUserStore((state) => state.user);
   const setProfileUser = useProfileStore((state) => state.setProfileUser);
   const setProfileUserTransactions = useProfileStore(
-    (state) => state.setProfileUserTransactions,
+    (state) => state.setProfileUserTransactions
   );
   const transactions = useTransactionsStore((state) => state.transactions);
   const setTransactions = useTransactionsStore(
-    (state) => state.setTransactions,
+    (state) => state.setTransactions
   );
   const { contract } = useContract(USDC_ADDRESS);
   const { data: balanceData = BigNumber.from(0) } = useContractRead(
     contract,
     "balanceOf",
-    [user?.address],
+    [user?.address]
   );
 
   useEffect(() => {
@@ -144,18 +143,18 @@ export default function Home() {
     >
       <SafeAreaView className="bg-transparent flex-1">
         <View className="flex flex-col bg-transparent">
-          <View className="flex flex-row items-center justify-between px-4">
+          <View className="flex flex-row items-center justify-between px-4 mt-2">
             <View className="flex flex-row items-center space-x-4 pl-2">
               <Link href={"/app/settings"}>
                 <Avatar name={user.username.charAt(0).toUpperCase()} />
               </Link>
             </View>
-            <View className="flex flex-row items-center space-x-0">
+            {/* <View className="flex flex-row items-center space-x-0">
               <IconButton
                 icon={() => <Bell size={24} color={"white"} />}
                 onPress={() => router.push("/app/qrcode")}
               />
-            </View>
+            </View> */}
           </View>
           <ScrollView className="px-4" scrollEnabled={transactions.length > 0}>
             <View className="py-8 flex flex-col space-y-16">
@@ -224,57 +223,35 @@ export default function Home() {
                 </View>
               )}
               <View className="flex flex-row justify-evenly w-full">
-                {transactions.length > 0 && (
+                {transactions.filter((payment) => payment.payeeId !== user?.id)
+                  .length > 0 && (
                   <>
-                    <Pressable
-                      onPress={() => {
-                        setProfileUser({
-                          address: "0x123",
-                          username: "orbulo",
-                        });
-                        setProfileUserTransactions([]);
-                        router.push("/app/profile-modal");
-                      }}
-                    >
-                      <View className="flex space-y-2 items-center">
-                        <Avatar name="O" />
-                        <Text className="text-white font-semibold">orbulo</Text>
-                      </View>
-                    </Pressable>
-                    <Pressable
-                      onPress={() => {
-                        setProfileUser({
-                          address: "0x123",
-                          username: "orbulo",
-                        });
-                        setProfileUserTransactions([]);
-                        router.push("/app/profile-modal");
-                      }}
-                    >
-                      <View className="flex space-y-2 items-center">
-                        <Avatar name="O" />
-                        <Text className="text-white font-semibold">orbulo</Text>
-                      </View>
-                    </Pressable>
-                    <Pressable
-                      onPress={() => {
-                        setProfileUser({
-                          address: "0x123",
-                          username: "orbulo",
-                        });
-                        setProfileUserTransactions([]);
-                        router.push("/app/profile-modal");
-                      }}
-                    >
-                      <View className="flex space-y-2 items-center">
-                        <Avatar name="O" />
-                        <Text className="text-white font-semibold">orbulo</Text>
-                      </View>
-                    </Pressable>
+                    {transactions
+                      .filter((payment) => payment.payeeId !== user?.id)
+                      .map((payment, index) => (
+                        <Pressable
+                          onPress={() => {
+                            setProfileUser({
+                              address: payment.payee.address,
+                              username: payment.payee.username,
+                            });
+                            setProfileUserTransactions([]);
+                            router.push("/app/profile-modal");
+                          }}
+                        >
+                          <View className="flex space-y-2 items-center">
+                            <Avatar name={payment.payee.username} />
+                            <Text className="text-white font-semibold">
+                              {payment.payee.username}
+                            </Text>
+                          </View>
+                        </Pressable>
+                      ))}
                   </>
                 )}
 
-                {transactions.length === 0 && (
+                {transactions.filter((payment) => payment.payeeId !== user?.id)
+                  .length === 0 && (
                   <View className="flex flex-col items-center justify-center">
                     <Text className="text-gray-400 text-center">
                       No recent payees available.

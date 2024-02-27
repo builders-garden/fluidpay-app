@@ -1,20 +1,56 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { Text, TextInput, View } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Pressable, Text, TextInput, View } from "react-native";
+import { Appbar, Badge, Searchbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
-import Avatar from "../../components/avatar";
-import TimeAgo from "@andordavoti/react-native-timeago";
-import { ArrowLeft, Share, Trash2 } from "lucide-react-native";
+import { ArrowLeft, Search, Trash2 } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { useState } from "react";
+import { getUsers, updateGroup } from "../../lib/api";
+import Avatar from "../../components/avatar";
 
 export default function GroupSettingsModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
+  console.log(user?.token);
   const { group } = useLocalSearchParams();
-  const data = JSON.parse(group as string);
+  const [data, setData] = useState<any>(JSON.parse(group as string));
   const [groupName, setGroupName] = useState(data.name);
+  const [results, setResults] = useState<any[]>([]);
+  const [username, setUsername] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [addedMembers, setAddedMembers] = useState<any[]>([]);
+  const members = data.members.filter(
+    (member: any) => member.user.id !== user?.id
+  );
+
+  const onChangeText = async (text: string) => {
+    setSearchQuery(text);
+    if (text) {
+      // const docs = await getDocs()
+      const users = await getUsers(user!.token, {
+        limit: 10,
+        query: text,
+        page: 0,
+      });
+      setResults(users);
+    } else {
+      setResults([]);
+    }
+  };
+
+  const update = async () => {
+    const updateGroupData = {
+      name: groupName,
+      memberIds: [
+        ...data.members.map((m: any) => m.user.id),
+        ...addedMembers.map((m: any) => m.id),
+      ],
+    };
+    await updateGroup(user!.token, { id: data.id }, updateGroupData);
+
+    router.back();
+  };
 
   return (
     <SafeAreaView
@@ -60,16 +96,107 @@ export default function GroupSettingsModal() {
             autoCorrect={false}
             placeholder="Your new group name"
             clearButtonMode="always"
-            className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg placeholder-[#8F8F91]"
+            className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-xl placeholder-[#8F8F91]"
           />
+          <View className="bg-[#232324] p-4 rounded-xl flex flex-col space-y-4">
+            {data.members.map((member: any) => (
+              <View className="flex flex-row items-center justify-between">
+                <View className="flex flex-row space-x-2">
+                  <Avatar name={member.user.username.charAt(0).toUpperCase()} />
+                  <View className="flex flex-col items-start justify-center">
+                    <Text className="text-white font-semibold text-xl">
+                      {member.user.displayName}
+                    </Text>
+                    <Text className="text-[#8F8F91] font-semibold">
+                      @{member.user.username}
+                    </Text>
+                  </View>
+                </View>
+                {member.user.id !== user?.id && (
+                  <Pressable
+                    onPress={() => {
+                      const updatedMembers = data.members.filter(
+                        (m: any) => m.user.id !== member.user.id
+                      );
+                      setData({ ...data, members: updatedMembers });
+                    }}
+                  >
+                    <Text className="text-[#8F8F91] font-semibold">Remove</Text>
+                  </Pressable>
+                )}
+              </View>
+            ))}
+          </View>
+          <Text className="text-white text-xl font-semibold mt-2">
+            Invite members
+          </Text>
+          <Searchbar
+            placeholder="@username"
+            onChangeText={onChangeText}
+            value={searchQuery}
+            className="bg-[#232324] !text-white mb-1"
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
+            placeholderTextColor={"#8F8F91"}
+            icon={() => <Search size={20} color={"white"} />}
+            // traileringIcon={() => <QrCode size={20} color={"white"} />}
+            theme={{ colors: { onSurfaceVariant: "#FFF" } }}
+          />
+          <View className="flex flex-row space-x-4">
+            {addedMembers.map((user: any) => (
+              <Pressable
+                onPress={() =>
+                  setAddedMembers(
+                    addedMembers.filter((member: any) => member.id !== user.id)
+                  )
+                }
+              >
+                <View className="flex flex-col space-y-2 items-center justify-center">
+                  <Avatar name={user.username.charAt(0).toUpperCase()} />
+                  <Text className="text-white font-semibold">
+                    {user.username}
+                  </Text>
+                </View>
+                <Badge className={"absolute -top-1 -right-2"} visible={true}>
+                  -
+                </Badge>
+              </Pressable>
+            ))}
+            {results
+              .filter(
+                (user: any) =>
+                  members.filter((member: any) => member.user.id === user.id)
+                    .length === 0 &&
+                  addedMembers.filter((member: any) => member.id === user.id)
+                    .length === 0
+              )
+              .map((user: any) => (
+                <Pressable
+                  onPress={() => {
+                    setAddedMembers(addedMembers.concat([user]));
+                  }}
+                >
+                  <View className="flex flex-col space-y-2 items-center justify-center">
+                    <Avatar name={user.username.charAt(0).toUpperCase()} />
+                    <Text className="text-white font-semibold">
+                      {user.username}
+                    </Text>
+                  </View>
+                  <Badge
+                    className={"absolute -top-1 -right-2"}
+                    style={{ backgroundColor: "green" }}
+                    visible={true}
+                  >
+                    +
+                  </Badge>
+                </Pressable>
+              ))}
+          </View>
         </View>
 
         <SafeAreaView className="mt-auto">
-          <AppButton
-            text="Save"
-            variant="primary"
-            onPress={() => router.back()}
-          />
+          <AppButton text="Save" variant="primary" onPress={() => update()} />
         </SafeAreaView>
       </View>
     </SafeAreaView>

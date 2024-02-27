@@ -41,7 +41,7 @@ export default function AddMoneyModal() {
         <Text className="text-white font-semibold mt-2">
           Send USDC to your address below.
         </Text>
-        <View className="bg-[#161618] rounded-lg flex flex-row justify-between mt-4 px-4 py-2">
+        <View className="bg-[#232324] rounded-lg flex flex-row justify-between mt-4 px-4 py-2">
           <Text className="text-[#8F8F91] text-ellipsis">
             {shortenAddress(user?.address)}
           </Text>

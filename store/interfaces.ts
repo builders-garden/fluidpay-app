@@ -1,5 +1,3 @@
-import { providers } from "ethers";
-
 export interface SimpleUser {
   address: string;
   username: string;
@@ -19,12 +17,12 @@ export interface DBUser {
 }
 
 export interface DBTransaction {
-  receipt: providers.TransactionReceipt | null;
-  from: string;
-  fromUsername: string;
-  to: string;
-  toUsername: string;
-  amount: string;
+  amount: number;
   createdAt: string;
-  txHash: string;
+  description: string;
+  id: number;
+  payeeId: number;
+  payerId: number;
+  payer: DBUser;
+  payee: DBUser;
 }

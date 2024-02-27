@@ -1,16 +1,19 @@
 import { router } from "expo-router";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, Search } from "lucide-react-native";
 import { useState } from "react";
 import { SafeAreaView, TextInput, Text, View } from "react-native";
-import { Appbar } from "react-native-paper";
+import { Appbar, Searchbar } from "react-native-paper";
 import AppButton from "../../components/app-button";
-import { createGroup } from "../../lib/api";
+import { createGroup, getUsers } from "../../lib/api";
 import { useGroupsStore, useUserStore } from "../../store";
 
 export default function CreateGroupPage() {
   const [groupName, setGroupName] = useState("");
   const addGroup = useGroupsStore((state) => state.addGroup);
   const user = useUserStore((state) => state.user);
+  const [results, setResults] = useState<any[]>([]);
+  const [username, setUsername] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const createNewGroup = async () => {
     if (groupName.length > 3) {
@@ -20,6 +23,22 @@ export default function CreateGroupPage() {
       });
       addGroup(group);
       router.back();
+    }
+  };
+
+  const onChangeText = async (text: string) => {
+    setSearchQuery(text);
+    if (text) {
+      // const docs = await getDocs()
+      const users = await getUsers(user!.token, {
+        limit: 10,
+        query: text,
+        page: 0,
+      });
+      console.log(users);
+      setResults(users);
+    } else {
+      setResults([]);
     }
   };
 
@@ -57,7 +76,25 @@ export default function CreateGroupPage() {
             autoComplete="off"
             autoCorrect={false}
             placeholder="Your new group name"
+            placeholderTextColor={"#8F8F91"}
             className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg placeholder-[#8F8F91]"
+          />
+          <Text className="text-white text-xl font-semibold mt-2">
+            Add one or more members
+          </Text>
+
+          <Searchbar
+            placeholder="@username"
+            onChangeText={onChangeText}
+            value={searchQuery}
+            className="bg-white/10 !text-white mb-1"
+            autoCapitalize="none"
+            autoComplete="off"
+            autoCorrect={false}
+            placeholderTextColor={"#8F8F91"}
+            icon={() => <Search size={20} color={"white"} />}
+            // traileringIcon={() => <QrCode size={20} color={"white"} />}
+            theme={{ colors: { onSurfaceVariant: "#FFF" } }}
           />
         </View>
         <View className="px-4">

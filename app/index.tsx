@@ -10,10 +10,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { useEffect } from "react";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { firebaseAuth, firebaseFirestore } from "../firebaseConfig";
 import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
-import { doc, getDoc } from "firebase/firestore";
 import {
   getAuthNonce,
   getGroups,
@@ -37,7 +34,7 @@ const Home = () => {
   const signer = useSigner();
   const setUser = useUserStore((state) => state.setUser);
   const setTransactions = useTransactionsStore(
-    (state) => state.setTransactions,
+    (state) => state.setTransactions
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
 
@@ -82,9 +79,9 @@ const Home = () => {
         </Text>
       </View>
       {/* <Text className="text-white text-4xl font-bold mb-4">Ghost</Text> */}
-      {/* {connectionStatus === "connecting" && (
-        <ActivityIndicator animating={true} color={"#667DFF"} />
-      )} */}
+      {connectionStatus === "connecting" && (
+        <ActivityIndicator animating={true} color={"#0061FF"} />
+      )}
       <View className="flex-1" />
       {connectionStatus === "disconnected" && (
         <ConnectWallet

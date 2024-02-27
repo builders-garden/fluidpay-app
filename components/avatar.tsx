@@ -1,5 +1,5 @@
-import { View, Text } from "react-native";
 import { Avatar } from "react-native-paper";
+import { colorHash } from "../lib/utils";
 
 export default function CruminaAvatar({
   name,
@@ -16,6 +16,12 @@ export default function CruminaAvatar({
       size={size}
       labelStyle={{ fontWeight: "bold", color: "white" }}
       color={color}
+      theme={{
+        colors: {
+          primary: colorHash(name).hex,
+          text: "#FFF",
+        },
+      }}
     />
   );
 }

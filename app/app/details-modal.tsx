@@ -20,7 +20,7 @@ export default function DetailsModal() {
   const { data: balanceData = BigNumber.from(0) } = useContractRead(
     contract,
     "balanceOf",
-    [user?.address],
+    [user?.address]
   );
 
   return (
@@ -68,7 +68,7 @@ export default function DetailsModal() {
             source={require("../../images/usdc.png")}
           />
         </View>
-        <View className="bg-[#161618] w-full mx-auto rounded-xl p-4 space-y-4">
+        <View className="bg-[#232324] w-full mx-auto rounded-xl p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
             <View className="flex space-y-2">
               <Text className="text-gray-400 text-lg font-medium">

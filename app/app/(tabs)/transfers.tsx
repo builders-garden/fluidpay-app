@@ -1,27 +1,15 @@
 import { Link, router } from "expo-router";
-import {
-  and,
-  collection,
-  getDocs,
-  limit,
-  or,
-  orderBy,
-  query,
-  where,
-} from "firebase/firestore";
 import { useState } from "react";
 import { View, Text, Pressable } from "react-native";
 import { Searchbar } from "react-native-paper";
-import { firebaseFirestore } from "../../../firebaseConfig";
 import Avatar from "../../../components/avatar";
 import {
   useSendStore,
   useTransactionsStore,
   useUserStore,
 } from "../../../store";
-import { ChevronRight, QrCode, Search, Plus } from "lucide-react-native";
+import { ChevronRight, Search } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
 import { getUsers } from "../../../lib/api";
 
@@ -106,11 +94,7 @@ export default function Send() {
             ))}
           </View>
         ) : (
-          <View className="flex-1 flex-col items-center justify-center">
-            <Text className="text-white font-semibold text-lg">
-              No recent transactions
-            </Text>
-          </View>
+          <View className="flex-1 flex-col items-center justify-center"></View>
         )}
       </View>
     </SafeAreaView>

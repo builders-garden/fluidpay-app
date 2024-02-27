@@ -1,16 +1,16 @@
 import { Pressable, View, Text } from "react-native";
-import { DBTransaction } from "../store/interfaces";
 import TimeAgo from "@andordavoti/react-native-timeago";
 import { router } from "expo-router";
 import { useProfileStore } from "../store/use-profile-store";
 import { useUserStore } from "../store/use-user-store";
+import { CATEGORIES, CATEGORIES_EMOJI } from "../constants/categories";
 import Avatar from "./avatar";
 
-export default function TransactionItem({
-  transaction,
+export default function ExpenseItem({
+  expense,
   index,
 }: {
-  transaction: DBTransaction;
+  expense: any;
   index: number;
 }) {
   const user = useUserStore((state) => state.user);
@@ -18,9 +18,7 @@ export default function TransactionItem({
   const setProfileUserTransactions = useProfileStore(
     (state) => state.setProfileUserTransactions
   );
-  console.log(transaction);
-  const { createdAt, payee, payer, payeeId, payerId, amount } = transaction;
-  const isFrom = payerId === user?.id;
+  const { createdAt, paidBy, amount, description, category } = expense;
   return (
     <View key={`transaction-${index}`}>
       <View className="flex flex-row items-center justify-between py-3">
@@ -29,47 +27,32 @@ export default function TransactionItem({
             key={`profile-event-${index}`}
             onPress={async () => {
               setProfileUser({
-                address: isFrom ? payee.address : payer.address,
-                username: isFrom ? payee.username : payer.username,
+                address: paidBy.address,
+                username: paidBy.username,
               });
               setProfileUserTransactions([]);
               router.push("/app/profile-modal");
             }}
           >
             <Avatar
-              name={(isFrom ? payee.username : payer.username)
-                .charAt(0)
-                .toUpperCase()}
+              name={CATEGORIES_EMOJI[category as keyof typeof CATEGORIES]}
             />
           </Pressable>
 
           <Pressable onPress={() => router.push("/app/tx-detail-modal")}>
             <View className="flex flex-col">
               <Text className="text-white font-semibold text-lg">
-                {isFrom ? payee.username : payer.username}
+                {description}
               </Text>
-              {/* <Pressable
-              key={`event-${index}`}
-              onPress={async () => {
-                await WebBrowser.openBrowserAsync(
-                  `${sepolia.explorers[0].url}/tx/${txHash}`
-                );
-              }}
-            > */}
               <Text className="text-[#8F8F91]">
-                <TimeAgo dateTo={new Date(createdAt)} />
+                {paidBy.username} - <TimeAgo dateTo={new Date(createdAt)} />
               </Text>
-              {/* </Pressable> */}
             </View>
           </Pressable>
         </View>
         <View className="flex flex-col items-end justify-center">
-          <Text
-            className={`${
-              !isFrom ? "text-emerald-500" : "text-red-500"
-            } font-semibold text-lg`}
-          >
-            {!isFrom ? "+" : "-"} ${amount.toFixed(2)}
+          <Text className={`font-semibold text-lg text-white`}>
+            {amount.toFixed(2)}$
           </Text>
         </View>
       </View>

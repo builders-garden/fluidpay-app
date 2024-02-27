@@ -39,19 +39,18 @@ export default function SendModal() {
     : (0).toFixed(2);
 
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
-  console.log(amount);
 
   if (!sendUser) {
     return <View className="flex-1 flex-col px-4 bg-black"></View>;
   }
 
   return (
-    <View className="flex-1 flex-col bg-black">
+    <View className="flex-1 flex-col bg-[#161618]">
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-black text-white"
+        className="bg-[#161618] text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}

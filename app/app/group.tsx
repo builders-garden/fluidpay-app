@@ -1,103 +1,60 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { ArrowLeft, Cog } from "lucide-react-native";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ScrollView, Text, View } from "react-native";
-import { Appbar, Avatar } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import AppButton from "../../components/app-button";
 import { SegmentSlider } from "../../components/segment-slider";
-import TransactionItem from "../../components/transaction-item";
+import {
+  getGroupBalances,
+  getGroupById,
+  getGroupExpenses,
+} from "../../lib/api";
+import { useUserStore } from "../../store";
+import ExpenseItem from "../../components/expense-item";
+import Avatar from "../../components/avatar";
 
 type GroupOptions = "Expenses" | "Balances";
 
 export default function GroupPage() {
-  const { group } = useLocalSearchParams();
-  const data = JSON.parse(group as string);
+  const { group: localGroup } = useLocalSearchParams();
+  const [data, setData] = useState<any>(JSON.parse(localGroup as string));
+  const user = useUserStore((state) => state.user);
 
   const [tab, setTab] = useState<GroupOptions>("Expenses");
   const tabs = useRef(["Expenses", "Balances"] as GroupOptions[]).current;
+  const navigation = useNavigation();
 
-  const transactions = [
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "1",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "2",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-  ];
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [balances, setBalances] = useState<any[]>([]);
+  console.log(transactions);
+
+  useEffect(() => {
+    const refresh = async () => {
+      await Promise.all([fetchGroup(), fetchExpenses(), fetchBalances()]);
+    };
+
+    navigation.addListener("focus", refresh);
+
+    return () => {
+      navigation.removeListener("focus", refresh);
+    };
+  }, []);
+
+  const fetchGroup = async () => {
+    const group = await getGroupById(user!.token, { id: data.id });
+    setData(group);
+  };
+
+  const fetchExpenses = async () => {
+    const expenses = await getGroupExpenses(user!.token, { id: data.id });
+    setTransactions(expenses);
+  };
+
+  const fetchBalances = async () => {
+    const balances = await getGroupBalances(user!.token, { id: data.id });
+    setBalances(balances);
+  };
 
   return (
     <View className="flex-1 flex-col bg-black">
@@ -124,7 +81,7 @@ export default function GroupPage() {
           onPress={() =>
             router.push({
               pathname: "/app/group-settings-modal",
-              params: { group },
+              params: { group: JSON.stringify(data) },
             })
           }
           color="#fff"
@@ -139,12 +96,7 @@ export default function GroupPage() {
               className={index === 0 ? "" : "-ml-6"}
               key={`member-${index}-${data.name}`}
             >
-              <Avatar.Text
-                label={member.username.charAt(0).toUpperCase()}
-                size={48}
-                labelStyle={{ fontWeight: "bold" }}
-                // color="#FFFFFF"
-              />
+              <Avatar name={member.user.username.charAt(0).toUpperCase()} />
             </View>
           ))}
         </View>
@@ -155,7 +107,7 @@ export default function GroupPage() {
             onPress={() =>
               router.push({
                 pathname: `/app/create-expense-modal`,
-                params: { group },
+                params: { group: JSON.stringify(data) },
               })
             }
           />
@@ -165,11 +117,11 @@ export default function GroupPage() {
           <SegmentSlider {...{ tabs, tab, setTab }} />
         </View>
         {tab === "Expenses" && (
-          <ScrollView className="bg-[#161618] w-full mx-auto h-[450px] rounded-xl px-4 space-y-4 mt-8 pb-8">
+          <ScrollView className="bg-[#161618] w-full mx-auto h-auto rounded-xl px-4 space-y-4 mt-8">
             {transactions.map((transaction, index) => (
-              <TransactionItem
-                key={index}
-                transaction={transaction}
+              <ExpenseItem
+                key={`expense-${index}`}
+                expense={transaction}
                 index={index}
               />
             ))}
