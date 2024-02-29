@@ -18,7 +18,6 @@ export default function TransactionItem({
   const setProfileUserTransactions = useProfileStore(
     (state) => state.setProfileUserTransactions
   );
-  console.log(transaction);
   const { createdAt, payee, payer, payeeId, payerId, amount } = transaction;
   const isFrom = payerId === user?.id;
   return (
@@ -29,6 +28,7 @@ export default function TransactionItem({
             key={`profile-event-${index}`}
             onPress={async () => {
               setProfileUser({
+                id: isFrom ? payeeId : payerId,
                 address: isFrom ? payee.address : payer.address,
                 username: isFrom ? payee.username : payer.username,
               });
@@ -43,7 +43,14 @@ export default function TransactionItem({
             />
           </Pressable>
 
-          <Pressable onPress={() => router.push("/app/tx-detail-modal")}>
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/app/tx-detail-modal",
+                params: { transaction: JSON.stringify(transaction) },
+              })
+            }
+          >
             <View className="flex flex-col">
               <Text className="text-white font-semibold text-lg">
                 {isFrom ? payee.username : payer.username}

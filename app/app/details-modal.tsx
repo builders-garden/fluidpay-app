@@ -12,6 +12,9 @@ import { ArrowLeft, Copy } from "lucide-react-native";
 import { BigNumber } from "ethers";
 import { USDC_ADDRESS } from "../../constants/sepolia";
 
+import * as Clipboard from "expo-clipboard";
+import { TouchableOpacity } from "react-native-gesture-handler";
+
 export default function DetailsModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
@@ -74,9 +77,13 @@ export default function DetailsModal() {
               <Text className="text-gray-400 text-lg font-medium">
                 Beneficiary
               </Text>
-              <Text className="text-[#0061FF] text-lg font-medium">
-                {user?.username}
-              </Text>
+              <TouchableOpacity
+                onPress={() => Clipboard.setStringAsync(user!.username)}
+              >
+                <Text className="text-[#0061FF] text-lg font-medium">
+                  {user?.username}
+                </Text>
+              </TouchableOpacity>
             </View>
 
             <Copy size={20} color="#0061FF" />
@@ -89,7 +96,11 @@ export default function DetailsModal() {
               </Text>
             </View>
 
-            <Copy size={20} color="#0061FF" />
+            <TouchableOpacity
+              onPress={() => Clipboard.setStringAsync(user!.address)}
+            >
+              <Copy size={20} color="#0061FF" />
+            </TouchableOpacity>
           </View>
         </View>
       </View>

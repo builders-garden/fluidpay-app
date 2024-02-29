@@ -12,6 +12,7 @@ import { ChevronRight, Search } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionItem from "../../../components/transaction-item";
 import { getUsers } from "../../../lib/api";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function Send() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -88,11 +89,11 @@ export default function Send() {
             </View>
           </>
         ) : transactions.length > 0 ? (
-          <View className="bg-[#161618] w-full mx-auto rounded-2xl px-4 mt-8">
+          <ScrollView className="bg-[#161618] w-full mx-auto rounded-2xl px-4 mt-8">
             {transactions.map((transaction, index) => (
               <TransactionItem transaction={transaction} index={index} />
             ))}
-          </View>
+          </ScrollView>
         ) : (
           <View className="flex-1 flex-col items-center justify-center"></View>
         )}

@@ -6,6 +6,9 @@ import { useUserStore } from "../../store";
 import AppButton from "../../components/app-button";
 import { ArrowLeft, Copy } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Share } from "react-native";
+import * as Clipboard from "expo-clipboard";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function RequestModal() {
   const isPresented = router.canGoBack();
@@ -50,23 +53,39 @@ export default function RequestModal() {
           <Text className="text-gray-400 text-lg">
             Share your link so anyone can pay you
           </Text>
-          <View className="flex flex-row items-center space-x-2">
-            <Copy size={20} color="#0061FF" />
-            <Text className="text-[#0061FF] font-bold text-lg">
-              crumina.xyz/{user?.username}
-            </Text>
-          </View>
+          <TouchableOpacity
+            onPress={async () => {
+              await Clipboard.setStringAsync(
+                `https://crumina.builders.garden/${user?.username}`
+              );
+            }}
+          >
+            <View className="flex flex-row items-center space-x-2">
+              <Copy size={20} color="#0061FF" />
+              <Text className="text-[#0061FF] font-bold text-lg">
+                crumina.builders.garden/{user?.username}
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
         <View className="flex flex-grow" />
         <SafeAreaView className="flex flex-col mb-24">
-          <View className="mb-4">
-            <AppButton text="Share link" variant="primary" onPress={() => {}} />
+          <View>
+            <AppButton
+              text="Share link"
+              variant="primary"
+              onPress={async () => {
+                await Share.share({
+                  message: `gm! join me on crumina using this link: https://crumina.builders.garden/${user?.username}`,
+                });
+              }}
+            />
           </View>
-          <AppButton
+          {/* <AppButton
             text="Request a specific amount"
             variant="ghost"
             onPress={() => {}}
-          />
+          /> */}
         </SafeAreaView>
       </View>
     </SafeAreaView>

@@ -1,4 +1,5 @@
 export interface SimpleUser {
+  id: number;
   address: string;
   username: string;
 }

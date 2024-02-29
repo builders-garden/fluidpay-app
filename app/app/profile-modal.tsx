@@ -5,103 +5,43 @@ import Avatar from "../../components/avatar";
 import { shortenAddress } from "@thirdweb-dev/react-native";
 import CircularButton from "../../components/circular-button";
 import { ScrollView } from "react-native-gesture-handler";
-import TransactionItem from "../../components/transaction-item";
 import { useProfileStore } from "../../store/use-profile-store";
 import { ArrowLeft } from "lucide-react-native";
-import { useSendStore } from "../../store";
-import { DBUser } from "../../store/interfaces";
+import { useSendStore, useUserStore } from "../../store";
+import { useEffect, useState } from "react";
+import { getPayments, getUserByIdUsernameOrAddress } from "../../lib/api";
+import TransactionItem from "../../components/transaction-item";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
+  const currentUser = useUserStore((state) => state.user);
   const user = useProfileStore((state) => state.user);
   const setProfileUser = useProfileStore((state) => state.setProfileUser);
   const setSendUser = useSendStore((state) => state.setSendUser);
+  const [profileUser, setUser] = useState<any>(undefined);
+  const [transactions, setTransaction] = useState<any[]>([]);
 
-  const transactions = [
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "1",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "2",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-    {
-      receipt: null,
-      from: "frankc",
-      fromUsername: "frankc",
-      to: "orbulo",
-      toUsername: "orbulo",
-      amount: "18.46",
-      createdAt: new Date().toISOString(),
-      txHash: "3",
-    },
-  ];
+  useEffect(() => {
+    if (user) {
+      fetchUser();
+    }
+  }, [user]);
 
-  if (!user) {
-    return <View className="flex-1 flex-col px-4 bg-[#201F2D]"></View>;
+  const fetchUser = async () => {
+    const [profile, transactions] = await Promise.all([
+      getUserByIdUsernameOrAddress(currentUser!.token, {
+        idOrUsernameOrAddress: user!.id.toString(),
+      }),
+      getPayments(currentUser!.token, {
+        withProfileId: user?.id,
+      }),
+    ]);
+    setUser(profile);
+    setTransaction(transactions);
+  };
+
+  if (!profileUser) {
+    return <View className="flex-1 flex-col px-4 bg-black"></View>;
   }
 
   return (
@@ -129,29 +69,32 @@ export default function ProfileModal() {
       </Appbar.Header>
       <View className="flex flex-col justify-between px-4">
         <View className="flex flex-col items-center mt-4 space-y-3">
-          <Avatar name={user?.username.charAt(0).toUpperCase()} size={64} />
+          <Avatar
+            name={profileUser?.username.charAt(0).toUpperCase()}
+            size={64}
+          />
           <Text className="text-white text-4xl text-center font-semibold">
-            @{user?.username}
+            @{profileUser?.username}
           </Text>
           <Text className="text-[#8F8F91] text-xl text-ellipsis">
-            {shortenAddress(user?.address, false)}
+            {shortenAddress(profileUser?.address, false)}
           </Text>
         </View>
 
         <View className="flex flex-row items-center justify-center space-x-8 py-8">
-          <View>
+          {/* <View>
             <CircularButton
               text="Request"
               icon="Download"
               onPress={() => router.push("/app/request-modal")}
             />
-          </View>
+          </View> */}
           <View>
             <CircularButton
               text="Send"
               icon="Send"
               onPress={() => {
-                setSendUser({ address: "0x123", username: "orbulo" } as DBUser);
+                setSendUser(profileUser);
                 router.push("/app/send-modal");
               }}
             />
@@ -163,13 +106,17 @@ export default function ProfileModal() {
             <Text className="text-gray-400 text-lg font-medium">
               Total sent
             </Text>
-            <Text className="text-white text-lg font-medium">$546,00</Text>
+            <Text className="text-white text-lg font-medium">
+              ${profileUser.paymentInfo.out.toFixed(2)}
+            </Text>
           </View>
           <View className="flex flex-row items-center justify-between">
             <Text className="text-gray-400 text-lg font-medium">
               Total received
             </Text>
-            <Text className="text-white text-lg font-medium">$150,00</Text>
+            <Text className="text-white text-lg font-medium">
+              ${profileUser.paymentInfo.in.toFixed(2)}
+            </Text>
           </View>
         </View>
 

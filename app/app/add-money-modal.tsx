@@ -33,16 +33,16 @@ export default function AddMoneyModal() {
           titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
-      <View className="flex px-4 space-y-4">
+      <View className="flex px-4 space-y-2">
         <Text className="text-3xl text-white font-bold">Add money</Text>
         <Text className="text-[#8F8F91] font-semibold mt-8">
           Add money to account
         </Text>
-        <Text className="text-white font-semibold mt-2">
+        <Text className="text-white font-semibold">
           Send USDC to your address below.
         </Text>
-        <View className="bg-[#232324] rounded-lg flex flex-row justify-between mt-4 px-4 py-2">
-          <Text className="text-[#8F8F91] text-ellipsis">
+        <View className="bg-[#232324] rounded-xl flex flex-row justify-between items-center mt-4 px-4 py-2">
+          <Text className="text-[#8F8F91] text-lg text-ellipsis">
             {shortenAddress(user?.address)}
           </Text>
           <Pressable

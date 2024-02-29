@@ -25,11 +25,13 @@ export type AuthSignResponse = {
  * @returns {Promise<AuthNonceResponse>} the nonce response from server
  */
 export const getAuthNonce = async (): Promise<AuthNonceResponse> =>
-  ky.get("http://localhost:3000/auth/nonce").json<AuthNonceResponse>();
+  ky
+    .get("https://crumina-api.builders.garden/auth/nonce")
+    .json<AuthNonceResponse>();
 
 export const signIn = async (body: AuthSignInBody): Promise<AuthSignResponse> =>
   ky
-    .post("http://localhost:3000/auth/sign-in", { json: body })
+    .post("https://crumina-api.builders.garden/auth/sign-in", { json: body })
     .json<AuthSignResponse>();
 
 /**
@@ -41,7 +43,6 @@ export type CreatePaymentBody = {
   payeeId: number;
   amount: number;
   description: string;
-  createdAt: string;
 };
 
 export type PaymentByIdParams = {
@@ -79,7 +80,7 @@ export const createPayment = async (
   body: CreatePaymentBody
 ): Promise<PaymentByIdResponse> =>
   ky
-    .post("http://localhost:3000/payments", {
+    .post("https://crumina-api.builders.garden/payments", {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -90,7 +91,7 @@ export const getPaymentById = async (
   params: PaymentByIdParams
 ): Promise<PaymentByIdResponse> =>
   ky
-    .get(`http://localhost:3000/payments/${params.id}`, {
+    .get(`https://crumina-api.builders.garden/payments/${params.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json<PaymentByIdResponse>();
@@ -100,7 +101,7 @@ export const getPayments = async (
   query: PaymentsQuery
 ): Promise<PaymentsQueryResponse[]> =>
   ky
-    .get("http://localhost:3000/payments", {
+    .get("https://crumina-api.builders.garden/payments", {
       searchParams: query,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -144,7 +145,7 @@ export type GetUsersQuery = {
 
 export const getMe = async (token: string): Promise<UsersMeResponse> =>
   ky
-    .get("http://localhost:3000/users/me", {
+    .get("https://crumina-api.builders.garden/users/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json<UsersMeResponse>();
@@ -154,7 +155,7 @@ export const updateMe = async (
   body: UpdateMeBody
 ): Promise<UsersMeResponse> =>
   ky
-    .put("http://localhost:3000/users/me", {
+    .put("https://crumina-api.builders.garden/users/me", {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -165,9 +166,12 @@ export const getUserByIdUsernameOrAddress = async (
   params: UsersByIdUsernameOrAddressParams
 ): Promise<UsersByIdUsernameOrAddressResponse> =>
   ky
-    .get(`http://localhost:3000/users/${params.idOrUsernameOrAddress}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    .get(
+      `https://crumina-api.builders.garden/users/${params.idOrUsernameOrAddress}?withPaymentInfo=true`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    )
     .json<UsersByIdUsernameOrAddressResponse>();
 
 export const getUsers = async (
@@ -175,7 +179,7 @@ export const getUsers = async (
   query: GetUsersQuery
 ): Promise<UsersByIdUsernameOrAddressResponse[]> =>
   ky
-    .get("http://localhost:3000/users", {
+    .get("https://crumina-api.builders.garden/users", {
       searchParams: query,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -264,7 +268,7 @@ export const getGroupById = async (
   params: GetGroupByIdParams
 ): Promise<GetGroupByIdResponse> =>
   ky
-    .get(`http://localhost:3000/groups/${params.id}`, {
+    .get(`https://crumina-api.builders.garden/groups/${params.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -273,7 +277,7 @@ export const getGroups = async (
   token: string
 ): Promise<GetGroupsQueryResponse[]> =>
   ky
-    .get("http://localhost:3000/groups", {
+    .get("https://crumina-api.builders.garden/groups", {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -283,7 +287,7 @@ export const createGroup = async (
   body: CreateGroupBody
 ): Promise<GetGroupByIdResponse> =>
   ky
-    .post("http://localhost:3000/groups", {
+    .post("https://crumina-api.builders.garden/groups", {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -295,7 +299,7 @@ export const addUsersToGroup = async (
   body: AddUsersToGroupBody
 ): Promise<{ message: string }> =>
   ky
-    .post(`http://localhost:3000/groups/${params.id}/users`, {
+    .post(`https://crumina-api.builders.garden/groups/${params.id}/users`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -307,7 +311,7 @@ export const removeUsersFromGroup = async (
   body: AddUsersToGroupBody
 ): Promise<{ message: string }> =>
   ky
-    .delete(`http://localhost:3000/groups/${params.id}/users`, {
+    .delete(`https://crumina-api.builders.garden/groups/${params.id}/users`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -319,7 +323,7 @@ export const updateGroup = async (
   body: UpdateGroupBody
 ): Promise<GetGroupByIdResponse> =>
   ky
-    .post(`http://localhost:3000/groups/${params.id}`, {
+    .post(`https://crumina-api.builders.garden/groups/${params.id}`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -330,7 +334,7 @@ export const deleteGroup = async (
   params: GetGroupByIdParams
 ): Promise<GetGroupByIdResponse> =>
   ky
-    .delete(`http://localhost:3000/groups/${params.id}`, {
+    .delete(`https://crumina-api.builders.garden/groups/${params.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -340,7 +344,7 @@ export const deleteGroupExpense = async (
 ): Promise<any> =>
   ky
     .delete(
-      `http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`
+      `https://crumina-api.builders.garden/groups/${params.expenseId}/expenses/${params.expenseId}`
     )
     .json();
 
@@ -349,7 +353,7 @@ export const getGroupExpenses = async (
   params: GetGroupExpensesByIdParams
 ): Promise<any> =>
   ky
-    .get(`http://localhost:3000/groups/${params.id}/expenses`, {
+    .get(`https://crumina-api.builders.garden/groups/${params.id}/expenses`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -360,7 +364,7 @@ export const getGroupExpenseById = async (
 ): Promise<any> =>
   ky
     .get(
-      `http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`,
+      `https://crumina-api.builders.garden/groups/${params.expenseId}/expenses/${params.expenseId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -372,7 +376,7 @@ export const getGroupBalances = async (
   params: GetUserExpensesInGroupParams
 ): Promise<any> =>
   ky
-    .get(`http://localhost:3000/groups/${params.id}/balances`, {
+    .get(`https://crumina-api.builders.garden/groups/${params.id}/balances`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -383,7 +387,7 @@ export const createGroupExpense = async (
   body: CreateGroupExpenseBody
 ): Promise<any> =>
   ky
-    .post(`http://localhost:3000/groups/${params.id}/expenses`, {
+    .post(`https://crumina-api.builders.garden/groups/${params.id}/expenses`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
       throwHttpErrors: false,
@@ -396,7 +400,7 @@ export const updateGroupExpense = async (
 ): Promise<any> =>
   ky
     .put(
-      `http://localhost:3000/groups/${params.expenseId}/expenses/${params.expenseId}`,
+      `https://crumina-api.builders.garden/groups/${params.expenseId}/expenses/${params.expenseId}`,
       { json: body }
     )
     .json();
@@ -417,10 +421,18 @@ export type GetNotificationsQuery = {
 export const getNotifications = async (
   query: GetNotificationsQuery
 ): Promise<any> =>
-  ky.get("http://localhost:3000/notifications", { searchParams: query }).json();
+  ky
+    .get("https://crumina-api.builders.garden/notifications", {
+      searchParams: query,
+    })
+    .json();
 
 export const updateNotification = async (
   id: number,
   body: UpdateNotificationBody
 ): Promise<any> =>
-  ky.put(`http://localhost:3000/notifications/${id}`, { json: body }).json();
+  ky
+    .put(`https://crumina-api.builders.garden/notifications/${id}`, {
+      json: body,
+    })
+    .json();

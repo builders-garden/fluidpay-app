@@ -3,7 +3,7 @@ import {
   useContract,
   useContractRead,
 } from "@thirdweb-dev/react-native";
-import { Link, Redirect } from "expo-router";
+import { Link, Redirect, useNavigation } from "expo-router";
 import { View, Text, Pressable } from "react-native";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
@@ -38,6 +38,19 @@ export default function Home() {
     "balanceOf",
     [user?.address]
   );
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const refresh = async () => {
+      await Promise.all([fetchPayments()]);
+    };
+
+    navigation.addListener("focus", refresh);
+
+    return () => {
+      navigation.removeListener("focus", refresh);
+    };
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -49,6 +62,21 @@ export default function Home() {
     if (!user) return;
     const res = await getPayments(user!.token, { limit: 3 });
     setTransactions(res as any[]);
+  };
+
+  const getUniquePayees = () => {
+    const payees = transactions
+      .filter((payment) => payment.payeeId !== user?.id)
+      .map((payment) => payment.payeeId);
+    const uniqueIds = [...new Set(payees)];
+    const uniquePayees: any[] = [];
+
+    for (const id of uniqueIds) {
+      const payee = transactions.find((payment) => payment.payeeId === id);
+      if (!uniquePayees.includes(payee)) uniquePayees.push(payee);
+    }
+
+    return uniquePayees;
   };
 
   // const { data: balanceData = BigNumber.from(0), refetch: balanceRefetch } =
@@ -226,27 +254,35 @@ export default function Home() {
                 {transactions.filter((payment) => payment.payeeId !== user?.id)
                   .length > 0 && (
                   <>
-                    {transactions
-                      .filter((payment) => payment.payeeId !== user?.id)
-                      .map((payment, index) => (
-                        <Pressable
-                          onPress={() => {
-                            setProfileUser({
-                              address: payment.payee.address,
-                              username: payment.payee.username,
-                            });
-                            setProfileUserTransactions([]);
-                            router.push("/app/profile-modal");
-                          }}
-                        >
-                          <View className="flex space-y-2 items-center">
-                            <Avatar name={payment.payee.username} />
-                            <Text className="text-white font-semibold">
-                              {payment.payee.username}
-                            </Text>
-                          </View>
-                        </Pressable>
-                      ))}
+                    {getUniquePayees().map((payment, index) => (
+                      <Pressable
+                        onPress={() => {
+                          console.log({
+                            id: payment.payeeId,
+                            address: payment.payee.address,
+                            username: payment.payee.username,
+                          });
+                          setProfileUser({
+                            id: payment.payeeId,
+                            address: payment.payee.address,
+                            username: payment.payee.username,
+                          });
+                          setProfileUserTransactions([]);
+                          router.push("/app/profile-modal");
+                        }}
+                      >
+                        <View className="flex space-y-2 items-center">
+                          <Avatar
+                            name={payment.payee.username
+                              .charAt(0)
+                              .toUpperCase()}
+                          />
+                          <Text className="text-white font-semibold">
+                            {payment.payee.username}
+                          </Text>
+                        </View>
+                      </Pressable>
+                    ))}
                   </>
                 )}
 

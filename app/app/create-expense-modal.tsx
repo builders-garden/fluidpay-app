@@ -11,6 +11,7 @@ import Avatar from "../../components/avatar";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
 import { createGroupExpense } from "../../lib/api";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function CreateExpenseModal() {
   const { group } = useLocalSearchParams();
@@ -107,7 +108,7 @@ export default function CreateExpenseModal() {
           </View>
         </View>
         <Text className="text-2xl text-white font-bold">Split among</Text>
-        <View className="rounded-lg flex flex-col space-y-4 bg-[#232324] py-4 px-2 mt-2">
+        <ScrollView className="rounded-lg flex flex-col space-y-4 bg-[#232324] py-4 px-2 mt-2">
           {data?.members?.map((member: any, index: number) => (
             <View className="flex flex-row items-center" key={index}>
               <Checkbox.Android
@@ -128,7 +129,7 @@ export default function CreateExpenseModal() {
               </Text>
             </View>
           ))}
-        </View>
+        </ScrollView>
         <SafeAreaView className="mt-auto">
           <AppButton
             text="Create"
