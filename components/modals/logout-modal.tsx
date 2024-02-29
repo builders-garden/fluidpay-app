@@ -2,8 +2,10 @@ import { Modal, Portal } from "react-native-paper";
 import { Text, View } from "react-native";
 import AppButton from "../app-button";
 import { useDisconnect } from "@thirdweb-dev/react-native";
-import { firebaseAuth } from "../../firebaseConfig";
 import Spacer from "../spacer";
+
+import * as SecureStore from "expo-secure-store";
+import { useUserStore } from "../../store";
 
 export default function LogoutModal({
   visible,
@@ -12,6 +14,7 @@ export default function LogoutModal({
   visible: boolean;
   hideModal: () => void;
 }) {
+  const user = useUserStore((state) => state.user);
   const disconnect = useDisconnect();
   return (
     <Portal>
@@ -27,7 +30,7 @@ export default function LogoutModal({
             text="Confirm logout"
             variant="ghost"
             onPress={async () => {
-              await firebaseAuth.signOut();
+              await SecureStore.deleteItemAsync(`token-${user?.address}`)
               await disconnect();
             }}
           />

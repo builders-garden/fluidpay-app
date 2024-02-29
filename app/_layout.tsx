@@ -65,7 +65,7 @@ export default function AppLayout() {
             smartWallet(
               embeddedWallet({
                 auth: {
-                  options: ["email", "google"],
+                  options: ["email", "google", "apple"],
                   redirectUrl: "crumina://",
                 },
               }),

@@ -9,7 +9,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (5.3.1):
     - ExpoModulesCore
-  - EXBarCodeScanner (12.7.0):
+  - EXBarCodeScanner (12.9.3):
     - EXImageLoader
     - ExpoModulesCore
     - ZXingObjC/OneD
@@ -20,20 +20,20 @@ PODS:
     - ExpoModulesCore
   - EXFont (11.4.0):
     - ExpoModulesCore
-  - EXImageLoader (4.4.0):
+  - EXImageLoader (4.6.0):
     - ExpoModulesCore
     - React-Core
   - EXNotifications (0.20.1):
     - ExpoModulesCore
-  - Expo (49.0.22):
+  - Expo (49.0.23):
     - ExpoModulesCore
   - ExpoClipboard (4.3.1):
     - ExpoModulesCore
   - ExpoDevice (5.4.0):
     - ExpoModulesCore
-  - ExpoDocumentPicker (11.7.0):
+  - ExpoDocumentPicker (11.10.1):
     - ExpoModulesCore
-  - ExpoHaptics (12.6.0):
+  - ExpoHaptics (12.8.1):
     - ExpoModulesCore
   - ExpoHead (0.0.20):
     - ExpoModulesCore
@@ -47,7 +47,7 @@ PODS:
     - React-NativeModulesApple
     - React-RCTAppDelegate
     - ReactCommon/turbomodule/core
-  - ExpoSecureStore (12.5.0):
+  - ExpoSecureStore (12.8.1):
     - ExpoModulesCore
   - ExpoSharing (11.5.0):
     - ExpoModulesCore
@@ -71,9 +71,9 @@ PODS:
     - hermes-engine/Pre-built (= 0.72.4)
   - hermes-engine/Pre-built (0.72.4)
   - libevent (2.1.12)
-  - MMKV (1.2.15):
-    - MMKVCore (~> 1.2.15)
-  - MMKVCore (1.2.15)
+  - MMKV (1.3.3):
+    - MMKVCore (~> 1.3.3)
+  - MMKVCore (1.3.3)
   - OpenSSL-Universal (1.1.2200)
   - RCT-Folly (2021.07.22.00):
     - boost
@@ -379,8 +379,8 @@ PODS:
     - React-Core
   - react-native-get-random-values (1.10.0):
     - React-Core
-  - react-native-mmkv (2.11.0):
-    - MMKV (>= 1.2.13)
+  - react-native-mmkv (2.12.1):
+    - MMKV (>= 1.3.3)
     - React-Core
   - react-native-netinfo (9.5.0):
     - React-Core
@@ -513,7 +513,7 @@ PODS:
     - React-jsi (= 0.72.4)
     - React-logger (= 0.72.4)
     - React-perflogger (= 0.72.4)
-  - RNAWSCognito (6.3.10):
+  - RNAWSCognito (6.3.7):
     - React-Core
   - RNCAsyncStorage (1.17.11):
     - React-Core
@@ -838,22 +838,22 @@ SPEC CHECKSUMS:
   CoinbaseWalletSDKExpo: fc6cc756974827763d7a0decf7140c2902dafca2
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: 042aa2e3f05258a16962ea1a9914bf288db9c9a1
-  EXBarCodeScanner: 296dd50f6c03928d1d71d37ea17473b304cfdb00
+  EXBarCodeScanner: d59fd943cebee3f913ebf4ffde0d05d344da8b78
   EXConstants: ce5bbea779da8031ac818c36bea41b10e14d04e1
   EXFileSystem: f8b838a880254de42a5a7da20ed5ce12e2697c1b
   EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
-  EXImageLoader: 03063370bc06ea1825713d3f55fe0455f7c88d04
+  EXImageLoader: 55080616b2fe9da19ef8c7f706afd9814e279b6b
   EXNotifications: 09394cbd7165f9a4a00a53328aa09bf874bae717
-  Expo: 9060b49fecf07bebf1dd967730d079aa5e750ebe
+  Expo: ba9abdf444dc6d2c05a82c4c1b51a2400beb6167
   ExpoClipboard: 695f274f8e028cd113837f917da40c76850877eb
   ExpoDevice: 1c1b0c9cad96c292c1de73948649cfd654b2b3c0
-  ExpoDocumentPicker: d3b6b0ed2dbbc2f05158e0294dd3f4673f386e5f
-  ExpoHaptics: 604aca02e942d1d43c139cae7cf397b26f85476f
+  ExpoDocumentPicker: 70254802886e29a45d4ad25486e64b6fc9c8f0cc
+  ExpoHaptics: 28a771b630353cd6e8dcf1b1e3e693e38ad7c3c3
   ExpoHead: ac95331e2a45cb94f6aee8ba6b8cb3d0a2cc6817
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoLinearGradient: 5966dd5d49872cc9c104fedc8bbc298b6049b2e8
   ExpoModulesCore: cf14fc49a3d5df3ed3cf2a38fc758d073bfd1c13
-  ExpoSecureStore: 5372610a4bbcf5e50fafbe6f38f8d9c22edf8253
+  ExpoSecureStore: c84ae37d1c36f38524d289c67c3a2e3fc56f1108
   ExpoSharing: 825b2b3fc919a2656f75def0069f584bbd6e359a
   ExpoWebBrowser: 2c788f9c07718a780fe6d8bf2f6195c47609faaa
   EXSplashScreen: c0e7f2d4a640f3b875808ed0b88575538daf6d82
@@ -863,8 +863,8 @@ SPEC CHECKSUMS:
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
   hermes-engine: 81191603c4eaa01f5e4ae5737a9efcf64756c7b2
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  MMKV: 7f34558bbb5a33b0eaefae2de4b6a20a2ffdad6f
-  MMKVCore: ddf41b9d9262f058419f9ba7598719af56c02cd3
+  MMKV: f902fb6719da13c2ab0965233d8963a59416f911
+  MMKVCore: d26e4d3edd5cb8588c2569222cbd8be4231374e9
   OpenSSL-Universal: 6e1ae0555546e604dbc632a2b9a24a9c46c41ef6
   RCT-Folly: 424b8c9a7a0b9ab2886ffe9c3b041ef628fd4fb1
   RCTRequired: c0569ecc035894e4a68baecb30fe6a7ea6e399f9
@@ -883,7 +883,7 @@ SPEC CHECKSUMS:
   React-logger: da1ebe05ae06eb6db4b162202faeafac4b435e77
   react-native-aes-gcm-crypto: f1bade1824458569b0e0f27ef4bc647ffe48ebbc
   react-native-get-random-values: 384787fd76976f5aec9465aff6fa9e9129af1e74
-  react-native-mmkv: e97c0c79403fb94577e5d902ab1ebd42b0715b43
+  react-native-mmkv: 124b22209aacdcd172b6ac39071b9647080f0411
   react-native-netinfo: 48c5f79a84fbc3ba1d28a8b0d04adeda72885fa8
   react-native-quick-base64: 777057ea4286f806b00259ede65dc79c7c706320
   react-native-quick-crypto: 455c1b411db006dba1026a30681ececb19180187
@@ -908,7 +908,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 4941cc1b3cf08b792fbf666342c9fc95f1969035
   React-utils: b79f2411931f9d3ea5781404dcbb2fa8a837e13a
   ReactCommon: 4b2bdcb50a3543e1c2b2849ad44533686610826d
-  RNAWSCognito: 163cad89322a58a1d9c3243d5217187885d5fe11
+  RNAWSCognito: 55657f2870fbf9be09abe014af7ab3084fb45d78
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNCPicker: 0bc2f0a29abcca7b7ed44a2d036aac9ab6d25700
   RNGestureHandler: c0d04458598fcb26052494ae23dda8f8f5162b13
@@ -922,6 +922,6 @@ SPEC CHECKSUMS:
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
-PODFILE CHECKSUM: e8588c4620c7203102bab3ca64b4e545a3e45e09
+PODFILE CHECKSUM: 50f1a2e381cd8db38bde0c8f2e24af435174948e
 
 COCOAPODS: 1.14.3
