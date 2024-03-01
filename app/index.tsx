@@ -64,10 +64,14 @@ const Home = () => {
       getPayments(token, { limit: 10 }),
       getGroups(token),
     ]);
-    setUser({ ...userData, token } as DBUser);
-    setTransactions(payments as any[]);
-    setGroups(groups);
-    router.push("/app/home");
+    if (!userData.username) {
+      router.push("/onboarding");
+    } else {
+      setUser({ ...userData, token } as DBUser);
+      setTransactions(payments as any[]);
+      setGroups(groups);
+      router.push("/app/home");
+    }
   };
 
   return (
