@@ -18,7 +18,8 @@ type GroupOptions = "Expenses" | "Balances";
 
 export default function GroupPage() {
   const { group: localGroup } = useLocalSearchParams();
-  const [data, setData] = useState<any>(JSON.parse(localGroup as string));
+  const parsedGroup = JSON.parse(localGroup as string);
+  const [data, setData] = useState<any>(parsedGroup);
   const user = useUserStore((state) => state.user);
 
   const [tab, setTab] = useState<GroupOptions>("Expenses");
@@ -28,7 +29,6 @@ export default function GroupPage() {
 
   const [transactions, setTransactions] = useState<any[]>([]);
   const [balances, setBalances] = useState<any[]>([]);
-  console.log(transactions);
 
   useEffect(() => {
     const refresh = async () => {
@@ -43,17 +43,23 @@ export default function GroupPage() {
   }, []);
 
   const fetchGroup = async () => {
-    const group = await getGroupById(user!.token, { id: data.id });
+    console.log(user!.token, { id: parsedGroup.id });
+    const group = await getGroupById(user!.token, { id: parsedGroup.id });
     setData(group);
   };
 
   const fetchExpenses = async () => {
-    const expenses = await getGroupExpenses(user!.token, { id: data.id });
+    const expenses = await getGroupExpenses(user!.token, {
+      id: parsedGroup.id,
+    });
     setTransactions(expenses);
   };
 
   const fetchBalances = async () => {
-    const balances = await getGroupBalances(user!.token, { id: data.id });
+    const balances = await getGroupBalances(user!.token, {
+      id: parsedGroup.id,
+    });
+    console.log("balances", balances[0].creditor);
     setBalances(balances);
   };
 
@@ -92,14 +98,15 @@ export default function GroupPage() {
       <View className="flex px-4 space-y-4">
         <Text className="text-4xl text-white font-bold">{data.name}</Text>
         <View className="flex flex-row">
-          {data.members.map((member: any, index: number) => (
-            <View
-              className={index === 0 ? "" : "-ml-6"}
-              key={`member-${index}-${data.name}`}
-            >
-              <Avatar name={member.user.username.charAt(0).toUpperCase()} />
-            </View>
-          ))}
+          {data.members &&
+            data.members.map((member: any, index: number) => (
+              <View
+                className={index === 0 ? "" : "-ml-6"}
+                key={`member-${index}-${data.name}`}
+              >
+                <Avatar name={member.user.username.charAt(0).toUpperCase()} />
+              </View>
+            ))}
         </View>
         <View>
           <AppButton
@@ -119,7 +126,7 @@ export default function GroupPage() {
         </View>
         {tab === "Expenses" && (
           <ScrollView className="bg-[#161618] w-full mx-auto h-auto rounded-xl px-4 space-y-4 mt-8">
-            {transactions.map((transaction, index) => (
+            {transactions?.map((transaction, index) => (
               <ExpenseItem
                 key={`expense-${index}`}
                 expense={transaction}
@@ -130,29 +137,59 @@ export default function GroupPage() {
         )}
         {tab === "Balances" && (
           <View className="bg-[#161618] w-full mx-auto rounded-xl px-4 space-y-4 mt-8">
-            {balances
-              .filter((balance: any) => balance.debtor.id === user?.id)
-              .map((balance: any) => (
-                <Pressable
-                  onPress={() => {
-                    setSendUser(balance.creditor);
-                    router.push({
-                      pathname: "/app/send-modal",
-                      params: { amount: balance.amount },
-                    });
-                  }}
-                >
-                  <View className="flex flex-row items-center justify-between py-3">
+            {balances &&
+              balances
+                .filter((balance: any) => balance.debtor?.id === user?.id)
+                ?.map((balance: any) => (
+                  <Pressable
+                    onPress={() => {
+                      setSendUser(balance.creditor);
+                      router.push({
+                        pathname: "/app/send-modal",
+                        params: { amount: balance.amount },
+                      });
+                    }}
+                  >
+                    <View className="flex flex-row items-center justify-between py-3">
+                      <View className="flex flex-row space-x-4 items-center">
+                        <Avatar
+                          name={balance.debtor.username.charAt(0).toUpperCase()}
+                        />
+                        <View className="flex flex-col items-start justify-center">
+                          <Text className="text-white font-semibold text-xl">
+                            You
+                          </Text>
+                          <Text className="text-[#DC3F32] font-semibold">
+                            owe {balance.creditor.displayName}
+                          </Text>
+                        </View>
+                      </View>
+                      <View className="flex flex-col items-end justify-center">
+                        <Text className={`font-semibold text-lg text-white`}>
+                          ${balance.amount.toFixed(2)}
+                        </Text>
+                      </View>
+                    </View>
+                  </Pressable>
+                ))}
+            {balances?.length >= 0 &&
+              balances
+                .filter((balance: any) => balance.creditor?.id === user?.id)
+                ?.map((balance: any) => (
+                  <View
+                    className="flex flex-row items-center justify-between py-3"
+                    key={`balance-${balance.creditor?.id}-${balance.debitor?.id}`}
+                  >
                     <View className="flex flex-row space-x-4 items-center">
                       <Avatar
                         name={balance.debtor.username.charAt(0).toUpperCase()}
                       />
                       <View className="flex flex-col items-start justify-center">
                         <Text className="text-white font-semibold text-xl">
-                          You
+                          {balance.debtor.displayName}
                         </Text>
-                        <Text className="text-[#DC3F32] font-semibold">
-                          owe {balance.creditor.displayName}
+                        <Text className="text-[#39F183] font-semibold">
+                          owes you
                         </Text>
                       </View>
                     </View>
@@ -162,35 +199,7 @@ export default function GroupPage() {
                       </Text>
                     </View>
                   </View>
-                </Pressable>
-              ))}
-            {balances
-              .filter((balance: any) => balance.creditor.id === user?.id)
-              .map((balance: any) => (
-                <View
-                  className="flex flex-row items-center justify-between py-3"
-                  key={`balance-${balance.creditor.id}-${balance.debitor.id}`}
-                >
-                  <View className="flex flex-row space-x-4 items-center">
-                    <Avatar
-                      name={balance.debtor.username.charAt(0).toUpperCase()}
-                    />
-                    <View className="flex flex-col items-start justify-center">
-                      <Text className="text-white font-semibold text-xl">
-                        {balance.debtor.displayName}
-                      </Text>
-                      <Text className="text-[#39F183] font-semibold">
-                        owes you
-                      </Text>
-                    </View>
-                  </View>
-                  <View className="flex flex-col items-end justify-center">
-                    <Text className={`font-semibold text-lg text-white`}>
-                      ${balance.amount.toFixed(2)}
-                    </Text>
-                  </View>
-                </View>
-              ))}
+                ))}
           </View>
         )}
       </View>

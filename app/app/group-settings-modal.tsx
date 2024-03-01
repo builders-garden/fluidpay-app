@@ -6,15 +6,15 @@ import { useUserStore } from "../../store";
 import { ArrowLeft, Search, Trash2 } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { useState } from "react";
-import { getUsers, updateGroup } from "../../lib/api";
+import { deleteGroup, getUsers, updateGroup } from "../../lib/api";
 import Avatar from "../../components/avatar";
 
 export default function GroupSettingsModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
-  console.log(user?.token);
-  const { group } = useLocalSearchParams();
-  const [data, setData] = useState<any>(JSON.parse(group as string));
+  const { group: localGroup } = useLocalSearchParams();
+  const parsedGroup = JSON.parse(localGroup as string);
+  const [data, setData] = useState<any>(parsedGroup);
   const [groupName, setGroupName] = useState(data.name);
   const [results, setResults] = useState<any[]>([]);
   const [username, setUsername] = useState<string>("");
@@ -47,9 +47,16 @@ export default function GroupSettingsModal() {
         ...addedMembers.map((m: any) => m.id),
       ],
     };
-    await updateGroup(user!.token, { id: data.id }, updateGroupData);
+    await updateGroup(user!.token, { id: parsedGroup!.id }, updateGroupData);
 
     router.back();
+  };
+
+  const deleteG = async () => {
+    console.log(user!.token, { id: parsedGroup!.id });
+    const result = await deleteGroup(user!.token, { id: parsedGroup!.id });
+    console.log(result);
+    router.replace("/app/groups");
   };
 
   return (
@@ -78,8 +85,8 @@ export default function GroupSettingsModal() {
         />
         <Appbar.Action
           icon={() => <Trash2 size={24} color="red" />}
-          onPress={() => {
-            router.back();
+          onPress={async () => {
+            await deleteG();
           }}
           color="#fff"
           size={24}

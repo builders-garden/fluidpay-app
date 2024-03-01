@@ -60,6 +60,7 @@ export default function Home() {
 
   const fetchPayments = async () => {
     if (!user) return;
+    console.log(user!.token);
     const res = await getPayments(user!.token, { limit: 3 });
     setTransactions(res as any[]);
   };

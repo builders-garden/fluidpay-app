@@ -1,8 +1,9 @@
 import { router } from "expo-router";
-import { ArrowLeft, Search } from "lucide-react-native";
+import { ArrowLeft, ChevronRight, Search } from "lucide-react-native";
 import { useState } from "react";
-import { SafeAreaView, TextInput, Text, View } from "react-native";
-import { Appbar, Searchbar } from "react-native-paper";
+import { SafeAreaView, TextInput, Text, View, Pressable } from "react-native";
+import { Appbar, Badge, Searchbar } from "react-native-paper";
+import Avatar from "../../components/avatar";
 import AppButton from "../../components/app-button";
 import { createGroup, getUsers } from "../../lib/api";
 import { useGroupsStore, useUserStore } from "../../store";
@@ -12,30 +13,37 @@ export default function CreateGroupPage() {
   const addGroup = useGroupsStore((state) => state.addGroup);
   const user = useUserStore((state) => state.user);
   const [results, setResults] = useState<any[]>([]);
-  const [username, setUsername] = useState<string>("");
+  const [addedMembers, setAddedMembers] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const createNewGroup = async () => {
     if (groupName.length > 3) {
       const group = await createGroup(user!.token, {
         name: groupName,
-        memberIds: [user!.id],
+        memberIds: [
+          user!.id,
+          ...(addedMembers ? [...addedMembers.map((m) => m.id)] : []),
+        ],
       });
+      console.log("new group", group);
       addGroup(group);
-      router.back();
+      router.push({
+        pathname: "/app/group",
+        params: { group: JSON.stringify(group) },
+      });
     }
   };
 
   const onChangeText = async (text: string) => {
     setSearchQuery(text);
     if (text) {
+      console.log(text);
       // const docs = await getDocs()
       const users = await getUsers(user!.token, {
         limit: 10,
         query: text,
         page: 0,
       });
-      console.log(users);
       setResults(users);
     } else {
       setResults([]);
@@ -96,6 +104,54 @@ export default function CreateGroupPage() {
             // traileringIcon={() => <QrCode size={20} color={"white"} />}
             theme={{ colors: { onSurfaceVariant: "#FFF" } }}
           />
+          <View className="flex flex-row space-x-4">
+            {addedMembers.map((user: any) => (
+              <Pressable
+                onPress={() =>
+                  setAddedMembers(
+                    addedMembers.filter((member: any) => member.id !== user.id)
+                  )
+                }
+              >
+                <View className="flex flex-col space-y-2 items-center justify-center">
+                  <Avatar name={user.username.charAt(0).toUpperCase()} />
+                  <Text className="text-white font-semibold">
+                    {user.username}
+                  </Text>
+                </View>
+                <Badge className={"absolute -top-1 -right-2"} visible={true}>
+                  -
+                </Badge>
+              </Pressable>
+            ))}
+            {results
+              .filter(
+                (user: any) =>
+                  addedMembers.filter((member: any) => member.id === user.id)
+                    .length === 0
+              )
+              .map((user: any) => (
+                <Pressable
+                  onPress={() => {
+                    setAddedMembers(addedMembers.concat([user]));
+                  }}
+                >
+                  <View className="flex flex-col space-y-2 items-center justify-center">
+                    <Avatar name={user.username.charAt(0).toUpperCase()} />
+                    <Text className="text-white font-semibold">
+                      {user.username}
+                    </Text>
+                  </View>
+                  <Badge
+                    className={"absolute -top-1 -right-2"}
+                    style={{ backgroundColor: "green" }}
+                    visible={true}
+                  >
+                    +
+                  </Badge>
+                </Pressable>
+              ))}
+          </View>
         </View>
         <View className="px-4">
           <AppButton
