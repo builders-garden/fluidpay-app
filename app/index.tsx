@@ -12,7 +12,13 @@ import { useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
 import { router } from "expo-router";
-import { getAuthNonce, signIn, getMe, getPayments, getGroups } from "../lib/api";
+import {
+  getAuthNonce,
+  signIn,
+  getMe,
+  getPayments,
+  getGroups,
+} from "../lib/api";
 import { DBUser } from "../store/interfaces";
 
 const theme = darkTheme({
@@ -32,7 +38,7 @@ const Home = () => {
     (state) => state.setTransactions
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
-  const disconnect = useDisconnect()
+  const disconnect = useDisconnect();
 
   useEffect(() => {
     if (connectionStatus === "connected" && address) {
@@ -41,7 +47,6 @@ const Home = () => {
   }, [connectionStatus, address]);
 
   const handleConnection = async () => {
-
     const { message, nonce } = await getAuthNonce();
     const signedMessage = await signer?.signMessage(message);
     const { isNewUser, token } = await signIn({
@@ -59,11 +64,10 @@ const Home = () => {
       getPayments(token, { limit: 10 }),
       getGroups(token),
     ]);
-    console.log("USER DATA", userData)
     setUser({ ...userData, token } as DBUser);
     setTransactions(payments as any[]);
     setGroups(groups);
-    // router.push("/app/home");
+    router.push("/app/home");
   };
 
   return (

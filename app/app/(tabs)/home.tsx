@@ -79,7 +79,6 @@ export default function Home() {
     return uniquePayees;
   };
 
-
   if (!signer || !user) {
     return <Redirect href={"/"} />;
   }
@@ -146,7 +145,11 @@ export default function Home() {
               {transactions.length > 0 && (
                 <>
                   {transactions.map((payment, index) => (
-                    <TransactionItem transaction={payment} index={index} />
+                    <TransactionItem
+                      transaction={payment}
+                      index={index}
+                      key={`transaction-${index}`}
+                    />
                   ))}
                   <Text
                     onPress={() => router.push("/app/transfers")}
@@ -191,6 +194,7 @@ export default function Home() {
                           setProfileUserTransactions([]);
                           router.push("/app/profile-modal");
                         }}
+                        key={`payee-${index}`}
                       >
                         <View className="flex space-y-2 items-center">
                           <Avatar
