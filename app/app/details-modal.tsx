@@ -62,7 +62,7 @@ export default function DetailsModal() {
                 .toFixed(2)}
             </Text>
             <Text className="text-white text-lg font-semibold">
-              Optimism • USDC
+              Base • USDC
             </Text>
           </View>
 
