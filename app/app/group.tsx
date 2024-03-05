@@ -13,6 +13,7 @@ import {
 import { useSendStore, useUserStore } from "../../store";
 import ExpenseItem from "../../components/expense-item";
 import Avatar from "../../components/avatar";
+import BalanceItem from "../../components/balance-item";
 
 type GroupOptions = "Expenses" | "Balances";
 
@@ -58,6 +59,11 @@ export default function GroupPage() {
     const balances = await getGroupBalances(user!.token, {
       id: parsedGroup.id,
     });
+    console.log(
+      balances.map((b: any) => b.debtor),
+      balances.map((b: any) => b.creditor)
+    );
+
     setBalances(balances);
   };
 
@@ -140,64 +146,19 @@ export default function GroupPage() {
               balances
                 .filter((balance: any) => balance.debtor?.id === user?.id)
                 ?.map((balance: any) => (
-                  <Pressable
-                    onPress={() => {
-                      setSendUser(balance.creditor);
-                      router.push({
-                        pathname: "/app/send-modal",
-                        params: { amount: balance.amount },
-                      });
-                    }}
-                  >
-                    <View className="flex flex-row items-center justify-between py-3">
-                      <View className="flex flex-row space-x-4 items-center">
-                        <Avatar
-                          name={balance.debtor.username.charAt(0).toUpperCase()}
-                        />
-                        <View className="flex flex-col items-start justify-center">
-                          <Text className="text-white font-semibold text-xl">
-                            You
-                          </Text>
-                          <Text className="text-[#DC3F32] font-semibold">
-                            owe {balance.creditor.displayName}
-                          </Text>
-                        </View>
-                      </View>
-                      <View className="flex flex-col items-end justify-center">
-                        <Text className={`font-semibold text-lg text-white`}>
-                          ${balance.amount.toFixed(2)}
-                        </Text>
-                      </View>
-                    </View>
-                  </Pressable>
+                  <BalanceItem
+                    key={`balance-${balance.creditor?.id}-${balance.debitor?.id}`}
+                    balance={balance}
+                  />
                 ))}
             {balances?.length >= 0 &&
               balances
                 .filter((balance: any) => balance.creditor?.id === user?.id)
                 ?.map((balance: any) => (
-                  <View
-                    className="flex flex-row items-center justify-between py-3"
+                  <BalanceItem
                     key={`balance-${balance.creditor?.id}-${balance.debitor?.id}`}
-                  >
-                    <View className="flex flex-row space-x-4 items-center">
-                      <Avatar
-                        name={balance.debtor.username.charAt(0).toUpperCase()}
-                      />
-                      <View className="flex flex-col items-start justify-center">
-                        <Text className="text-white font-semibold text-xl">
-                          {balance.debtor.displayName}
-                        </Text>
-                        <Text className="text-[#39F183] font-semibold">
-                          owes you
-                        </Text>
-                      </View>
-                    </View>
-                    <View className="flex flex-col items-end justify-center">
-                      <Text className={`font-semibold text-lg text-white`}>
-                        ${balance.amount.toFixed(2)}
-                      </Text>
-                    </View>
-                  </View>
+                    balance={balance}
+                  />
                 ))}
           </View>
         )}
