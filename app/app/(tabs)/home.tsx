@@ -19,6 +19,7 @@ import { useEffect } from "react";
 import { getPayments } from "../../../lib/api";
 import { USDC_ADDRESS } from "../../../constants/sepolia";
 import { BigNumber } from "ethers";
+import AppButton from "../../../components/app-button";
 
 export default function Home() {
   const signer = useConnectedWallet();
@@ -79,6 +80,8 @@ export default function Home() {
 
     return uniquePayees;
   };
+
+  const recentPayees = getUniquePayees();
 
   if (!signer || !user) {
     return <Redirect href={"/"} />;
@@ -142,86 +145,72 @@ export default function Home() {
                 />
               </View>
             </View>
-            <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
-              {transactions.length > 0 && (
-                <>
-                  {transactions.map((payment, index) => (
-                    <TransactionItem
-                      transaction={payment}
-                      index={index}
-                      key={`transaction-${index}`}
-                    />
-                  ))}
-                  <Text
-                    onPress={() => router.push("/app/transfers")}
-                    className="text-[#0061FF] font-semibold text-center"
-                  >
-                    See all
-                  </Text>
-                </>
-              )}
-              {transactions.length === 0 && (
-                <View className="flex flex-col items-center justify-center">
-                  <Text className="text-gray-400 text-center">
-                    No recent transactions available.
-                  </Text>
-                </View>
-              )}
-            </View>
-            <View className="bg-[#161618] w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
-              {transactions.length > 0 && (
+            {transactions.length > 0 && (
+              <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
+                {transactions.map((payment, index) => (
+                  <TransactionItem
+                    transaction={payment}
+                    index={index}
+                    key={`transaction-${index}`}
+                  />
+                ))}
+                <Text
+                  onPress={() => router.push("/app/transfers")}
+                  className="text-[#0061FF] font-semibold text-center"
+                >
+                  See all
+                </Text>
+              </View>
+            )}
+
+            {transactions.length === 0 && (
+              <AppButton
+                text="Make your first payment!"
+                variant="secondary"
+                onPress={() => {
+                  router.push("/app/transfers");
+                }}
+              />
+            )}
+
+            {recentPayees.length > 0 && (
+              <View className="bg-[#161618] w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
                 <View className="flex flex-row items-center pb-6">
                   <Text className="text-gray-400">Recent payees</Text>
                   <ChevronRight color="grey" size={14} />
                 </View>
-              )}
-              <View className="flex flex-row justify-evenly w-full">
-                {transactions.filter((payment) => payment.payeeId !== user?.id)
-                  .length > 0 && (
-                  <>
-                    {getUniquePayees().map((payment, index) => (
-                      <Pressable
-                        onPress={() => {
-                          console.log({
-                            id: payment.payeeId,
-                            address: payment.payee.address,
-                            username: payment.payee.username,
-                          });
-                          setProfileUser({
-                            id: payment.payeeId,
-                            address: payment.payee.address,
-                            username: payment.payee.username,
-                          });
-                          setProfileUserTransactions([]);
-                          router.push("/app/profile-modal");
-                        }}
-                        key={`payee-${index}`}
-                      >
-                        <View className="flex space-y-2 items-center">
-                          <Avatar
-                            name={payment.payee.username
-                              .charAt(0)
-                              .toUpperCase()}
-                          />
-                          <Text className="text-white font-semibold">
-                            {payment.payee.username}
-                          </Text>
-                        </View>
-                      </Pressable>
-                    ))}
-                  </>
-                )}
-
-                {transactions.filter((payment) => payment.payeeId !== user?.id)
-                  .length === 0 && (
-                  <View className="flex flex-col items-center justify-center">
-                    <Text className="text-gray-400 text-center">
-                      No recent payees available.
-                    </Text>
-                  </View>
-                )}
+                <View className="flex flex-row justify-evenly w-full">
+                  {getUniquePayees().map((payment, index) => (
+                    <Pressable
+                      onPress={() => {
+                        console.log({
+                          id: payment.payeeId,
+                          address: payment.payee.address,
+                          username: payment.payee.username,
+                        });
+                        setProfileUser({
+                          id: payment.payeeId,
+                          address: payment.payee.address,
+                          username: payment.payee.username,
+                        });
+                        setProfileUserTransactions([]);
+                        router.push("/app/profile-modal");
+                      }}
+                      key={`payee-${index}`}
+                    >
+                      <View className="flex space-y-2 items-center">
+                        <Avatar
+                          name={payment.payee.username.charAt(0).toUpperCase()}
+                        />
+                        <Text className="text-white font-semibold">
+                          {payment.payee.username}
+                        </Text>
+                      </View>
+                    </Pressable>
+                  ))}
+                </View>
               </View>
-            </View>
+            )}
           </ScrollView>
           {/* <TransactionsList
           transactions={transactions}
