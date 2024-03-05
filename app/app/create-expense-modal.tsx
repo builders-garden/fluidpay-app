@@ -1,9 +1,9 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { Appbar, Checkbox } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, ChevronDown } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
 import { useState } from "react";
@@ -12,6 +12,7 @@ import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
 import { createGroupExpense } from "../../lib/api";
 import { ScrollView } from "react-native-gesture-handler";
+import { COLORS } from "../../constants/colors";
 
 export default function CreateExpenseModal() {
   const { group } = useLocalSearchParams();
@@ -24,6 +25,7 @@ export default function CreateExpenseModal() {
   const [selected, setSelected] = useState<boolean[]>(
     data?.members?.map(() => false)
   );
+  const [paidById, setPaidById] = useState(user?.id);
   const [category, setCategory] = useState<string | null>(null);
 
   const createExpense = async () => {
@@ -71,6 +73,22 @@ export default function CreateExpenseModal() {
       <View className="flex-1 px-4">
         <View className="flex space-y-4">
           <Text className="text-3xl text-white font-bold">Create expense</Text>
+          <View className="flex flex-row space-x-1">
+            <Text className="text-gray-400">Paid by</Text>
+            <Pressable>
+              <View className="flex flex-row items-center">
+                <Text className="text-primary font-semibold">
+                  {paidById === user?.id
+                    ? "You"
+                    : data.members.find(
+                        (member: any) => member.user.id === paidById
+                      )?.user.username}
+                </Text>
+                <ChevronDown size={16} color={`${COLORS.primary}`} />
+              </View>
+            </Pressable>
+          </View>
+
           <View className="mx-auto">
             <AmountChooser
               dollars={amount}
