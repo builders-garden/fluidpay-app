@@ -219,6 +219,17 @@ export type GetGroupExpensesByIdParams = {
 };
 
 export type GetExpenseByIdParams = {
+  id: number;
+  expenseId: number;
+};
+
+export type UpdateExpenseByIdParams = {
+  id: number;
+  expenseId: number;
+};
+
+export type DeleteExpenseByIdParams = {
+  id: number;
   expenseId: number;
 };
 
@@ -253,14 +264,11 @@ export type CreateGroupExpenseBody = {
 };
 
 export type UpdateGroupExpenseBody = {
-  paidById: number;
   amount: number;
   description: string;
-  splitAmong: {
-    userId: number;
-    amount: number;
-    type: "PERCENTAGE" | "AMOUNT";
-  }[];
+  category: string;
+  date: string;
+  splitAmongIds: number[];
 };
 
 export const getGroupById = async (
@@ -340,11 +348,15 @@ export const deleteGroup = async (
     .json();
 
 export const deleteGroupExpense = async (
-  params: GetExpenseByIdParams
+  token: string,
+  params: DeleteExpenseByIdParams
 ): Promise<any> =>
   ky
     .delete(
-      `https://crumina-api.builders.garden/groups/${params.expenseId}/expenses/${params.expenseId}`
+      `https://crumina-api.builders.garden/groups/${params.id}/expenses/${params.expenseId}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     )
     .json();
 
@@ -395,13 +407,14 @@ export const createGroupExpense = async (
     .json();
 
 export const updateGroupExpense = async (
-  params: GetExpenseByIdParams,
+  token: string,
+  params: UpdateExpenseByIdParams,
   body: UpdateGroupExpenseBody
 ): Promise<any> =>
   ky
     .put(
-      `https://crumina-api.builders.garden/groups/${params.expenseId}/expenses/${params.expenseId}`,
-      { json: body }
+      `https://crumina-api.builders.garden/groups/${params.id}/expenses/${params.expenseId}`,
+      { json: body, headers: { Authorization: `Bearer ${token}` } }
     )
     .json();
 

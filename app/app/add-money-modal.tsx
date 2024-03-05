@@ -39,7 +39,7 @@ export default function AddMoneyModal() {
           Add money to account
         </Text>
         <Text className="text-white font-semibold">
-          Send USDC to your address below.
+          Send USDC to your address below on Base.
         </Text>
         <View className="bg-[#232324] rounded-xl flex flex-row justify-between items-center mt-4 px-4 py-2">
           <Text className="text-[#8F8F91] text-lg text-ellipsis">

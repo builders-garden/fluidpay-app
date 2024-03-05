@@ -43,7 +43,6 @@ export default function GroupPage() {
   }, []);
 
   const fetchGroup = async () => {
-    console.log(user!.token, { id: parsedGroup.id });
     const group = await getGroupById(user!.token, { id: parsedGroup.id });
     setData(group);
   };
@@ -59,7 +58,6 @@ export default function GroupPage() {
     const balances = await getGroupBalances(user!.token, {
       id: parsedGroup.id,
     });
-    console.log("balances", balances[0].creditor);
     setBalances(balances);
   };
 
@@ -130,6 +128,7 @@ export default function GroupPage() {
               <ExpenseItem
                 key={`expense-${index}`}
                 expense={transaction}
+                group={parsedGroup}
                 index={index}
               />
             ))}

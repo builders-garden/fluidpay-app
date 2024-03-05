@@ -34,6 +34,7 @@ export function AmountChooser({
   innerRef?: React.RefObject<TextInput>;
   onFocus?: () => void;
 }) {
+  console.log(dollars);
   return (
     <View className="px-16 mt-16">
       <AmountInput
@@ -124,9 +125,7 @@ function AmountInput({
 
   // Controlled component, but with state to allow typing "0", "0.", etc.
   useEffect(() => {
-    console.log(ref.current?.isFocused());
     if (ref.current?.isFocused()) return;
-    console.log("useEffect");
     setStrVal(dollars <= 0 ? "" : fmt(dollars));
   }, [dollars]);
 

@@ -109,7 +109,7 @@ export default function Home() {
             <View className="py-8 flex flex-col space-y-16">
               <View className="flex flex-col space-y-6">
                 <Text className="text-white font-semibold text-center">
-                  Main • USDC
+                  Base • USDC
                 </Text>
                 <Text className="text-white font-bold text-center text-5xl">
                   $

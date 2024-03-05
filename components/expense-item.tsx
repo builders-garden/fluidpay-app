@@ -4,11 +4,14 @@ import { useProfileStore } from "../store/use-profile-store";
 import { useUserStore } from "../store/use-user-store";
 import { CATEGORIES, CATEGORIES_EMOJI } from "../constants/categories";
 import Avatar from "./avatar";
+import { router } from "expo-router";
 
 export default function ExpenseItem({
   expense,
+  group,
   index,
 }: {
+  group: any;
   expense: any;
   index: number;
 }) {
@@ -26,7 +29,17 @@ export default function ExpenseItem({
             name={CATEGORIES_EMOJI[category as keyof typeof CATEGORIES]}
           />
 
-          <Pressable onPress={() => {}}>
+          <Pressable
+            onPress={() => {
+              router.push({
+                params: {
+                  expense: JSON.stringify(expense),
+                  group: JSON.stringify(group),
+                },
+                pathname: "/app/detail-expense-modal",
+              });
+            }}
+          >
             <View className="flex flex-col">
               <Text className="text-white font-semibold text-lg">
                 {description}
