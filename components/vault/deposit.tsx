@@ -55,7 +55,6 @@ export default function VaultDeposit({
       );
 
       if (approvalData.eq(0)) {
-        console.log("approving spending");
         const { receipt } = await approve({
           args: [VAULT_ADDRESS, ethers.constants.MaxUint256],
         });

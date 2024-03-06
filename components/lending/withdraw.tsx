@@ -86,12 +86,6 @@ export default function LendingWithdraw({
       //     .mul(percentage)
       //     .div(100)
       //     .mul(BigNumber.from(10).pow(10));
-      console.log(userData[3].toString());
-      console.log(
-        userData.map((x: BigNumber, i: number) => {
-          console.log(i, formatUnits(x, 8));
-        })
-      );
       const withdrawAmountInWei = userData[0]
         .sub(userData[1])
         .mul(percentage)
@@ -100,7 +94,6 @@ export default function LendingWithdraw({
         .div(100)
         .mul(BigNumber.from(10).pow(10));
 
-      console.log(formatUnits(withdrawAmountInWei, 18));
 
       const { receipt } = await withdraw({
         args: [DAI_ADDRESS, withdrawAmountInWei, user?.address],

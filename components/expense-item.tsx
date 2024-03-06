@@ -3,6 +3,7 @@ import TimeAgo from "@andordavoti/react-native-timeago";
 import { CATEGORIES, CATEGORIES_EMOJI } from "../constants/categories";
 import Avatar from "./avatar";
 import { router } from "expo-router";
+import { formatDistanceToNow } from "date-fns";
 
 export default function ExpenseItem({
   expense,
@@ -38,7 +39,15 @@ export default function ExpenseItem({
                 {description}
               </Text>
               <Text className="text-[#8F8F91]">
-                {paidBy.username} - <TimeAgo dateTo={new Date(date)} />
+                {paidBy.username} -{" "}
+                {(() => {
+                  const distance = formatDistanceToNow(new Date(date));
+                  return distance.startsWith("less than a minute") ? (
+                    "now"
+                  ) : (
+                    <TimeAgo dateTo={new Date(date)} />
+                  );
+                })()}
               </Text>
             </View>
           </Pressable>

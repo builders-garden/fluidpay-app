@@ -25,7 +25,6 @@ export default function CreateGroupPage() {
           ...(addedMembers ? [...addedMembers.map((m) => m.id)] : []),
         ],
       });
-      console.log("new group", group);
       addGroup(group);
       router.push({
         pathname: "/app/group",
@@ -37,7 +36,6 @@ export default function CreateGroupPage() {
   const onChangeText = async (text: string) => {
     setSearchQuery(text);
     if (text) {
-      console.log(text);
       // const docs = await getDocs()
       const users = await getUsers(user!.token, {
         limit: 10,

@@ -53,9 +53,7 @@ export default function GroupSettingsModal() {
   };
 
   const deleteG = async () => {
-    console.log(user!.token, { id: parsedGroup!.id });
     const result = await deleteGroup(user!.token, { id: parsedGroup!.id });
-    console.log(result);
     router.replace("/app/groups");
   };
 

@@ -35,10 +35,10 @@ export default function SendModal() {
     "balanceOf",
     [user?.address]
   );
-
   const balance = balanceData
-    ? parseFloat(formatUnits(balanceData, 18)).toFixed(2)
+    ? parseFloat(formatUnits(balanceData, 6)).toFixed(2)
     : (0).toFixed(2);
+
 
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
   // const canSend = true;

@@ -78,14 +78,12 @@ export default function LendingSupply({
       );
 
       if (ghoApprovalData.eq(0)) {
-        console.log("approving GHO spending to router");
         const { receipt } = await ghoApprove({
           args: [SUPPLY_ROUTER_ADDRESS, ethers.constants.MaxUint256],
         });
       }
 
       if (approvalData.eq(0)) {
-        console.log("approving spending");
         const { receipt } = await approve({
           args: [AAVE_POOL_ADDRESS, ethers.constants.MaxUint256],
         });

@@ -34,7 +34,6 @@ export function AmountChooser({
   innerRef?: React.RefObject<TextInput>;
   onFocus?: () => void;
 }) {
-  console.log(dollars);
   return (
     <View className="px-16 mt-16">
       <AmountInput
@@ -90,7 +89,6 @@ function AmountInput({
     // Max two decimals: if necessary, modify entry
     const parts = text.split(/[.,]/);
     if (parts.length >= 2) {
-      console.log("onChangeParse");
       const roundedStr = `${parts[0]}${amountSeparator}${parts[1].slice(0, 2)}`;
       const roundedVal = parseLocalFloat(`${parts[0]}.${parts[1].slice(0, 2)}`);
       setStrVal(roundedStr);
@@ -105,7 +103,6 @@ function AmountInput({
 
   // Once we're done, round value to 2 decimal places
   const onBlur = (e: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
-    console.log("onBlur");
     const value = e.nativeEvent.text;
 
     let newVal = parseLocalFloat(value);
