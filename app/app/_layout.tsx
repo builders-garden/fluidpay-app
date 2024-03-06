@@ -30,15 +30,19 @@ export default function AppLayout() {
       />
       <Stack.Screen
         name="create-expense-modal"
-        options={{ presentation: "modal", headerShown: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="detail-expense-modal"
-        options={{ presentation: "modal", headerShown: false }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="edit-expense-modal"
-        options={{ presentation: "modal", headerShown: false }}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="select-paid-by-modal"
+        options={{ presentation: "containedTransparentModal", headerShown: false }}
       />
       <Stack.Screen
         name="group-settings-modal"

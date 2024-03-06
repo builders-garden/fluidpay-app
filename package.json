@@ -10,6 +10,7 @@
   "dependencies": {
     "@andordavoti/react-native-timeago": "^0.0.14",
     "@expo-google-fonts/inter": "^0.2.3",
+    "@gorhom/bottom-sheet": "^4",
     "@react-native-async-storage/async-storage": "1.17.11",
     "@react-native-community/netinfo": "^9.4.1",
     "@react-native-picker/picker": "2.4.10",

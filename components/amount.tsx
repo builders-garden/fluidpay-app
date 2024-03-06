@@ -17,6 +17,7 @@ export function getAmountText({
   symbol?: string;
   fullPrecision?: boolean;
 }) {
+  console.log(dollars, amount, symbol, fullPrecision);
   if (dollars == null) {
     if (amount == null) throw new Error("Missing amount");
     // Amount specified, calculate dollars string

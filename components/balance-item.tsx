@@ -14,8 +14,8 @@ export default function BalanceItem(balanceData: any, index: number) {
         if (isCurrentUserDebtor) {
           setSendUser(balance.creditor);
           router.push({
-            pathname: "/app/request-modal",
-            params: { amount: balance.amount },
+            pathname: "/app/send-modal",
+            params: { amount: balance.amount.toFixed(2) },
           });
           return;
         } else {

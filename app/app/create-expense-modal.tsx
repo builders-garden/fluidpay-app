@@ -6,13 +6,15 @@ import { useUserStore } from "../../store";
 import { ArrowLeft, ChevronDown } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
-import { useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import Avatar from "../../components/avatar";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
 import { createGroupExpense } from "../../lib/api";
 import { ScrollView } from "react-native-gesture-handler";
 import { COLORS } from "../../constants/colors";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import SelectPaidByModal from "./select-paid-by-modal";
 
 export default function CreateExpenseModal() {
   const { group } = useLocalSearchParams();
@@ -25,13 +27,13 @@ export default function CreateExpenseModal() {
   const [selected, setSelected] = useState<boolean[]>(
     data?.members?.map(() => false)
   );
-  const [paidById, setPaidById] = useState(user?.id);
+  const [paidById, setPaidById] = useState<number>(user?.id!);
   const [category, setCategory] = useState<string | null>(null);
 
   const createExpense = async () => {
     const expenseData = {
       category: category!,
-      paidById: user!.id,
+      paidById,
       description,
       date: new Date().toISOString(),
       amount,
@@ -39,16 +41,24 @@ export default function CreateExpenseModal() {
         .filter((member: any, index: number) => selected[index])
         .map((member: any) => member.user.id),
     };
-
-    // console.log(expenseData);
     await createGroupExpense(user!.token, { id: data.id }, expenseData);
     router.back();
   };
 
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
   return (
     <SafeAreaView
       className="flex-1 flex-col bg-[#161618]"
-      edges={{ top: "off" }}
+      edges={{ top: "additive" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
@@ -75,7 +85,7 @@ export default function CreateExpenseModal() {
           <Text className="text-3xl text-white font-bold">Create expense</Text>
           <View className="flex flex-row space-x-1">
             <Text className="text-gray-400">Paid by</Text>
-            <Pressable>
+            <Pressable onPress={handlePresentModalPress}>
               <View className="flex flex-row items-center">
                 <Text className="text-primary font-semibold">
                   {paidById === user?.id
@@ -156,6 +166,12 @@ export default function CreateExpenseModal() {
           />
         </SafeAreaView>
       </View>
+      <SelectPaidByModal
+        bottomSheetModalRef={bottomSheetModalRef}
+        members={data.members}
+        paidById={paidById}
+        setPaidById={setPaidById}
+      />
     </SafeAreaView>
   );
 }

@@ -68,7 +68,6 @@ function AmountInput({
   onFocus?: () => void;
 }) {
   if (dollars < 0) throw new Error("AmountPicker value can't be negative");
-
   const fmt = (dollars: number) => getAmountText({ dollars, symbol: "" });
 
   const [strVal, setStrVal] = useState(dollars <= 0 ? "" : fmt(dollars));

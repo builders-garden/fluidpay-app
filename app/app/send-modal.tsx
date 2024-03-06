@@ -55,7 +55,6 @@ export default function SendModal() {
       amount: amount,
       description: "",
     };
-    console.log(payment);
 
     await createPayment(user!.token, payment);
 
@@ -102,7 +101,7 @@ export default function SendModal() {
           dollars={amount}
           onSetDollars={setAmount}
           showAmountAvailable
-          autoFocus
+          autoFocus={paramsAmount ? false : true}
           lagAutoFocus={false}
         />
         {balanceOfLoading ? (

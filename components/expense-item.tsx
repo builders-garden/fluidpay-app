@@ -1,7 +1,5 @@
 import { Pressable, View, Text } from "react-native";
 import TimeAgo from "@andordavoti/react-native-timeago";
-import { useProfileStore } from "../store/use-profile-store";
-import { useUserStore } from "../store/use-user-store";
 import { CATEGORIES, CATEGORIES_EMOJI } from "../constants/categories";
 import Avatar from "./avatar";
 import { router } from "expo-router";
@@ -15,11 +13,6 @@ export default function ExpenseItem({
   expense: any;
   index: number;
 }) {
-  const user = useUserStore((state) => state.user);
-  const setProfileUser = useProfileStore((state) => state.setProfileUser);
-  const setProfileUserTransactions = useProfileStore(
-    (state) => state.setProfileUserTransactions
-  );
   const { date, paidBy, amount, description, category } = expense;
   return (
     <View key={`transaction-${index}`}>

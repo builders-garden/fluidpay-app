@@ -1,17 +1,24 @@
 import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
-import { Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import { Appbar, Checkbox } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, ChevronDown, Edit, Trash2 } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Avatar from "../../components/avatar";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
-import { getGroupExpenseById, updateGroupExpense } from "../../lib/api";
+import {
+  deleteGroupExpense,
+  getGroupExpenseById,
+  updateGroupExpense,
+} from "../../lib/api";
 import { ScrollView } from "react-native-gesture-handler";
+import { COLORS } from "../../constants/colors";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import SelectPaidByModal from "./select-paid-by-modal";
 
 export default function DetailExpenseModal() {
   const { expense, group } = useLocalSearchParams();
@@ -19,14 +26,22 @@ export default function DetailExpenseModal() {
   const groupData = JSON.parse(group as string);
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
-  const [amount, setAmount] = useState(0);
-  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState(expenseData.amount);
+  const [description, setDescription] = useState(expenseData.description);
   const [selected, setSelected] = useState<boolean[]>(
     groupData?.members?.map(() => false)
   );
+  const [paidById, setPaidById] = useState<number | null>(user?.id!);
   const [updateButtonDisabled, setUpdateButtonDisabled] = useState(true);
   const navigation = useNavigation();
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<string | null>(expenseData.category);
+
+  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
 
   useEffect(() => {
     const refresh = async () => {
@@ -41,14 +56,25 @@ export default function DetailExpenseModal() {
     };
   }, []);
 
-  const fetchGroupExpense = async () => {
-    const expense = await getGroupExpenseById(user!.token, {
-      id: expenseData.groupId,
+  const deleteExpense = async () => {
+    const result = await deleteGroupExpense(user!.token, {
+      id: groupData!.id,
       expenseId: expenseData.id,
     });
-    setDescription(expense.description);
-    setAmount(expense.amount);
-    setCategory(expense.category);
+    router.back();
+  };
+
+  const fetchGroupExpense = async () => {
+    console.log("fetching expense", {
+      token: user!.token,
+      id: groupData.id,
+      expenseId: expenseData.id,
+    });
+    const expense = await getGroupExpenseById(user!.token, {
+      id: groupData.id,
+      expenseId: expenseData.id,
+    });
+    console.log("expense", expense);
     const splitAmongIds = expense.splitAmong.map(
       (member: any) => member.user.id
     );
@@ -62,6 +88,7 @@ export default function DetailExpenseModal() {
   const updateExpense = async () => {
     const updatedExpenseData = {
       category: category!,
+      paidById,
       description,
       amount,
       date: expenseData.date,
@@ -69,7 +96,6 @@ export default function DetailExpenseModal() {
         .filter((member: any, index: number) => selected[index])
         .map((member: any) => member.user.id),
     };
-    // console.log(expenseData);
     await updateGroupExpense(
       user!.token,
       { id: expenseData.groupId, expenseId: expenseData.id },
@@ -81,7 +107,7 @@ export default function DetailExpenseModal() {
   return (
     <SafeAreaView
       className="flex-1 flex-col bg-[#161618]"
-      edges={{ top: "off" }}
+      edges={{ top: "additive" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
@@ -102,10 +128,34 @@ export default function DetailExpenseModal() {
           color="#fff"
           titleStyle={{ fontWeight: "bold" }}
         />
+        <Appbar.Action
+          icon={() => <Trash2 size={24} color="red" />}
+          onPress={async () => {
+            await deleteExpense();
+          }}
+          color="#fff"
+          size={24}
+        />
       </Appbar.Header>
       <View className="flex-1 px-4">
         <View className="flex space-y-4">
           <Text className="text-3xl text-white font-bold">Expense detail</Text>
+
+          <View className="flex flex-row space-x-1">
+            <Text className="text-gray-400">Paid by</Text>
+            <Pressable onPress={handlePresentModalPress}>
+              <View className="flex flex-row items-center">
+                <Text className="text-primary font-semibold">
+                  {paidById === user?.id
+                    ? "You"
+                    : groupData.members.find(
+                        (member: any) => member.user.id === paidById
+                      )?.user.username}
+                </Text>
+                <ChevronDown size={16} color={`${COLORS.primary}`} />
+              </View>
+            </Pressable>
+          </View>
           <View className="mx-auto">
             <AmountChooser
               dollars={amount}
@@ -184,6 +234,12 @@ export default function DetailExpenseModal() {
           />
         </SafeAreaView>
       </View>
+      <SelectPaidByModal
+        bottomSheetModalRef={bottomSheetModalRef}
+        members={groupData.members}
+        paidById={paidById}
+        setPaidById={setPaidById}
+      />
     </SafeAreaView>
   );
 }
