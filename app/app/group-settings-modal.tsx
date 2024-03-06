@@ -106,19 +106,30 @@ export default function GroupSettingsModal() {
             className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-xl placeholder-[#8F8F91]"
           />
           <View className="bg-[#232324] p-4 rounded-xl flex flex-col space-y-4">
-            {data.members.map((member: any) => (
-              <View className="flex flex-row items-center justify-between">
-                <View className="flex flex-row space-x-2">
-                  <Avatar name={member.user.username.charAt(0).toUpperCase()} />
-                  <View className="flex flex-col items-start justify-center">
-                    <Text className="text-white font-semibold text-xl">
-                      {member.user.displayName}
-                    </Text>
-                    <Text className="text-[#8F8F91] font-semibold">
-                      @{member.user.username}
-                    </Text>
+            {data.members.map((member: any, index: number) => (
+              <View className="flex flex-row items-center justify-between" key={`member-${index}`}>
+                <Pressable
+                  onPress={() => {
+                    router.push({
+                      pathname: "/app/profile-modal",
+                      params: { userId: member.user.id },
+                    });
+                  }}
+                >
+                  <View className="flex flex-row space-x-2">
+                    <Avatar
+                      name={member.user.username.charAt(0).toUpperCase()}
+                    />
+                    <View className="flex flex-col items-start justify-center">
+                      <Text className="text-white font-semibold text-xl">
+                        {member.user.displayName}
+                      </Text>
+                      <Text className="text-[#8F8F91] font-semibold">
+                        @{member.user.username}
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                </Pressable>
                 {member.user.id !== user?.id && (
                   <Pressable
                     onPress={() => {

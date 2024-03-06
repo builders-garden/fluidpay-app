@@ -77,7 +77,7 @@ const Home = () => {
   return (
     <SafeAreaView className="flex-1 items-center space-y-3">
       <Image className="mt-24" source={require("../images/crumina.png")} />
-      <View className="px-24">
+      <View className="px-16">
         <Text
           className={`text-[#0061FF] text-2xl text-center leading-tight font-semibold`}
         >

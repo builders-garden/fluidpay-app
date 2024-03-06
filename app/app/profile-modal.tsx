@@ -1,11 +1,10 @@
-import { Link, router } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { View, Text } from "react-native";
 import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "@thirdweb-dev/react-native";
 import CircularButton from "../../components/circular-button";
 import { ScrollView } from "react-native-gesture-handler";
-import { useProfileStore } from "../../store/use-profile-store";
 import { ArrowLeft } from "lucide-react-native";
 import { useSendStore, useUserStore } from "../../store";
 import { useEffect, useState } from "react";
@@ -14,26 +13,25 @@ import TransactionItem from "../../components/transaction-item";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
+  const { userId } = useLocalSearchParams();
   const currentUser = useUserStore((state) => state.user);
-  const user = useProfileStore((state) => state.user);
-  const setProfileUser = useProfileStore((state) => state.setProfileUser);
   const setSendUser = useSendStore((state) => state.setSendUser);
-  const [profileUser, setUser] = useState<any>(undefined);
+  const [profileUser, setUser] = useState<any>(null);
   const [transactions, setTransaction] = useState<any[]>([]);
 
   useEffect(() => {
-    if (user) {
+    if (currentUser) {
       fetchUser();
     }
-  }, [user]);
+  }, [currentUser]);
 
   const fetchUser = async () => {
     const [profile, transactions] = await Promise.all([
       getUserByIdUsernameOrAddress(currentUser!.token, {
-        idOrUsernameOrAddress: user!.id.toString(),
+        idOrUsernameOrAddress: userId!.toString(),
       }),
       getPayments(currentUser!.token, {
-        withProfileId: user?.id,
+        withProfileId: parseInt(userId as string, 10),
       }),
     ]);
     setUser(profile);
@@ -55,7 +53,6 @@ export default function ProfileModal() {
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}
           onPress={() => {
-            setProfileUser(undefined);
             router.back();
           }}
           color="#fff"
@@ -119,51 +116,24 @@ export default function ProfileModal() {
             </Text>
           </View>
         </View>
-
-        <ScrollView className="bg-[#161618] w-full mx-auto h-[320px] rounded-lg px-4 space-y-4 mt-8 pb-8">
-          {transactions.map((transaction, index) => (
-            <TransactionItem
-              key={index}
-              transaction={transaction}
-              index={index}
-            />
-          ))}
-        </ScrollView>
-        {/* <View className="w-full mt-8">
-          <AppButton
-            text={"SEND"}
-            onPress={() => {
-              setSendUser({
-                username: profileUser?.username,
-                address: profileUser?.address,
-                createdAt: "",
-                rounding: true,
-              });
-              router.push(`/app/send-modal`);
-            }}
-            variant={"primary"}
-          />
-        </View> */}
-        {/* <View className="w-full mt-4">
-          <AppButton
-            text={"VIEW ON BLOCK EXPLORER"}
-            onPress={async () => {
-              await WebBrowser.openBrowserAsync(
-                `${sepolia.explorers[0].url}/address/${profileUser.address}`
-              );
-            }}
-            variant={"ghost"}
-          />
-        </View>
-        <Spacer h={92} />
-        <TransactionsList
-          transactions={transactions!}
-          loading={loading}
-          setLoading={setLoading}
-          setTransactions={setTransactions}
-          getTransactions={getUserTransactions}
-          withAddress={profileUser.address}
-        /> */}
+        {(!transactions || transactions?.length === 0) && (
+          <View className="mt-4">
+            <Text className="text-white text-center">
+              No payments yet with {profileUser?.username}
+            </Text>
+          </View>
+        )}
+        {transactions?.length > 0 && (
+          <ScrollView className="bg-[#161618] w-full mx-auto h-[320px] rounded-lg px-4 space-y-4 mt-8 pb-8">
+            {transactions.map((transaction, index) => (
+              <TransactionItem
+                key={index}
+                transaction={transaction}
+                index={index}
+              />
+            ))}
+          </ScrollView>
+        )}
       </View>
     </View>
   );

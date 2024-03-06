@@ -27,13 +27,11 @@ export default function TransactionItem({
           <Pressable
             key={`profile-event-${index}`}
             onPress={async () => {
-              setProfileUser({
-                id: isFrom ? payeeId : payerId,
-                address: isFrom ? payee.address : payer.address,
-                username: isFrom ? payee.username : payer.username,
-              });
               setProfileUserTransactions([]);
-              router.push("/app/profile-modal");
+              router.push({
+                pathname: "/app/profile-modal",
+                params: { userId: isFrom ? payeeId : payerId },
+              });
             }}
           >
             <Avatar

@@ -188,13 +188,11 @@ export default function Home() {
                           address: payment.payee.address,
                           username: payment.payee.username,
                         });
-                        setProfileUser({
-                          id: payment.payeeId,
-                          address: payment.payee.address,
-                          username: payment.payee.username,
-                        });
                         setProfileUserTransactions([]);
-                        router.push("/app/profile-modal");
+                        router.push({
+                          pathname: "/app/profile-modal",
+                          params: { userId: payment.payeeId },
+                        });
                       }}
                       key={`payee-${index}`}
                     >

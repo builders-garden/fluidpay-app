@@ -376,7 +376,7 @@ export const getGroupExpenseById = async (
 ): Promise<any> =>
   ky
     .get(
-      `https://crumina-api.builders.garden/groups/${params.expenseId}/expenses/${params.expenseId}`,
+      `https://crumina-api.builders.garden/groups/${params.id}/expenses/${params.expenseId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
