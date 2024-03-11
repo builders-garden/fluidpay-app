@@ -49,7 +49,6 @@ export default function Onboarding() {
       setTransactions(payments as any[]);
       setGroups(groups);
       router.push("/app/home");
-      router.push("/app/home");
     }
   };
 

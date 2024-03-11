@@ -17,9 +17,9 @@ import { ChevronRight } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
 import { getPayments } from "../../../lib/api";
-import { USDC_ADDRESS } from "../../../constants/sepolia";
 import { BigNumber } from "ethers";
 import AppButton from "../../../components/app-button";
+import tokens from "../../../constants/tokens";
 
 export default function Home() {
   const signer = useConnectedWallet();
@@ -33,7 +33,7 @@ export default function Home() {
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
-  const { contract } = useContract(USDC_ADDRESS);
+  const { contract } = useContract(tokens.USDC.base);
   const { data: balanceData = BigNumber.from(0) } = useContractRead(
     contract,
     "balanceOf",

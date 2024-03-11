@@ -21,10 +21,7 @@ import LogoutModal from "../../components/modals/logout-modal";
 export default function Settings() {
   const signer = useConnectedWallet();
   const [showModal, setShowModal] = React.useState(false);
-  const toggleSwitch = () => setIsEnabled((previousState) => !previousState);
-  const [copied, setCopied] = React.useState(false);
   const user = useUserStore((state) => state.user);
-  const [isEnabled, setIsEnabled] = useState(user?.rounding);
 
   if (!signer || !user) {
     return <Redirect href={"/"} />;

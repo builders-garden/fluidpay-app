@@ -10,16 +10,16 @@ import {
 } from "@thirdweb-dev/react-native";
 import { ArrowLeft, Copy } from "lucide-react-native";
 import { BigNumber } from "ethers";
-import { USDC_ADDRESS } from "../../constants/sepolia";
 
 import * as Clipboard from "expo-clipboard";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import tokens from "../../constants/tokens";
 
 export default function DetailsModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
 
-  const { contract } = useContract(USDC_ADDRESS);
+  const { contract } = useContract(tokens.USDC.base);
   const { data: balanceData = BigNumber.from(0) } = useContractRead(
     contract,
     "balanceOf",

@@ -10,7 +10,6 @@ import {
   useContractRead,
   useTransferToken,
 } from "@thirdweb-dev/react-native";
-import { USDC_ADDRESS } from "../../constants/sepolia";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../../components/app-button";
 import { formatUnits } from "ethers/lib/utils";
@@ -18,6 +17,7 @@ import { AmountChooser } from "../../components/amount-chooser";
 import Avatar from "../../components/avatar";
 import { ArrowLeft } from "lucide-react-native";
 import { createPayment } from "../../lib/api";
+import tokens from "../../constants/tokens";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0 } = useLocalSearchParams();
@@ -25,7 +25,7 @@ export default function SendModal() {
   const sendUser = useSendStore((state) => state.user);
   const setSendUser = useSendStore((state) => state.setSendUser);
   const user = useUserStore((state) => state.user);
-  const { contract } = useContract(USDC_ADDRESS);
+  const { contract } = useContract(tokens.USDC.sepolia);
   const { mutateAsync: transfer, isLoading: transferLoading } =
     useTransferToken(contract);
   const [amount, setAmount] = useState(paramsAmount as number);
@@ -38,7 +38,6 @@ export default function SendModal() {
   const balance = balanceData
     ? parseFloat(formatUnits(balanceData, 6)).toFixed(2)
     : (0).toFixed(2);
-
 
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
   // const canSend = true;

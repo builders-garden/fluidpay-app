@@ -38,7 +38,6 @@ const Home = () => {
     (state) => state.setTransactions
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
-  const disconnect = useDisconnect();
 
   useEffect(() => {
     if (connectionStatus === "connected" && address) {

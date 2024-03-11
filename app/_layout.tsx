@@ -5,7 +5,6 @@ import {
 } from "@thirdweb-dev/react-native";
 import { Slot } from "expo-router";
 import { LogBox, View } from "react-native";
-import { sepolia } from "../constants/sepolia";
 import { PaperProvider } from "react-native-paper";
 import Toast, {
   BaseToast,
@@ -15,6 +14,7 @@ import Toast, {
 } from "react-native-toast-message";
 //@ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
+import { base, sepolia } from "../constants/chains";
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
@@ -58,9 +58,9 @@ export default function AppLayout() {
         }}
       >
         <ThirdwebProvider
-          activeChain={sepolia.chainId}
+          activeChain={base.chainId}
           clientId={process.env.EXPO_PUBLIC_TW_CLIENT_ID}
-          supportedChains={[sepolia]}
+          supportedChains={[base, sepolia]}
           supportedWallets={[
             smartWallet(
               embeddedWallet({
