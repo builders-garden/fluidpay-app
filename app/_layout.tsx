@@ -58,7 +58,7 @@ export default function AppLayout() {
         }}
       >
         <ThirdwebProvider
-          activeChain={base.chainId}
+          activeChain={sepolia.chainId}
           clientId={process.env.EXPO_PUBLIC_TW_CLIENT_ID}
           supportedChains={[base, sepolia]}
           supportedWallets={[
