@@ -1,8 +1,3 @@
-import {
-  useConnectedWallet,
-  useContract,
-  useContractRead,
-} from "@thirdweb-dev/react-native";
 import { Link, Redirect, useNavigation } from "expo-router";
 import { View, Text, Pressable } from "react-native";
 import Avatar from "../../../components/avatar";
@@ -20,12 +15,14 @@ import { getPayments } from "../../../lib/api";
 import { BigNumber } from "ethers";
 import AppButton from "../../../components/app-button";
 import tokens from "../../../constants/tokens";
+import { isConnected, useEmbeddedWallet, usePrivy } from "@privy-io/expo";
+import { publicClient } from "../../../lib/chain/client";
 
 export default function Home() {
-  const signer = useConnectedWallet();
+  const wallet = useEmbeddedWallet();
+  const {isReady, user: privyUser} = usePrivy();
   // const [refreshing, setRefreshing] = React.useState(false);
   const user = useUserStore((state) => state.user);
-  const setProfileUser = useProfileStore((state) => state.setProfileUser);
   const setProfileUserTransactions = useProfileStore(
     (state) => state.setProfileUserTransactions
   );
@@ -33,12 +30,31 @@ export default function Home() {
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
-  const { contract } = useContract(tokens.USDC.base);
-  const { data: balanceData = BigNumber.from(0) } = useContractRead(
-    contract,
-    "balanceOf",
-    [user?.address]
-  );
+  const { data: balanceData = BigNumber.from(0) } = publicClient.readContract({
+    address: tokens.USDC.sepolia as `0x${string}`,
+    abi: [
+      {
+        constant: true,
+        inputs: [
+          {
+            name: "_owner",
+            type: "address",
+          },
+        ],
+        name: "balanceOf",
+        outputs: [
+          {
+            name: "balance",
+            type: "uint256",
+          },
+        ],
+        payable: false,
+        type: "function",
+      },
+    ],
+    functionName: "balanceOf",
+    args: [privyUser.],
+  });
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -83,7 +99,7 @@ export default function Home() {
 
   const recentPayees = getUniquePayees();
 
-  if (!signer || !user) {
+  if (!isConnected(wallet) || !isReady) {
     return <Redirect href={"/"} />;
   }
 

@@ -3,11 +3,7 @@ import { Image, Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
-import {
-  shortenAddress,
-  useContract,
-  useContractRead,
-} from "@thirdweb-dev/react-native";
+
 import { ArrowLeft, Copy } from "lucide-react-native";
 import { BigNumber } from "ethers";
 
