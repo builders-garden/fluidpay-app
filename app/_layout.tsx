@@ -1,8 +1,3 @@
-import {
-  ThirdwebProvider,
-  embeddedWallet,
-  smartWallet,
-} from "@thirdweb-dev/react-native";
 import { Slot } from "expo-router";
 import { LogBox, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
@@ -14,10 +9,24 @@ import Toast, {
 } from "react-native-toast-message";
 //@ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
-import { base, sepolia } from "../constants/chains";
+// Import the PrivyProvider
+import { PrivyProvider } from "@privy-io/expo";
+import { PrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
+import { QueryClient } from "@tanstack/react-query";
+import { createConfig } from "wagmi";
+import { http } from "viem";
+import { base } from "viem/chains";
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
+const queryClient = new QueryClient();
+
+const wagmiConfig = createConfig({
+  chains: [base],
+  transports: {
+    [base.id]: http(),
+  },
+});
 const toastConfig: ToastConfig = {
   success: (props) => (
     <BaseToast
@@ -57,30 +66,13 @@ export default function AppLayout() {
           icon: (props) => <Icon {...props} />,
         }}
       >
-        <ThirdwebProvider
-          activeChain={sepolia.chainId}
-          clientId={process.env.EXPO_PUBLIC_TW_CLIENT_ID}
-          supportedChains={[base, sepolia]}
-          supportedWallets={[
-            smartWallet(
-              embeddedWallet({
-                auth: {
-                  options: ["email", "google", "apple"],
-                  redirectUrl: "crumina://",
-                },
-              }),
-              {
-                factoryAddress: process.env
-                  .EXPO_PUBLIC_TW_FACTORY_ADDRESS as string,
-                gasless: true,
-              }
-            ),
-          ]}
-        >
-          <View className="bg-black flex-1">
-            <Slot />
-          </View>
-        </ThirdwebProvider>
+        <PrivyProvider appId={"clrgh1bz400cijs0gbyk46urk"}>
+          <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
+            <View className="bg-black flex-1">
+              <Slot />
+            </View>
+          </PrivyWagmiProvider>
+        </PrivyProvider>
       </PaperProvider>
       <Toast
         config={toastConfig}
