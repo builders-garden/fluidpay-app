@@ -1,8 +1,3 @@
-import {
-  useConnectedWallet,
-  useContract,
-  useContractRead,
-} from "@thirdweb-dev/react-native";
 import { Link, Redirect, useNavigation } from "expo-router";
 import { View, Text, Pressable } from "react-native";
 import Avatar from "../../../components/avatar";
@@ -17,12 +12,17 @@ import { ChevronRight } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
 import { getPayments } from "../../../lib/api";
-import { BigNumber } from "ethers";
+import {
+  useERC20BalanceOf,
+  usePrivyWagmiProvider,
+} from "@buildersgarden/privy-wagmi-provider";
 import AppButton from "../../../components/app-button";
 import tokens from "../../../constants/tokens";
+import { sepolia } from "viem/chains";
+import { formatBigInt } from "../../../lib/utils";
 
 export default function Home() {
-  const signer = useConnectedWallet();
+  const { address, isConnected, isReady } = usePrivyWagmiProvider();
   // const [refreshing, setRefreshing] = React.useState(false);
   const user = useUserStore((state) => state.user);
   const setProfileUser = useProfileStore((state) => state.setProfileUser);
@@ -33,12 +33,11 @@ export default function Home() {
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
-  const { contract } = useContract(tokens.USDC.base);
-  const { data: balanceData = BigNumber.from(0) } = useContractRead(
-    contract,
-    "balanceOf",
-    [user?.address]
-  );
+  const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
+    network: sepolia.id,
+    args: [address!],
+    address: tokens.USDC.sepolia as `0x${string}`,
+  });
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -83,7 +82,7 @@ export default function Home() {
 
   const recentPayees = getUniquePayees();
 
-  if (!signer || !user) {
+  if (!isReady || !isConnected || !user) {
     return <Redirect href={"/"} />;
   }
 
@@ -115,11 +114,7 @@ export default function Home() {
                   Base • USDC
                 </Text>
                 <Text className="text-white font-bold text-center text-5xl">
-                  $
-                  {balanceData
-                    .div(10 ** 6)
-                    .toNumber()
-                    .toFixed(2)}
+                  ${formatBigInt(balance!, 2)}
                 </Text>
               </View>
               <View className="flex flex-row items-center justify-evenly w-full">

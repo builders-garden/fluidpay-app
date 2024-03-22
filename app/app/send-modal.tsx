@@ -4,20 +4,20 @@ import { ActivityIndicator, Appbar } from "react-native-paper";
 import { Text } from "react-native";
 import { useSendStore, useUserStore } from "../../store";
 import { useState } from "react";
-import {
-  shortenAddress,
-  useContract,
-  useContractRead,
-  useTransferToken,
-} from "@thirdweb-dev/react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../../components/app-button";
-import { formatUnits } from "ethers/lib/utils";
 import { AmountChooser } from "../../components/amount-chooser";
 import Avatar from "../../components/avatar";
 import { ArrowLeft } from "lucide-react-native";
 import { createPayment } from "../../lib/api";
 import tokens from "../../constants/tokens";
+import { formatBigInt, shortenAddress } from "../../lib/utils";
+import { sepolia } from "viem/chains";
+import {
+  useERC20BalanceOf,
+  useERC20Transfer,
+  usePrivyWagmiProvider,
+} from "@buildersgarden/privy-wagmi-provider";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0 } = useLocalSearchParams();
@@ -25,29 +25,29 @@ export default function SendModal() {
   const sendUser = useSendStore((state) => state.user);
   const setSendUser = useSendStore((state) => state.setSendUser);
   const user = useUserStore((state) => state.user);
-  const { contract } = useContract(tokens.USDC.sepolia);
-  const { mutateAsync: transfer, isLoading: transferLoading } =
-    useTransferToken(contract);
+  const transfer = useERC20Transfer({
+    network: sepolia.id,
+    address: tokens.USDC.sepolia as `0x${string}`,
+  });
   const [amount, setAmount] = useState(paramsAmount as number);
-  const [loading, setLoading] = useState(false);
-  const { data: balanceData, isLoading: balanceOfLoading } = useContractRead(
-    contract,
-    "balanceOf",
-    [user?.address]
-  );
-  const balance = balanceData
-    ? parseFloat(formatUnits(balanceData, 6)).toFixed(2)
-    : (0).toFixed(2);
+  const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
+  const { address } = usePrivyWagmiProvider();
+  const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
+    network: sepolia.id,
+    args: [address!],
+    address: tokens.USDC.sepolia as `0x${string}`,
+  });
 
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
   // const canSend = true;
   const sendTokens = async () => {
     if (!amount || amount < 0) return;
-    await transfer({
-      to: sendUser!.address,
-      amount: amount,
+    setIsLoadingTransfer(true);
+    await transfer!({
+      to: sendUser!.address as `0x${string}`,
+      amount: BigInt(amount),
+      waitForTx: true,
     });
-
     const payment = {
       payerId: user!.id,
       payeeId: sendUser!.id,
@@ -56,6 +56,7 @@ export default function SendModal() {
     };
 
     await createPayment(user!.token, payment);
+    setIsLoadingTransfer(false);
 
     router.back();
   };
@@ -93,7 +94,7 @@ export default function SendModal() {
           @{sendUser?.username}
         </Text>
         <Text className="text-[#8F8F91] text-lg text-ellipsis">
-          {shortenAddress(sendUser?.address, false)}
+          {shortenAddress(sendUser?.address)}
         </Text>
 
         <AmountChooser
@@ -103,16 +104,16 @@ export default function SendModal() {
           autoFocus={paramsAmount ? false : true}
           lagAutoFocus={false}
         />
-        {balanceOfLoading ? (
+        {isLoadingBalance ? (
           <ActivityIndicator animating={true} color={"#667DFF"} />
         ) : (
           <Text className="text-[#8F8F91] font-semibold">
-            ${balance} available
+            ${formatBigInt(balance!, 2)} available
           </Text>
         )}
       </View>
       <SafeAreaView className="mt-auto">
-        {transferLoading || loading ? (
+        {isLoadingBalance || isLoadingTransfer ? (
           <ActivityIndicator animating={true} color={"#667DFF"} />
         ) : (
           <View className="flex flex-col px-4">

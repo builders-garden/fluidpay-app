@@ -2,8 +2,8 @@ import { View, Text, Pressable } from "react-native";
 import { Appbar } from "react-native-paper";
 import { Redirect, router } from "expo-router";
 import Avatar from "../../components/avatar";
-import { shortenAddress, useConnectedWallet } from "@thirdweb-dev/react-native";
-import { useState } from "react";
+import { shortenAddress } from "../../lib/utils";
+import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import { useUserStore } from "../../store";
 import React from "react";
 import {
@@ -19,11 +19,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import LogoutModal from "../../components/modals/logout-modal";
 
 export default function Settings() {
-  const signer = useConnectedWallet();
+  const { isConnected, isReady } = usePrivyWagmiProvider();
   const [showModal, setShowModal] = React.useState(false);
   const user = useUserStore((state) => state.user);
 
-  if (!signer || !user) {
+  if (!isConnected || !isReady || !user) {
     return <Redirect href={"/"} />;
   }
 
@@ -62,7 +62,7 @@ export default function Settings() {
               </Text>
               <View className="flex flex-row space-x-2 items-center">
                 <Text className="text-[#8F8F91] text-xl text-ellipsis">
-                  {shortenAddress(user?.address, false)}
+                  {shortenAddress(user?.address)}
                 </Text>
                 <QrCode
                   onPress={() => {

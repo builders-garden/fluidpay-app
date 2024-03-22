@@ -1,11 +1,11 @@
 import { Modal, Portal } from "react-native-paper";
 import { Text, View } from "react-native";
 import AppButton from "../app-button";
-import { useDisconnect } from "@thirdweb-dev/react-native";
 import Spacer from "../spacer";
 
 import * as SecureStore from "expo-secure-store";
 import { useUserStore } from "../../store";
+import { useDisconnect } from "wagmi";
 
 export default function LogoutModal({
   visible,
@@ -15,7 +15,7 @@ export default function LogoutModal({
   hideModal: () => void;
 }) {
   const user = useUserStore((state) => state.user);
-  const disconnect = useDisconnect();
+  const { disconnect } = useDisconnect();
   return (
     <Portal>
       <Modal visible={visible} onDismiss={hideModal}>
@@ -30,7 +30,7 @@ export default function LogoutModal({
             text="Confirm logout"
             variant="ghost"
             onPress={async () => {
-              await SecureStore.deleteItemAsync(`token-${user?.address}`)
+              await SecureStore.deleteItemAsync(`token-${user?.address}`);
               await disconnect();
             }}
           />

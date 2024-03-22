@@ -3,11 +3,6 @@ import { Image, Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
-import {
-  shortenAddress,
-  useContract,
-  useContractRead,
-} from "@thirdweb-dev/react-native";
 import { ArrowLeft, Copy } from "lucide-react-native";
 import { BigNumber } from "ethers";
 
@@ -15,16 +10,24 @@ import * as Clipboard from "expo-clipboard";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import tokens from "../../constants/tokens";
 
+import {
+  usePrivyWagmiProvider,
+  useERC20BalanceOf,
+} from "@buildersgarden/privy-wagmi-provider";
+import { sepolia } from "viem/chains";
+import { formatBigInt, shortenAddress } from "../../lib/utils";
+
 export default function DetailsModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
 
-  const { contract } = useContract(tokens.USDC.base);
-  const { data: balanceData = BigNumber.from(0) } = useContractRead(
-    contract,
-    "balanceOf",
-    [user?.address]
-  );
+  const { address } = usePrivyWagmiProvider();
+
+  const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
+    network: sepolia.id,
+    args: [address!],
+    address: tokens.USDC.sepolia as `0x${string}`,
+  });
 
   return (
     <SafeAreaView
@@ -55,11 +58,7 @@ export default function DetailsModal() {
         <View className="flex flex-row items-center justify-between space-x-2">
           <View className="flex space-y-2">
             <Text className="text-3xl text-white font-bold">
-              $
-              {balanceData
-                .div(10 ** 6)
-                .toNumber()
-                .toFixed(2)}
+              {isLoadingBalance ? "Loading..." : `${formatBigInt(balance!, 2)}`}
             </Text>
             <Text className="text-white text-lg font-semibold">
               Base • USDC
@@ -92,7 +91,7 @@ export default function DetailsModal() {
             <View className="flex space-y-2">
               <Text className="text-gray-400 text-lg font-medium">Address</Text>
               <Text className="text-[#0061FF] text-lg font-medium">
-                {shortenAddress(user?.address)}
+                {shortenAddress(address!)}
               </Text>
             </View>
 

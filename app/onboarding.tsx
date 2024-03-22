@@ -1,4 +1,4 @@
-import { useAddress } from "@thirdweb-dev/react-native";
+import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import { useState } from "react";
 import { View, Text, TextInput } from "react-native";
 import * as SecureStore from "expo-secure-store";
@@ -25,7 +25,7 @@ export default function Onboarding() {
   const [step] = useState(0);
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
-  const address = useAddress();
+  const { address } = usePrivyWagmiProvider();
   const setUser = useUserStore((state) => state.setUser);
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions

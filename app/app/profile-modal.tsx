@@ -2,7 +2,6 @@ import { Link, router, useLocalSearchParams } from "expo-router";
 import { View, Text } from "react-native";
 import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
-import { shortenAddress } from "@thirdweb-dev/react-native";
 import CircularButton from "../../components/circular-button";
 import { ScrollView } from "react-native-gesture-handler";
 import { ArrowLeft } from "lucide-react-native";
@@ -10,6 +9,7 @@ import { useSendStore, useUserStore } from "../../store";
 import { useEffect, useState } from "react";
 import { getPayments, getUserByIdUsernameOrAddress } from "../../lib/api";
 import TransactionItem from "../../components/transaction-item";
+import { shortenAddress } from "../../lib/utils";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
@@ -74,7 +74,7 @@ export default function ProfileModal() {
             @{profileUser?.username}
           </Text>
           <Text className="text-[#8F8F91] text-xl text-ellipsis">
-            {shortenAddress(profileUser?.address, false)}
+            {shortenAddress(profileUser?.address)}
           </Text>
         </View>
 

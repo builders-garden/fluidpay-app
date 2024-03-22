@@ -4,9 +4,9 @@ import { Appbar } from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
 import React from "react";
 import { useUserStore } from "../../store";
-import { shortenAddress } from "@thirdweb-dev/react-native";
 import QRCode from "../../components/qrcode";
 import { ArrowLeft, Check, Copy } from "lucide-react-native";
+import { shortenAddress } from "../../lib/utils";
 
 export default function AddMoneyModal() {
   const isPresented = router.canGoBack();
@@ -43,7 +43,7 @@ export default function AddMoneyModal() {
         </Text>
         <View className="bg-[#232324] rounded-xl flex flex-row justify-between items-center mt-4 px-4 py-2">
           <Text className="text-[#8F8F91] text-lg text-ellipsis">
-            {shortenAddress(user?.address)}
+            {shortenAddress(user?.address!)}
           </Text>
           <Pressable
             onPress={async () => {

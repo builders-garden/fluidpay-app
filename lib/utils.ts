@@ -75,3 +75,17 @@ export function colorHash(inputString: string) {
     hex,
   };
 }
+
+export const shortenAddress = (address: string) => {
+  if (!address) return "undefined";
+  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+};
+
+export const formatBigInt = (value: bigint, decimalPlaces = 2) => {
+  if (!value) return 0;
+  const divisorBigInt = BigInt(10 ** (6 + decimalPlaces)); // Adjust for decimal places
+  const quotientBigInt = value / divisorBigInt;
+  const remainderBigInt = value % divisorBigInt;
+  const remainderStr = remainderBigInt.toString().padStart(decimalPlaces, "0"); // Pad with leading zeros
+  return `${quotientBigInt}.${remainderStr.slice(0, decimalPlaces)}`;
+};
