@@ -4,15 +4,18 @@ export default function AppButton({
   text,
   onPress,
   variant = "primary",
+  disabled = false,
 }: {
   text: string;
   onPress: () => void;
   variant?: "primary" | "ghost" | "disabled" | "secondary";
+  disabled?: boolean;
 }) {
   if (variant === "ghost") {
     return (
       <TouchableOpacity
         onPress={onPress}
+        disabled={disabled}
         className="bg-[#0061FF]/20 rounded-full flex items-center justify-center py-3"
       >
         <Text className="text-lg text-[#3F89FF] font-semibold">{text}</Text>
@@ -32,6 +35,7 @@ export default function AppButton({
     return (
       <TouchableOpacity
         onPress={onPress}
+        disabled={disabled}
         className="bg-white border-2 border-white rounded-full flex items-center justify-center py-3 px-4"
       >
         <Text className="text-lg text-black font-semibold">{text}</Text>
