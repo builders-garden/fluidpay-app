@@ -14,7 +14,6 @@ import {
   usePrivy,
   isNotCreated,
   PrivyEmbeddedWalletProvider,
-  usePrivyClient,
 } from "@privy-io/expo";
 import { useEffect, useRef, useState } from "react";
 import AppButton from "../components/app-button";
@@ -31,7 +30,7 @@ import { DBUser } from "../store/interfaces";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 
 const Home = () => {
-  const { isReady } = usePrivy();
+  const { isReady, logout } = usePrivy();
   const { address } = usePrivyWagmiProvider();
   const [email, setEmail] = useState<string>();
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
@@ -198,11 +197,6 @@ const Home = () => {
               </View>
             )}
 
-            {state.status === "sending-code" && (
-              //  Shows only while the code is sending
-              <Text>Sending Code...</Text>
-            )}
-
             {state.status === "awaiting-code-input" && (
               <View className="w-full flex flex-col">
                 <Text className="text-white text-xl text-center mb-4">
@@ -269,6 +263,7 @@ const Home = () => {
                   onPress={() => {
                     setEmail("");
                     setCode(Array(6).fill(""));
+                    logout();
                   }}
                   text="Logout"
                 />

@@ -66,7 +66,7 @@ export default function AppLayout() {
           icon: (props) => <Icon {...props} />,
         }}
       >
-        <PrivyProvider appId={"clrgh1bz400cijs0gbyk46urk"}>
+        <PrivyProvider appId={process.env.EXPO_PUBLIC_PRIVY_APP_ID!}>
           <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
             <View className="bg-black flex-1">
               <Slot />
