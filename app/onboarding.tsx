@@ -83,7 +83,8 @@ export default function Onboarding() {
                 autoComplete="off"
                 autoCorrect={false}
                 placeholder="First and last name"
-                className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg placeholder-[#8F8F91]"
+                placeholderTextColor={"#8F8F91"}
+                className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg"
               />
             </View>
             <View className="w-full mt-4">
@@ -100,8 +101,9 @@ export default function Onboarding() {
                 autoCapitalize="none"
                 autoComplete="off"
                 autoCorrect={false}
-                placeholder="First and last name"
-                className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg placeholder-[#8F8F91]"
+                placeholder="username"
+                placeholderTextColor={"#8F8F91"}
+                className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg"
               />
             </View>
           </View>

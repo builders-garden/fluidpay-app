@@ -6,6 +6,8 @@ import Spacer from "../spacer";
 import * as SecureStore from "expo-secure-store";
 import { useUserStore } from "../../store";
 import { useDisconnect } from "wagmi";
+import { usePrivy } from "@privy-io/expo";
+import { router } from "expo-router";
 
 export default function LogoutModal({
   visible,
@@ -16,6 +18,7 @@ export default function LogoutModal({
 }) {
   const user = useUserStore((state) => state.user);
   const { disconnect } = useDisconnect();
+  const { logout } = usePrivy();
   return (
     <Portal>
       <Modal visible={visible} onDismiss={hideModal}>
@@ -31,7 +34,9 @@ export default function LogoutModal({
             variant="ghost"
             onPress={async () => {
               await SecureStore.deleteItemAsync(`token-${user?.address}`);
+              await logout();
               await disconnect();
+              router.replace("/");
             }}
           />
           <Spacer h={16} />
