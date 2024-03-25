@@ -179,14 +179,16 @@ const Home = () => {
                 <AppButton
                   // Keeps button disabled while code is being sent
                   disabled={state.status !== "initial" || email?.length === 0}
-                  onPress={() => {
+                  onPress={async () => {
                     if (!validateEmail(email!)) {
                       setIsEmailValid(false);
                       return;
                     }
                     setIsLoading(true);
                     setLoadingMessage("Sending code...");
-                    sendCode({ email: email! });
+                    console.log("email", email!);
+                    const res = await sendCode({ email: email! });
+                    console.log(res);
                     setLoadingMessage("false");
                     setIsLoading(false);
                     setCode(Array(6).fill(""));
@@ -227,8 +229,10 @@ const Home = () => {
                   }
                   onPress={async () => {
                     setIsLoading(true);
-                    setLoadingMessage("Sending code...");
-                    await loginWithCode({ code: code.join("") });
+                    setLoadingMessage("Submitting code...");
+                    console.log("code", code.join(""));
+                    const res = await loginWithCode({ code: code.join("") });
+                    console.log(res);
                     setIsLoading(false);
                     setLoadingMessage("");
                   }}
