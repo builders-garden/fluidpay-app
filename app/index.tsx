@@ -264,10 +264,10 @@ const Home = () => {
             {state.status === "error" && (
               <View className="w-full">
                 <AppButton
-                  onPress={() => {
+                  onPress={async () => {
                     setEmail("");
                     setCode(Array(6).fill(""));
-                    logout();
+                    await logout();
                   }}
                   text="Logout"
                 />

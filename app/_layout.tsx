@@ -16,6 +16,7 @@ import { QueryClient } from "@tanstack/react-query";
 import { createConfig } from "wagmi";
 import { http } from "viem";
 import { base } from "viem/chains";
+import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
@@ -66,7 +67,10 @@ export default function AppLayout() {
           icon: (props) => <Icon {...props} />,
         }}
       >
-        <PrivyProvider appId={process.env.EXPO_PUBLIC_PRIVY_APP_ID!}>
+        <PrivyProvider
+          appId={process.env.EXPO_PUBLIC_PRIVY_APP_ID!}
+          storage={MyPermissiveSecureStorageAdapter}
+        >
           <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
             <View className="bg-black flex-1">
               <Slot />
