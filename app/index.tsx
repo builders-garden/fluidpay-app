@@ -4,7 +4,7 @@ import {
   Text,
   TextInput,
   View,
-  Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
@@ -161,7 +161,7 @@ const Home = () => {
       )}
       {isReady && (
         <>
-          <View className="flex flex-col items-center space-y-3 w-full mb-12">
+          <KeyboardAvoidingView className="flex flex-col items-center space-y-3 w-full mb-12">
             {state.status === "initial" && (
               <View className="w-full">
                 <View className="w-full flex flex-col space-y-1 mb-4">
@@ -277,7 +277,7 @@ const Home = () => {
                 />
               </View>
             )}
-          </View>
+          </KeyboardAvoidingView>
         </>
       )}
     </SafeAreaView>
