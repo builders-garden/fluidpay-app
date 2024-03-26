@@ -30,7 +30,7 @@ import { DBUser } from "../store/interfaces";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 
 const Home = () => {
-  const { isReady, logout } = usePrivy();
+  const { isReady, logout, getAccessToken } = usePrivy();
   const { address } = usePrivyWagmiProvider();
   const [email, setEmail] = useState<string>();
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
@@ -40,7 +40,14 @@ const Home = () => {
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
   const wallet = useEmbeddedWallet();
-  const { state, sendCode, loginWithCode } = useLoginWithEmail();
+  const { state, sendCode, loginWithCode } = useLoginWithEmail({
+    onError: (error) => {
+      console.error(error);
+    },
+    onLoginSuccess(user) {
+      console.log("Logged in", user);
+    },
+  });
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -65,7 +72,7 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    if (state.status === "done") {
+    if (state.status === "done" && address) {
       try {
         setIsLoading(true);
         handleConnection();
@@ -75,7 +82,7 @@ const Home = () => {
         setIsLoading(false);
       }
     }
-  }, [state]);
+  }, [state, address]);
 
   const signMessage = async (
     provider: PrivyEmbeddedWalletProvider,
@@ -186,9 +193,7 @@ const Home = () => {
                     }
                     setIsLoading(true);
                     setLoadingMessage("Sending code...");
-                    console.log("email", email!);
                     const res = await sendCode({ email: email! });
-                    console.log(res);
                     setLoadingMessage("false");
                     setIsLoading(false);
                     setCode(Array(6).fill(""));
@@ -230,9 +235,8 @@ const Home = () => {
                   onPress={async () => {
                     setIsLoading(true);
                     setLoadingMessage("Submitting code...");
-                    console.log("code", code.join(""));
                     const res = await loginWithCode({ code: code.join("") });
-                    console.log(res);
+                    const token = await getAccessToken();
                     setIsLoading(false);
                     setLoadingMessage("");
                   }}
