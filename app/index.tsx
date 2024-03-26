@@ -5,6 +5,7 @@ import {
   TextInput,
   View,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
@@ -161,122 +162,128 @@ const Home = () => {
       )}
       {isReady && (
         <>
-          <KeyboardAvoidingView className="flex flex-col items-center space-y-3 w-full mb-12">
-            {state.status === "initial" && (
-              <View className="w-full">
-                <View className="w-full flex flex-col space-y-1 mb-4">
-                  <TextInput
-                    value={email}
-                    onChangeText={setEmail}
-                    autoCapitalize="none"
-                    autoComplete="off"
-                    autoCorrect={false}
-                    inputMode="email"
-                    clearButtonMode="while-editing"
-                    placeholder="youremail@example.com"
-                    placeholderTextColor={"#8F8F91"}
-                    className=" text-white bg-[#232324] px-3 py-4 rounded-lg"
-                  />
-                  {!isEmailValid && (
-                    <Text className="text-red-500 text-sm">
-                      Please enter a valid email
-                    </Text>
-                  )}
-                </View>
-                <AppButton
-                  // Keeps button disabled while code is being sent
-                  disabled={state.status !== "initial" || email?.length === 0}
-                  onPress={async () => {
-                    if (!validateEmail(email!)) {
-                      setIsEmailValid(false);
-                      return;
-                    }
-                    setIsLoading(true);
-                    setLoadingMessage("Sending code...");
-                    const res = await sendCode({ email: email! });
-                    setLoadingMessage("false");
-                    setIsLoading(false);
-                    setCode(Array(6).fill(""));
-                  }}
-                  variant={state.status !== "initial" ? "disabled" : "primary"}
-                  text="Login with Email"
-                />
-              </View>
-            )}
-
-            {state.status === "awaiting-code-input" && (
-              <View className="w-full flex flex-col">
-                <Text className="text-white text-xl text-center mb-4">
-                  We sent a code to {email}
-                </Text>
-                <View className="flex flex-row mb-4 space-x-4 justify-around">
-                  {code.map((value, index) => (
+          <KeyboardAvoidingView className="w-full" behavior="padding">
+            <View className="flex flex-col items-center space-y-3 w-full mb-12">
+              {state.status === "initial" && (
+                <View className="w-full">
+                  <View className="w-full flex flex-col space-y-1 mb-4">
                     <TextInput
-                      key={index}
-                      value={value}
-                      onChangeText={(text) => handleInputChange(text, index)}
-                      maxLength={1}
-                      keyboardType="numeric"
-                      ref={(el: TextInput) =>
-                        ((inputRefs.current[index] as TextInput) =
-                          el as TextInput)
-                      }
-                      className="text-4xl text-center basis-1/6 text-white bg-[#232324] py-4 rounded-lg placeholder-white"
+                      value={email}
+                      onChangeText={setEmail}
+                      autoCapitalize="none"
+                      autoComplete="off"
+                      autoCorrect={false}
+                      inputMode="email"
+                      clearButtonMode="while-editing"
+                      placeholder="youremail@example.com"
+                      placeholderTextColor={"#8F8F91"}
+                      className=" text-white bg-[#232324] px-3 py-4 rounded-lg"
                     />
-                  ))}
+                    {!isEmailValid && (
+                      <Text className="text-red-500 text-sm">
+                        Please enter a valid email
+                      </Text>
+                    )}
+                  </View>
+                  <AppButton
+                    // Keeps button disabled while code is being sent
+                    disabled={state.status !== "initial" || email?.length === 0}
+                    onPress={async () => {
+                      if (!validateEmail(email!)) {
+                        setIsEmailValid(false);
+                        return;
+                      }
+                      setIsLoading(true);
+                      setLoadingMessage("Sending code...");
+                      const res = await sendCode({ email: email! });
+                      setLoadingMessage("false");
+                      setIsLoading(false);
+                      setCode(Array(6).fill(""));
+                    }}
+                    variant={
+                      state.status !== "initial" ? "disabled" : "primary"
+                    }
+                    text="Login with Email"
+                  />
                 </View>
+              )}
 
-                <AppButton
-                  // Keeps button disabled until the code has been sent
-                  disabled={
-                    state.status !== "awaiting-code-input" &&
-                    code.join("").length === 6
-                  }
-                  onPress={async () => {
-                    setIsLoading(true);
-                    setLoadingMessage("Submitting code...");
-                    const res = await loginWithCode({ code: code.join("") });
-                    const token = await getAccessToken();
-                    setIsLoading(false);
-                    setLoadingMessage("");
-                  }}
-                  text="Enter code"
-                  variant={
-                    state.status === "awaiting-code-input" &&
-                    code?.join("").length === 6
-                      ? "primary"
-                      : "disabled"
-                  }
-                />
-                <Text
-                  className="mt-8 text-blue-500 text-center font-bold"
-                  onPress={() => sendCode({ email: email! })}
-                >
-                  Didn&apos;t receive anything? Send again
-                </Text>
-                <Text
-                  className="mt-4 text-gray-500 text-center font-semibold"
-                  onPress={() => {
-                    router.replace("/");
-                  }}
-                >
-                  Change email
-                </Text>
-              </View>
-            )}
+              {state.status === "awaiting-code-input" && (
+                <View className="w-full flex flex-col">
+                  <Text className="text-white text-xl text-center mb-4">
+                    We sent a code to {email}
+                  </Text>
+                  <View className="flex flex-row mb-4 space-x-4 justify-around">
+                    {code.map((value, index) => (
+                      <TextInput
+                        key={index}
+                        value={value}
+                        onChangeText={(text) => handleInputChange(text, index)}
+                        maxLength={1}
+                        keyboardType="numeric"
+                        ref={(el: TextInput) =>
+                          ((inputRefs.current[index] as TextInput) =
+                            el as TextInput)
+                        }
+                        className="text-4xl text-center basis-1/6 text-white bg-[#232324] py-4 rounded-lg placeholder-white"
+                      />
+                    ))}
+                  </View>
 
-            {state.status === "error" && (
-              <View className="w-full">
-                <AppButton
-                  onPress={async () => {
-                    setEmail("");
-                    setCode(Array(6).fill(""));
-                    await logout();
-                  }}
-                  text="Logout"
-                />
-              </View>
-            )}
+                  <AppButton
+                    // Keeps button disabled until the code has been sent
+                    disabled={
+                      state.status !== "awaiting-code-input" &&
+                      code.join("").length === 6
+                    }
+                    onPress={async () => {
+                      setIsLoading(true);
+                      setLoadingMessage("Submitting code...");
+                      const res = await loginWithCode({
+                        code: code.join(""),
+                      });
+                      const token = await getAccessToken();
+                      setIsLoading(false);
+                      setLoadingMessage("");
+                    }}
+                    text="Enter code"
+                    variant={
+                      state.status === "awaiting-code-input" &&
+                      code?.join("").length === 6
+                        ? "primary"
+                        : "disabled"
+                    }
+                  />
+                  <Text
+                    className="mt-8 text-blue-500 text-center font-bold"
+                    onPress={() => sendCode({ email: email! })}
+                  >
+                    Didn&apos;t receive anything? Send again
+                  </Text>
+                  <Text
+                    className="mt-4 text-gray-500 text-center font-semibold"
+                    onPress={() => {
+                      router.replace("/");
+                    }}
+                  >
+                    Change email
+                  </Text>
+                </View>
+              )}
+
+              {state.status === "error" && (
+                <View className="w-full">
+                  <AppButton
+                    onPress={async () => {
+                      setEmail("");
+                      setCode(Array(6).fill(""));
+                      await logout();
+                    }}
+                    text="Logout"
+                  />
+                </View>
+              )}
+            </View>
           </KeyboardAvoidingView>
         </>
       )}
