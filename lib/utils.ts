@@ -83,7 +83,7 @@ export const shortenAddress = (address: string) => {
 
 export const formatBigInt = (value: bigint, decimalPlaces = 2) => {
   if (!value) return 0;
-  const divisorBigInt = BigInt(10 ** (6 + decimalPlaces)); // Adjust for decimal places
+  const divisorBigInt = BigInt(10 ** 6); // Adjust for decimal places
   const quotientBigInt = value / divisorBigInt;
   const remainderBigInt = value % divisorBigInt;
   const remainderStr = remainderBigInt.toString().padStart(decimalPlaces, "0"); // Pad with leading zeros

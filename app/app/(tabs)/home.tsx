@@ -38,6 +38,7 @@ export default function Home() {
     args: [address!],
     address: tokens.USDC.sepolia as `0x${string}`,
   });
+  console.log(balance);
   const navigation = useNavigation();
 
   useEffect(() => {
