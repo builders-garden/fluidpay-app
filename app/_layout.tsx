@@ -70,6 +70,7 @@ export default function AppLayout() {
         <PrivyProvider
           appId={process.env.EXPO_PUBLIC_PRIVY_APP_ID!}
           storage={MyPermissiveSecureStorageAdapter}
+          supportedChains={[sepolia]}
         >
           <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
             <View className="bg-black flex-1">
