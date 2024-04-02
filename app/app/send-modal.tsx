@@ -53,6 +53,7 @@ export default function SendModal() {
     const payment = {
       payerId: user!.id,
       payeeId: sendUser!.id,
+      chainId: chain.id,
       amount: amount,
       description: "",
     };

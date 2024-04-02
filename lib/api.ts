@@ -42,6 +42,7 @@ export type CreatePaymentBody = {
   payerId: number;
   payeeId: number;
   amount: number;
+  chainId: number;
   description: string;
 };
 
@@ -53,6 +54,7 @@ export type PaymentByIdResponse = {
   id: number;
   payerId: number;
   payeeId: number;
+  chainId: number;
   amount: number;
   description: string;
   createdAt: string;
@@ -62,6 +64,7 @@ export type PaymentsQueryResponse = {
   id: number;
   payerId: number;
   payeeId: number;
+  chainId: number;
   amount: number;
   description: string;
   createdAt: string;
@@ -72,6 +75,7 @@ export type PaymentsQuery = {
   fromDate?: string;
   toDate?: string;
   direction?: string;
+  chainId?: number;
   limit?: number;
 };
 

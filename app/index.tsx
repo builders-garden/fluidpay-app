@@ -29,6 +29,7 @@ const Home = () => {
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
   const setChain = useChainStore((state) => state.setChain);
+  const chain = useChainStore((state) => state.chain);
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -61,7 +62,7 @@ const Home = () => {
   const fetchUserData = async (token: string) => {
     const [userData, payments, groups] = await Promise.all([
       getMe(token),
-      getPayments(token, { limit: 10 }),
+      getPayments(token, { limit: 10, chainId: chain.id }),
       getGroups(token),
     ]);
     setUser({ ...userData, token } as DBUser);

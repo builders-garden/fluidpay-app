@@ -62,7 +62,7 @@ export default function Home() {
 
   const fetchPayments = async () => {
     if (!user) return;
-    const res = await getPayments(user!.token, { limit: 3 });
+    const res = await getPayments(user!.token, { limit: 3, chainId: chain.id });
     setTransactions(res as any[]);
   };
 

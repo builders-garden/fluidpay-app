@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { getPayments, getUserByIdUsernameOrAddress } from "../../lib/api";
 import TransactionItem from "../../components/transaction-item";
 import { shortenAddress } from "../../lib/utils";
+import { useChainStore } from "../../store/use-chain-store";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
@@ -18,6 +19,7 @@ export default function ProfileModal() {
   const setSendUser = useSendStore((state) => state.setSendUser);
   const [profileUser, setUser] = useState<any>(null);
   const [transactions, setTransaction] = useState<any[]>([]);
+  const chain = useChainStore((state) => state.chain);
 
   useEffect(() => {
     if (currentUser) {
@@ -32,6 +34,7 @@ export default function ProfileModal() {
       }),
       getPayments(currentUser!.token, {
         withProfileId: parseInt(userId as string, 10),
+        chainId: chain.id
       }),
     ]);
     setUser(profile);

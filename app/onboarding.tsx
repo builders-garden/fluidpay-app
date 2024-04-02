@@ -8,6 +8,7 @@ import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getGroups, getPayments, updateMe } from "../lib/api";
 import { DBUser } from "../store/interfaces";
+import { useChainStore } from "../store/use-chain-store";
 
 const generatePassword = () => {
   const chars =
@@ -26,6 +27,7 @@ export default function Onboarding() {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const { address } = usePrivyWagmiProvider();
+  const chain = useChainStore((state) => state.chain);
   const setUser = useUserStore((state) => state.setUser);
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
@@ -42,7 +44,7 @@ export default function Onboarding() {
       const res = await updateMe(token, data);
 
       const [payments, groups] = await Promise.all([
-        getPayments(token, { limit: 10 }),
+        getPayments(token, { limit: 10, chainId: chain.id }),
         getGroups(token),
       ]);
       setUser({ ...res, token } as DBUser);
@@ -55,17 +57,6 @@ export default function Onboarding() {
   return (
     <SafeAreaView className="flex-1 bg-black px-4">
       <Text className="text-3xl text-white font-bold">Setup your profile</Text>
-      {/* {step === 0 && (
-        <View className="flex-1 flex-col items-center justify-center space-y-2 mx-4">
-          <Text className="text-white font-semibold text-lg text-center">
-            Creating your account, this might{"\n"} take a while.
-          </Text>
-          <Text className="text-[#8F8F91] text-center font-medium">
-            {creationStatus}
-          </Text>
-          <ActivityIndicator animating={loading} color={"#667DFF"} />
-        </View>
-      )} */}
       {step === 0 && (
         <View className="flex flex-col flex-grow justify-between mb-12">
           <View className="flex flex-col space-y-4">
