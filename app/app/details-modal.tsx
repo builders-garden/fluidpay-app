@@ -16,10 +16,12 @@ import {
 } from "@buildersgarden/privy-wagmi-provider";
 import { sepolia } from "viem/chains";
 import { formatBigInt, shortenAddress } from "../../lib/utils";
+import { useChainStore } from "../../store/use-chain-store";
 
 export default function DetailsModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
+  const chain = useChainStore((state) => state.chain);
 
   const { address } = usePrivyWagmiProvider();
 
@@ -61,7 +63,7 @@ export default function DetailsModal() {
               {isLoadingBalance ? "Loading..." : `${formatBigInt(balance!, 2)}`}
             </Text>
             <Text className="text-white text-lg font-semibold">
-              Base • USDC
+              {chain.name} • USDC
             </Text>
           </View>
 

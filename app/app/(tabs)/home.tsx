@@ -20,10 +20,13 @@ import AppButton from "../../../components/app-button";
 import tokens from "../../../constants/tokens";
 import { sepolia } from "viem/chains";
 import { formatBigInt } from "../../../lib/utils";
+import { useChainStore } from "../../../store/use-chain-store";
+import PillButton from "../../../components/pill-button";
 
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
   // const [refreshing, setRefreshing] = React.useState(false);
+  const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
   const setProfileUser = useProfileStore((state) => state.setProfileUser);
   const setProfileUserTransactions = useProfileStore(
@@ -108,14 +111,21 @@ export default function Home() {
           </View>
           <ScrollView className="px-4" scrollEnabled={transactions.length > 0}>
             <View className="py-8 flex flex-col space-y-16">
-              <View className="flex flex-col space-y-6">
+              <View className="flex flex-col space-y-4">
                 <Text className="text-white font-semibold text-center">
-                  Base • USDC
+                  {chain.name} • USDC
                 </Text>
                 <Text className="text-white font-bold text-center text-5xl">
                   ${formatBigInt(balance!, 2)}
                 </Text>
+                <View>
+                  <PillButton
+                    text="Accounts"
+                    onPress={() => console.log("x")}
+                  />
+                </View>
               </View>
+              <View></View>
               <View className="flex flex-row items-center justify-evenly w-full">
                 <CircularButton
                   text="Add money"

@@ -28,6 +28,8 @@ import { signMessageWithPrivy } from "../../lib/privy";
 import { DBUser } from "../../store/interfaces";
 import * as SecureStore from "expo-secure-store";
 import { LoginStatus } from "../../app/index";
+import { useChainStore } from "../../store/use-chain-store";
+import { sepolia } from "viem/chains";
 
 export default function LoginForm({
   loginStatus,
@@ -49,6 +51,7 @@ export default function LoginForm({
     (state) => state.setTransactions
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
+  const setChain = useChainStore((state) => state.setChain);
 
   const wallet = useEmbeddedWallet();
   const { state } = useLoginWithEmail({
@@ -110,6 +113,7 @@ export default function LoginForm({
     }
     setLoadingMessage("Fetching user data...");
     const userData = await fetchUserData(token);
+    setChain(sepolia);
     if (!userData.username) {
       return "/onboarding";
     } else {

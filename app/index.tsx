@@ -9,6 +9,8 @@ import { DBUser } from "../store/interfaces";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
 import { getMe, getPayments, getGroups } from "../lib/api";
+import { useChainStore } from "../store/use-chain-store";
+import { sepolia } from "viem/chains";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -26,6 +28,7 @@ const Home = () => {
     (state) => state.setTransactions
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
+  const setChain = useChainStore((state) => state.setChain);
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -68,7 +71,6 @@ const Home = () => {
   };
 
   const getToken = async (address: string) => {
-    console.log("getting token", address);
     const token = await SecureStore.getItemAsync(`token-${address}`);
     if (token) {
       const userData = await fetchUserData(token);
