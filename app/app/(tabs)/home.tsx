@@ -28,7 +28,6 @@ export default function Home() {
   // const [refreshing, setRefreshing] = React.useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
-  const setProfileUser = useProfileStore((state) => state.setProfileUser);
   const setProfileUserTransactions = useProfileStore(
     (state) => state.setProfileUserTransactions
   );
@@ -37,9 +36,9 @@ export default function Home() {
     (state) => state.setTransactions
   );
   const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
-    network: sepolia.id,
+    network: chain.id,
     args: [address!],
-    address: tokens.USDC.sepolia as `0x${string}`,
+    address: tokens.USDC[chain.id] as `0x${string}`,
   });
   const navigation = useNavigation();
 
@@ -121,7 +120,7 @@ export default function Home() {
                 <View>
                   <PillButton
                     text="Accounts"
-                    onPress={() => console.log("x")}
+                    onPress={() => router.push("/app/accounts-modal")}
                   />
                 </View>
               </View>

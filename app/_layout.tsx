@@ -15,7 +15,7 @@ import { PrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import { QueryClient } from "@tanstack/react-query";
 import { createConfig } from "wagmi";
 import { http } from "viem";
-import { sepolia } from "viem/chains";
+import { base, sepolia } from "viem/chains";
 import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
@@ -23,9 +23,10 @@ LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 const queryClient = new QueryClient();
 
 const wagmiConfig = createConfig({
-  chains: [sepolia],
+  chains: [sepolia, base],
   transports: {
     [sepolia.id]: http(),
+    [base.id]: http(),
   },
 });
 const toastConfig: ToastConfig = {

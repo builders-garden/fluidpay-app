@@ -26,9 +26,9 @@ export default function DetailsModal() {
   const { address } = usePrivyWagmiProvider();
 
   const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
-    network: sepolia.id,
+    network: chain.id,
     args: [address!],
-    address: tokens.USDC.sepolia as `0x${string}`,
+    address: tokens.USDC[chain.id] as `0x${string}`,
   });
 
   return (

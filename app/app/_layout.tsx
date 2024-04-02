@@ -42,7 +42,10 @@ export default function AppLayout() {
       />
       <Stack.Screen
         name="select-paid-by-modal"
-        options={{ presentation: "containedTransparentModal", headerShown: false }}
+        options={{
+          presentation: "containedTransparentModal",
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name="group-settings-modal"
@@ -53,6 +56,10 @@ export default function AppLayout() {
         options={{ presentation: "fullScreenModal", headerShown: false }}
       />
       <Stack.Screen name="settings" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="accounts-modal"
+        options={{ headerShown: false, presentation: "fullScreenModal" }}
+      />
       <Stack.Screen name="security-privacy" options={{ headerShown: false }} />
       <Stack.Screen
         name="notification-settings"

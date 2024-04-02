@@ -18,6 +18,7 @@ import {
   useERC20Transfer,
   usePrivyWagmiProvider,
 } from "@buildersgarden/privy-wagmi-provider";
+import { useChainStore } from "../../store/use-chain-store";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0 } = useLocalSearchParams();
@@ -25,17 +26,18 @@ export default function SendModal() {
   const sendUser = useSendStore((state) => state.user);
   const setSendUser = useSendStore((state) => state.setSendUser);
   const user = useUserStore((state) => state.user);
+  const chain = useChainStore((state) => state.chain);
   const transfer = useERC20Transfer({
-    network: sepolia.id,
-    address: tokens.USDC.sepolia as `0x${string}`,
+    network: chain.id,
+    address: tokens.USDC[chain.id] as `0x${string}`,
   });
   const [amount, setAmount] = useState(paramsAmount as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
   const { address } = usePrivyWagmiProvider();
   const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
-    network: sepolia.id,
+    network: chain.id,
     args: [address!],
-    address: tokens.USDC.sepolia as `0x${string}`,
+    address: tokens.USDC[chain.id] as `0x${string}`,
   });
 
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
