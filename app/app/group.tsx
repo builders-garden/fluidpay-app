@@ -59,10 +59,6 @@ export default function GroupPage() {
     const balances = await getGroupBalances(user!.token, {
       id: parsedGroup.id,
     });
-    console.log(
-      balances.map((b: any) => b.debtor),
-      balances.map((b: any) => b.creditor)
-    );
 
     setBalances(balances);
   };

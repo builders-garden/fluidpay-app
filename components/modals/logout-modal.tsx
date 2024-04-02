@@ -33,9 +33,13 @@ export default function LogoutModal({
             text="Confirm logout"
             variant="ghost"
             onPress={async () => {
+              console.log("deleting token");
               await SecureStore.deleteItemAsync(`token-${user?.address}`);
+              console.log("logging out");
               await logout();
+              console.log("disconnecting");
               await disconnect();
+              console.log("replacing router");
               router.replace("/");
             }}
           />
