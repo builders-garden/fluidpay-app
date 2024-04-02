@@ -14,12 +14,15 @@ import { useChainStore } from "../../store/use-chain-store";
 import { base, sepolia } from "viem/chains";
 import tokens from "../../constants/tokens";
 import { formatBigInt } from "../../lib/utils";
+import { switchChain } from "../../lib/privy";
+import { useEmbeddedWallet } from "@privy-io/expo";
 
 export default function AccountsModal() {
   const { isConnected, isReady, address } = usePrivyWagmiProvider();
   const chain = useChainStore((state) => state.chain);
   const setChain = useChainStore((state) => state.setChain);
   const [selectedChain, setSelectedChain] = useState(chain);
+  const wallet = useEmbeddedWallet();
 
   const { balance: sepoliaBalance, isLoading: isLoadingSepoliaBalance } =
     useERC20BalanceOf({
@@ -76,8 +79,10 @@ export default function AccountsModal() {
             </View>
             <View className="bg-white/20 w-full mx-auto rounded-2xl p-2 flex flex-col space-y-2">
               <Pressable
-                onPress={() => {
+                onPress={async () => {
+                  const provider = await wallet.getProvider!();
                   setSelectedChain(base);
+                  switchChain(provider, base.id);
                   setChain(base);
                 }}
                 className={`flex flex-row items-center justify-between p-4 rounded-lg ${selectedChain === base ? "bg-white/25" : ""}`}
@@ -94,8 +99,10 @@ export default function AccountsModal() {
                 </Text>
               </Pressable>
               <Pressable
-                onPress={() => {
+                onPress={async () => {
+                  const provider = await wallet.getProvider!();
                   setSelectedChain(sepolia);
+                  switchChain(provider, sepolia.id);
                   setChain(sepolia);
                 }}
                 className={`flex flex-row items-center justify-between p-4 rounded-lg ${selectedChain === sepolia ? "bg-white/25" : ""}`}

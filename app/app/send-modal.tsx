@@ -12,7 +12,6 @@ import { ArrowLeft } from "lucide-react-native";
 import { createPayment } from "../../lib/api";
 import tokens from "../../constants/tokens";
 import { formatBigInt, shortenAddress } from "../../lib/utils";
-import { sepolia } from "viem/chains";
 import {
   useERC20BalanceOf,
   useERC20Transfer,

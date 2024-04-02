@@ -14,3 +14,18 @@ export const signMessageWithPrivy = async (
     params: [message, accounts[0]],
   });
 };
+
+export const switchChain = async (
+  provider: PrivyEmbeddedWalletProvider,
+  chainId: number
+) => {
+  console.log({
+    method: "wallet_switchEthereumChain",
+    provider,
+    params: [{ chainId: `${chainId}` }],
+  });
+  return await provider.request({
+    method: "wallet_switchEthereumChain",
+    params: [{ chainId: `${chainId}` }],
+  });
+};
