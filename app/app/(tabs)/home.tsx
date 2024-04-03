@@ -66,7 +66,10 @@ export default function Home() {
 
   const fetchPayments = async () => {
     if (!user) return;
-    const res = await getPayments(user!.token, { limit: 3, chainId: chain.id });
+    const res = await getPayments(user!.token, {
+      limit: 10,
+      chainId: chain.id,
+    });
     console.log(res);
     setTransactions(res as any[]);
   };
@@ -155,7 +158,7 @@ export default function Home() {
             </View>
             {transactions.length > 0 && (
               <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
-                {transactions.map((payment, index) => (
+                {transactions.slice(0, 3).map((payment, index) => (
                   <TransactionItem
                     transaction={payment}
                     index={index}

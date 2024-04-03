@@ -1307,10 +1307,10 @@
     "@biconomy/common" "^4.1.1"
     viem "^2.7.12"
 
-"@buildersgarden/privy-wagmi-provider@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@buildersgarden/privy-wagmi-provider/-/privy-wagmi-provider-0.5.0.tgz#36fcfa79fd9994553e34659ade09947731c3d716"
-  integrity sha512-1xBPRkKCYUGjCp5AKnkcEp3Rss76Tk7gb6SRcyWU1GlDzVHM4eWvqLvD9s0KsHDFoWQ2geQ4UN9U+aFYNJdVtg==
+"@buildersgarden/privy-wagmi-provider@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@buildersgarden/privy-wagmi-provider/-/privy-wagmi-provider-0.6.0.tgz#5a33c2ec363b53674f3aa7eeb53016886c8f3d17"
+  integrity sha512-FNZfRvE9UbWC3PapZZL7Zg1MMpdMU8ofnf/eto1R5sM1ZajzU4Wkt00Litoru3Z/j3sKbZ99XSFUrrW6CrT3uQ==
   dependencies:
     "@biconomy/account" "^4.1.1"
     "@privy-io/expo" "^0.11.1"

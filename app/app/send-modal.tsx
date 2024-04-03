@@ -21,10 +21,10 @@ import {
 import { useChainStore } from "../../store/use-chain-store";
 
 export default function SendModal() {
-  const { amount: paramsAmount = 0 } = useLocalSearchParams();
+  const { amount: paramsAmount = 0, user: sendUserData } =
+    useLocalSearchParams();
+  const sendUser = JSON.parse(sendUserData as string);
   const isPresented = router.canGoBack();
-  const sendUser = useSendStore((state) => state.user);
-  const setSendUser = useSendStore((state) => state.setSendUser);
   const user = useUserStore((state) => state.user);
   const chain = useChainStore((state) => state.chain);
   console.log(chain);
@@ -82,7 +82,6 @@ export default function SendModal() {
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}
           onPress={() => {
-            setSendUser(undefined);
             router.back();
           }}
           color="#fff"

@@ -13,6 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionItem from "../../../components/transaction-item";
 import { getUsers } from "../../../lib/api";
 import { ScrollView } from "react-native-gesture-handler";
+import { shortenAddress } from "../../../lib/utils";
+import UserSearchResult from "../../../components/user-search-result";
+import { DBTransaction, DBUser } from "../../../store/interfaces";
 
 export default function Send() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -35,6 +38,41 @@ export default function Send() {
       setResults([]);
     }
   };
+
+  function getInteractedUsers(): {
+    user: DBUser;
+    lastTransaction: DBTransaction;
+  }[] {
+    const interactedUsers: { user: DBUser; lastTransaction: DBTransaction }[] =
+      [];
+
+    transactions.forEach((transaction) => {
+      if (transaction.payeeId === user!.id) {
+        interactedUsers.push({
+          user: transaction.payer,
+          lastTransaction: transaction,
+        });
+      } else if (transaction.payerId === user!.id) {
+        interactedUsers.push({
+          user: transaction.payee,
+          lastTransaction: transaction,
+        });
+      }
+    });
+
+    // Remove duplicates and keep the last transaction
+    const uniqueInteractedUsers = Array.from(
+      new Set(interactedUsers.map(({ user }) => user!.id))
+    )
+      .map((id) =>
+        interactedUsers.reverse().find(({ user }) => user!.id === id)
+      )
+      .filter((user) => user !== undefined); // Filter out undefined values
+
+    return uniqueInteractedUsers as any;
+  }
+
+  const interactedUsers = getInteractedUsers();
 
   return (
     <SafeAreaView className="bg-black flex-1">
@@ -69,29 +107,17 @@ export default function Send() {
                 <Text className="text-white font-semibold">No results</Text>
               )}
               {results.map((result) => (
-                <Pressable
-                  className="flex flex-row items-center justify-between"
-                  onPress={() => {
-                    setSendUser(result);
-                    router.push(`/app/send-modal`);
-                  }}
-                  key={result.id}
-                >
-                  <View className="flex flex-row items-center space-x-4">
-                    <Avatar name={result.username.charAt(0).toUpperCase()} />
-                    <Text className="text-white font-semibold text-lg">
-                      {result.username}
-                    </Text>
-                  </View>
-                  <ChevronRight size={16} color="#FFF" />
-                </Pressable>
+                <UserSearchResult user={result} />
               ))}
             </View>
           </>
         ) : transactions.length > 0 ? (
           <ScrollView className="bg-[#161618] w-full mx-auto rounded-2xl px-4 mt-8">
-            {transactions.map((transaction, index) => (
-              <TransactionItem transaction={transaction} index={index} />
+            {interactedUsers.map((user, index) => (
+              <UserSearchResult
+                user={user.user!}
+                transaction={user.lastTransaction}
+              />
             ))}
           </ScrollView>
         ) : (

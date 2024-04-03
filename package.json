@@ -11,7 +11,7 @@
     "@andordavoti/react-native-timeago": "^0.0.14",
     "@babel/plugin-transform-flow-strip-types": "^7.24.1",
     "@biconomy/account": "^4.1.1",
-    "@buildersgarden/privy-wagmi-provider": "^0.5.0",
+    "@buildersgarden/privy-wagmi-provider": "^0.6.0",
     "@ethersproject/shims": "^5.7.0",
     "@expo-google-fonts/inter": "^0.2.3",
     "@gorhom/bottom-sheet": "^4",
