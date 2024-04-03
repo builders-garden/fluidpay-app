@@ -62,7 +62,7 @@ const Home = () => {
   const fetchUserData = async (token: string) => {
     const [userData, payments, groups] = await Promise.all([
       getMe(token),
-      getPayments(token, { limit: 10, chainId: chain.id }),
+      getPayments(token, { limit: 3, chainId: chain.id }),
       getGroups(token),
     ]);
     setUser({ ...userData, token } as DBUser);

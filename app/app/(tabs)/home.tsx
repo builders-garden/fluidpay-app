@@ -35,7 +35,11 @@ export default function Home() {
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
-  const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
+  const {
+    balance,
+    isLoading: isLoadingBalance,
+    refetch: refetchBalance,
+  } = useERC20BalanceOf({
     network: chain.id,
     args: [address!],
     address: tokens.USDC[chain.id] as `0x${string}`,
@@ -44,7 +48,7 @@ export default function Home() {
 
   useEffect(() => {
     const refresh = async () => {
-      await Promise.all([fetchPayments()]);
+      await Promise.all([fetchPayments(), refetchBalance()]);
     };
 
     navigation.addListener("focus", refresh);
@@ -63,6 +67,7 @@ export default function Home() {
   const fetchPayments = async () => {
     if (!user) return;
     const res = await getPayments(user!.token, { limit: 3, chainId: chain.id });
+    console.log(res);
     setTransactions(res as any[]);
   };
 

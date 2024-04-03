@@ -13,6 +13,7 @@ import { createPayment } from "../../lib/api";
 import tokens from "../../constants/tokens";
 import { formatBigInt, shortenAddress } from "../../lib/utils";
 import {
+  useBiconomySmartAccount,
   useERC20BalanceOf,
   useERC20Transfer,
   usePrivyWagmiProvider,
@@ -26,6 +27,7 @@ export default function SendModal() {
   const setSendUser = useSendStore((state) => state.setSendUser);
   const user = useUserStore((state) => state.user);
   const chain = useChainStore((state) => state.chain);
+  console.log(chain);
   const transfer = useERC20Transfer({
     network: chain.id,
     address: tokens.USDC[chain.id] as `0x${string}`,
@@ -39,6 +41,8 @@ export default function SendModal() {
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
 
+  console.log();
+
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
   // const canSend = true;
   const sendTokens = async () => {
@@ -46,7 +50,7 @@ export default function SendModal() {
     setIsLoadingTransfer(true);
     await transfer!({
       to: sendUser!.address as `0x${string}`,
-      amount: BigInt(amount),
+      amount: BigInt(amount * 10 ** 6),
       waitForTx: true,
     });
     const payment = {

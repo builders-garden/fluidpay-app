@@ -110,7 +110,7 @@ export default function AccountsModal() {
                   />
 
                   <Text className="text-white text-lg font-semibold">
-                    Sepolia
+                    Sepolia (Testnet)
                   </Text>
                 </View>
                 <Text className="text-white text-lg font-semibold">

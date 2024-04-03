@@ -28,13 +28,14 @@ export default function ProfileModal() {
   }, [currentUser]);
 
   const fetchUser = async () => {
+    console.log(userId);
     const [profile, transactions] = await Promise.all([
       getUserByIdUsernameOrAddress(currentUser!.token, {
         idOrUsernameOrAddress: userId!.toString(),
       }),
       getPayments(currentUser!.token, {
-        withProfileId: parseInt(userId as string, 10),
-        chainId: chain.id
+        withUserId: parseInt(userId as string, 10),
+        chainId: chain.id,
       }),
     ]);
     setUser(profile);

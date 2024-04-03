@@ -71,7 +71,7 @@ export type PaymentsQueryResponse = {
 };
 
 export type PaymentsQuery = {
-  withProfileId?: number;
+  withUserId?: number;
   fromDate?: string;
   toDate?: string;
   direction?: string;
