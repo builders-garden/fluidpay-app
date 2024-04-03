@@ -1,21 +1,20 @@
 import { View, Text, Image, Pressable } from "react-native";
 import { Appbar } from "react-native-paper";
-import { Redirect, router } from "expo-router";
 import {
   useERC20BalanceOf,
   usePrivyWagmiProvider,
 } from "@buildersgarden/privy-wagmi-provider";
-import { useUserStore } from "../../store";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X } from "lucide-react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { useChainStore } from "../../store/use-chain-store";
-import { base, sepolia } from "viem/chains";
+import { Chain, base, sepolia } from "viem/chains";
 import tokens from "../../constants/tokens";
 import { formatBigInt } from "../../lib/utils";
-import { switchChain } from "../../lib/privy";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import { useSwitchChain } from "wagmi";
+import { router } from "expo-router";
 
 export default function AccountsModal() {
   const { isConnected, isReady, address } = usePrivyWagmiProvider();
@@ -23,6 +22,7 @@ export default function AccountsModal() {
   const setChain = useChainStore((state) => state.setChain);
   const [selectedChain, setSelectedChain] = useState(chain);
   const wallet = useEmbeddedWallet();
+  const { switchChain } = useSwitchChain();
 
   const { balance: sepoliaBalance, isLoading: isLoadingSepoliaBalance } =
     useERC20BalanceOf({
@@ -38,11 +38,13 @@ export default function AccountsModal() {
       address: tokens.USDC[base.id] as `0x${string}`,
     });
 
-  const user = useUserStore((state) => state.user);
-
-  if (!isConnected || !isReady || !user) {
-    return <Redirect href={"/"} />;
-  }
+  const switchSelectedChain = async (newChain: Chain) => {
+    switchChain({
+      chainId: newChain.id,
+    });
+    setChain(newChain);
+    setSelectedChain(newChain);
+  };
 
   return (
     <View className="flex-1 bg-black h-full">
@@ -80,10 +82,7 @@ export default function AccountsModal() {
             <View className="bg-white/20 w-full mx-auto rounded-2xl p-2 flex flex-col space-y-2">
               <Pressable
                 onPress={async () => {
-                  const provider = await wallet.getProvider!();
-                  setSelectedChain(base);
-                  switchChain(provider, base.id);
-                  setChain(base);
+                  await switchSelectedChain(base);
                 }}
                 className={`flex flex-row items-center justify-between p-4 rounded-lg ${selectedChain === base ? "bg-white/25" : ""}`}
               >
@@ -100,10 +99,7 @@ export default function AccountsModal() {
               </Pressable>
               <Pressable
                 onPress={async () => {
-                  const provider = await wallet.getProvider!();
-                  setSelectedChain(sepolia);
-                  switchChain(provider, sepolia.id);
-                  setChain(sepolia);
+                  await switchSelectedChain(sepolia);
                 }}
                 className={`flex flex-row items-center justify-between p-4 rounded-lg ${selectedChain === sepolia ? "bg-white/25" : ""}`}
               >

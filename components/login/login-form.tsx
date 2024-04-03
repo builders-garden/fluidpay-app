@@ -99,8 +99,9 @@ export default function LoginForm({
     }
     setLoadingMessage("Signing in...");
     const { message, nonce } = await getAuthNonce();
+    const provider = await wallet.getProvider!();
     const signedMessage = await signMessageWithPrivy(
-      await wallet.getProvider!(),
+      provider,
       message as `0x${string}`
     );
     const { isNewUser, token } = await signIn({

@@ -1,4 +1,7 @@
-import { PrivyEmbeddedWalletProvider } from "@privy-io/expo";
+import {
+  EmbeddedWalletState,
+  PrivyEmbeddedWalletProvider,
+} from "@privy-io/expo";
 
 export const signMessageWithPrivy = async (
   provider: PrivyEmbeddedWalletProvider,
@@ -15,17 +18,13 @@ export const signMessageWithPrivy = async (
   });
 };
 
-export const switchChain = async (
-  provider: PrivyEmbeddedWalletProvider,
-  chainId: number
-) => {
-  console.log({
-    method: "wallet_switchEthereumChain",
-    provider,
-    params: [{ chainId: `${chainId}` }],
-  });
-  return await provider.request({
-    method: "wallet_switchEthereumChain",
-    params: [{ chainId: `${chainId}` }],
-  });
+export const getAddress = async (provider: PrivyEmbeddedWalletProvider) => {
+  try {
+    const accounts = await provider.request({
+      method: "eth_requestAccounts",
+    });
+    return accounts[0];
+  } catch (error) {
+    console.log("error: ", error);
+  }
 };

@@ -10,7 +10,6 @@ import { ArrowLeft } from "lucide-react-native";
 export default function TransactionDetailModal() {
   const { transaction } = useLocalSearchParams();
   const data = JSON.parse(transaction as string);
-  console.log(data);
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
 

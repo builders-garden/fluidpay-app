@@ -78,7 +78,6 @@ export default function CodeInput({
         onPress={async () => {
           setIsLoading(true);
           setLoadingMessage("Verifying code...");
-          console.log("Logging in with code", code.join(""));
           await loginWithCode({
             code: code.join(""),
             email,
