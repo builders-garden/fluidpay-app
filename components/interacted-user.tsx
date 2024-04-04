@@ -1,13 +1,20 @@
 import { router } from "expo-router";
-import { ChevronRight } from "lucide-react-native";
 import { Pressable, View, Text } from "react-native";
 import { DBTransaction, DBUser } from "../store/interfaces";
 import Avatar from "./avatar";
+import TimeAgo from "@andordavoti/react-native-timeago";
 
-export default function UserSearchResult({ user }: { user: DBUser }) {
+export default function InteractedUser({
+  user,
+  transaction,
+}: {
+  user: DBUser;
+  transaction: DBTransaction;
+}) {
+  const direction = transaction.payeeId === user.id ? "from" : "to";
   return (
     <Pressable
-      className="flex flex-row items-center justify-between py-4"
+      className="flex flex-row justify-between py-4"
       onPress={() => {
         router.push({
           pathname: `/app/send-modal`,
@@ -16,19 +23,23 @@ export default function UserSearchResult({ user }: { user: DBUser }) {
       }}
       key={user.id}
     >
-      <View className="flex flex-row items-center space-x-4">
+      <View className="flex flex-row space-x-4">
         <Avatar name={user.username?.charAt(0).toUpperCase()} />
         <View className="flex flex-col">
           <Text className="text-white font-semibold text-lg">
             {user.displayName}
           </Text>
           <Text className="text-gray-500 font-semibold text-sm">
-            @{user.username}
+            {direction === "from"
+              ? `🤑 Sent you $${transaction.amount.toFixed(2)}`
+              : `${transaction.payeeId === user.id ? `from` : `to`}`}
           </Text>
         </View>
       </View>
-      <View className="flex flex-row space-x-4 items-center">
-        <ChevronRight size={16} color="#FFF" />
+      <View className="flex flex-row space-x-4">
+        <Text className="text-[#8F8F91]">
+          <TimeAgo dateTo={new Date(transaction.createdAt)} />
+        </Text>
       </View>
     </Pressable>
   );

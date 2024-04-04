@@ -16,6 +16,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { shortenAddress } from "../../../lib/utils";
 import UserSearchResult from "../../../components/user-search-result";
 import { DBTransaction, DBUser } from "../../../store/interfaces";
+import InteractedUser from "../../../components/interacted-user";
 
 export default function Send() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -112,14 +113,16 @@ export default function Send() {
             </View>
           </>
         ) : transactions.length > 0 ? (
-          <ScrollView className="bg-[#161618] w-full mx-auto rounded-2xl px-4 mt-8">
-            {interactedUsers.map((user, index) => (
-              <UserSearchResult
-                user={user.user!}
-                transaction={user.lastTransaction}
-              />
-            ))}
-          </ScrollView>
+          <View className="bg-[#161618] w-full mx-auto rounded-2xl px-4 mt-8">
+            {interactedUsers
+              ?.slice(0, 5)
+              .map((user, index) => (
+                <InteractedUser
+                  user={user.user!}
+                  transaction={user.lastTransaction}
+                />
+              ))}
+          </View>
         ) : (
           <View className="flex-1 flex-col items-center justify-center"></View>
         )}
