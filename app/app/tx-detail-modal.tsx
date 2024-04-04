@@ -68,19 +68,19 @@ export default function TransactionDetailModal() {
 
         <View className="bg-[#232324] w-full mx-auto rounded-lg p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
-            <Text className="text-gray-400 text-lg font-medium">Status</Text>
+            <Text className="text-lg text-white font-medium">Status</Text>
 
             <Text className="text-green-500 text-lg font-medium">Success</Text>
           </View>
           <View className="flex flex-row items-center justify-between">
-            <Text className="text-gray-400 text-lg font-medium">Link</Text>
+            <Text className="text-white text-lg font-medium">Link</Text>
             <Text
               onPress={async () => {
                 await WebBrowser.openBrowserAsync(
                   `${data.chainId === sepolia.id ? sepolia.blockExplorers.default.url : base.blockExplorers.default.url}/tx/${data?.txHash}`
                 );
               }}
-              className="text-lg font-medium text-white"
+              className="text-lg font-medium text-gray-400"
             >
               View
             </Text>
