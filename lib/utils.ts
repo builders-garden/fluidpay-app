@@ -78,7 +78,7 @@ export function colorHash(inputString: string) {
 
 export const shortenAddress = (address: string) => {
   if (!address) return "undefined";
-  return `${address.slice(0, 4)}...${address.slice(-4)}`;
+  return `${address.slice(0, 4)}...${address.slice(-2)}`;
 };
 
 export const formatBigInt = (value: bigint, decimalPlaces = 2) => {

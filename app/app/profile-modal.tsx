@@ -1,23 +1,23 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import CircularButton from "../../components/circular-button";
 import { ScrollView } from "react-native-gesture-handler";
-import { ArrowLeft } from "lucide-react-native";
-import { useSendStore, useUserStore } from "../../store";
+import { ArrowLeft, Copy, CopyIcon } from "lucide-react-native";
+import { useUserStore } from "../../store";
 import { useEffect, useState } from "react";
 import { getPayments, getUserByIdUsernameOrAddress } from "../../lib/api";
 import TransactionItem from "../../components/transaction-item";
 import { shortenAddress } from "../../lib/utils";
 import { useChainStore } from "../../store/use-chain-store";
+import * as Clipboard from "expo-clipboard";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
   const { userId } = useLocalSearchParams();
   const currentUser = useUserStore((state) => state.user);
-  const setSendUser = useSendStore((state) => state.setSendUser);
-  const [profileUser, setUser] = useState<any>(null);
+  const [profileUser, setProfileUser] = useState<any>();
   const [transactions, setTransaction] = useState<any[]>([]);
   const chain = useChainStore((state) => state.chain);
 
@@ -28,7 +28,6 @@ export default function ProfileModal() {
   }, [currentUser]);
 
   const fetchUser = async () => {
-    console.log(userId);
     const [profile, transactions] = await Promise.all([
       getUserByIdUsernameOrAddress(currentUser!.token, {
         idOrUsernameOrAddress: userId!.toString(),
@@ -38,13 +37,15 @@ export default function ProfileModal() {
         chainId: chain.id,
       }),
     ]);
-    setUser(profile);
+    setProfileUser(profile);
     setTransaction(transactions);
   };
 
   if (!profileUser) {
     return <View className="flex-1 flex-col px-4 bg-black"></View>;
   }
+
+  console.log(profileUser);
 
   return (
     <View className="flex-1 flex-col bg-black">
@@ -74,12 +75,26 @@ export default function ProfileModal() {
             name={profileUser?.username.charAt(0).toUpperCase()}
             size={64}
           />
-          <Text className="text-white text-4xl text-center font-semibold">
-            @{profileUser?.username}
-          </Text>
-          <Text className="text-[#8F8F91] text-xl text-ellipsis">
-            {shortenAddress(profileUser?.address)}
-          </Text>
+          <View className="flex flex-col">
+            <Text className="text-white text-4xl text-center font-semibold">
+              {profileUser?.displayName}
+            </Text>
+            <View className="flex flex-row items-center space-x-2">
+              <Text className="text-[#8F8F91] text-xl text-ellipsis text-center">
+                @{profileUser?.username} •
+              </Text>
+              <View className="bg-mutedGrey/50 rounded-lg p-1 flex flex-row items-center space-x-2">
+                <Text className="text-white text-xs">
+                  {shortenAddress(profileUser.address)}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => Clipboard.setStringAsync(profileUser!.address)}
+                >
+                  <Copy size={12} color="white" />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
         </View>
 
         <View className="flex flex-row items-center justify-center space-x-8 py-8">
@@ -95,8 +110,10 @@ export default function ProfileModal() {
               text="Send"
               icon="Send"
               onPress={() => {
-                setSendUser(profileUser);
-                router.push("/app/send-modal");
+                router.push({
+                  pathname: "/app/send-modal",
+                  params: { user: JSON.stringify(profileUser) },
+                });
               }}
             />
           </View>
@@ -128,7 +145,7 @@ export default function ProfileModal() {
           </View>
         )}
         {transactions?.length > 0 && (
-          <ScrollView className="bg-[#161618] w-full mx-auto h-[320px] rounded-lg px-4 space-y-4 mt-8 pb-8">
+          <ScrollView className="bg-[#161618] w-full mx-auto rounded-lg px-4 space-y-4 mt-8">
             {transactions.map((transaction, index) => (
               <TransactionItem
                 key={index}
