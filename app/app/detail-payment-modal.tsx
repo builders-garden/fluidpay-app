@@ -63,7 +63,6 @@ export default function DetailExpenseModal() {
         <View className="bg-[#161618] w-full mx-auto rounded-lg p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-gray-400 text-lg font-medium">Status</Text>
-
             <Text className="text-green-500 text-lg font-medium">Success</Text>
           </View>
           <View className="flex flex-row items-center justify-between">

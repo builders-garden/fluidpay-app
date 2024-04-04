@@ -6,6 +6,8 @@ import { useUserStore } from "../../store";
 import Avatar from "../../components/avatar";
 import TimeAgo from "@andordavoti/react-native-timeago";
 import { ArrowLeft } from "lucide-react-native";
+import { base, sepolia } from "viem/chains";
+import * as WebBrowser from "expo-web-browser";
 
 export default function TransactionDetailModal() {
   const { transaction } = useLocalSearchParams();
@@ -70,13 +72,19 @@ export default function TransactionDetailModal() {
 
             <Text className="text-green-500 text-lg font-medium">Success</Text>
           </View>
-          {/* <View className="flex flex-row items-center justify-between">
-            <Text className="text-gray-400 text-lg font-medium">
-              Block explorer
+          <View className="flex flex-row items-center justify-between">
+            <Text className="text-gray-400 text-lg font-medium">Link</Text>
+            <Text
+              onPress={async () => {
+                await WebBrowser.openBrowserAsync(
+                  `${data.chainId === sepolia.id ? sepolia.blockExplorers.default.url : base.blockExplorers.default.url}/tx/${data?.txHash}`
+                );
+              }}
+              className="text-lg font-medium text-white"
+            >
+              View
             </Text>
-
-            <Text className="text-[#0061FF] text-lg font-medium">View</Text>
-          </View> */}
+          </View>
         </View>
       </View>
     </SafeAreaView>

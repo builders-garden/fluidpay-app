@@ -44,6 +44,7 @@ export type CreatePaymentBody = {
   amount: number;
   chainId: number;
   description: string;
+  txHash: `0x${string}`;
 };
 
 export type PaymentByIdParams = {

@@ -9,6 +9,7 @@ import {
   useEmbeddedWallet,
   useLoginWithEmail,
   isNotCreated,
+  getUserEmbeddedWallet,
 } from "@privy-io/expo";
 import { useEffect, useState } from "react";
 import {
@@ -42,7 +43,7 @@ export default function LoginForm({
   setIsLoading: (isLoading: boolean) => void;
   setLoadingMessage: (message: string) => void;
 }) {
-  const { logout } = usePrivy();
+  const { logout, user } = usePrivy();
   const { address } = usePrivyWagmiProvider();
   const [email, setEmail] = useState<string>("");
   const [code, setCode] = useState(Array(6).fill(""));
@@ -64,8 +65,13 @@ export default function LoginForm({
     },
   });
 
+  console.log({
+    state,
+    address,
+  });
+
   useEffect(() => {
-    if (state.status === "done" && address) {
+    if (state.status === "done") {
       try {
         setIsLoading(true);
         handleConnection().then((path: string) => {
@@ -95,9 +101,11 @@ export default function LoginForm({
   const handleConnection = async (): Promise<string> => {
     if (isNotCreated(wallet)) {
       setLoadingMessage("Creating wallet...");
+      console.log("creating wallet");
       await wallet.create!();
     }
     setLoadingMessage("Signing in...");
+    console.log("signing in...");
     const { message, nonce } = await getAuthNonce();
     const provider = await wallet.getProvider!();
     const signedMessage = await signMessageWithPrivy(
@@ -105,15 +113,20 @@ export default function LoginForm({
       message as `0x${string}`
     );
     const { isNewUser, token } = await signIn({
-      address: address!,
+      address: address || getUserEmbeddedWallet(user)?.address!,
       signature: signedMessage!,
       nonce,
+    });
+    console.log({
+      isNewUser,
+      token,
     });
     await SecureStore.setItemAsync(`token-${address}`, token);
     if (isNewUser) {
       return "/onboarding";
     }
     setLoadingMessage("Fetching user data...");
+    console.log("Fetching user data...");
     const userData = await fetchUserData(token);
     setChain(sepolia);
     if (!userData.username) {

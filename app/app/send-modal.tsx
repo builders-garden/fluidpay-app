@@ -19,6 +19,7 @@ import {
   usePrivyWagmiProvider,
 } from "@buildersgarden/privy-wagmi-provider";
 import { useChainStore } from "../../store/use-chain-store";
+import { TransactionReceipt } from "viem";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -40,13 +41,12 @@ export default function SendModal() {
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
 
-
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
   // const canSend = true;
   const sendTokens = async () => {
     if (!amount || amount < 0) return;
     setIsLoadingTransfer(true);
-    await transfer!({
+    const txReceipt = await transfer!({
       to: sendUser!.address as `0x${string}`,
       amount: BigInt(amount * 10 ** 6),
       waitForTx: true,
@@ -57,8 +57,11 @@ export default function SendModal() {
       chainId: chain.id,
       amount: amount,
       description: "",
+      txHash: (txReceipt as TransactionReceipt)
+        .transactionHash as `0x${string}`,
     };
 
+    console.log(txReceipt);
     await createPayment(user!.token, payment);
     setIsLoadingTransfer(false);
 

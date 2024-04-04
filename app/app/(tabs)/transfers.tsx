@@ -120,6 +120,7 @@ export default function Send() {
                 <InteractedUser
                   user={user.user!}
                   transaction={user.lastTransaction}
+                  key={"interacted-user-" + index}
                 />
               ))}
           </View>

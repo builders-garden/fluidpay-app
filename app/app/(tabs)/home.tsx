@@ -70,7 +70,6 @@ export default function Home() {
       limit: 10,
       chainId: chain.id,
     });
-    console.log(res);
     setTransactions(res as any[]);
   };
 
@@ -201,11 +200,6 @@ export default function Home() {
                   {getUniquePayees().map((payment, index) => (
                     <Pressable
                       onPress={() => {
-                        console.log({
-                          id: payment.payeeId,
-                          address: payment.payee.address,
-                          username: payment.payee.username,
-                        });
                         setProfileUserTransactions([]);
                         router.push({
                           pathname: "/app/profile-modal",
