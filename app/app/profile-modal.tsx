@@ -45,7 +45,6 @@ export default function ProfileModal() {
     return <View className="flex-1 flex-col px-4 bg-black"></View>;
   }
 
-  console.log(profileUser);
 
   return (
     <View className="flex-1 flex-col bg-black">

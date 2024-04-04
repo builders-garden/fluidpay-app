@@ -68,6 +68,10 @@ export default function AppLayout() {
       <Stack.Screen name="create-group" options={{ headerShown: false }} />
       <Stack.Screen name="group" options={{ headerShown: false }} />
       <Stack.Screen name="qrcode" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="transactions-modal"
+        options={{ headerShown: false, presentation: "fullScreenModal" }}
+      />
     </Stack>
   );
 }

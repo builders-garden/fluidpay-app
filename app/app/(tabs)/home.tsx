@@ -166,7 +166,14 @@ export default function Home() {
                   />
                 ))}
                 <Text
-                  onPress={() => router.push("/app/transfers")}
+                  onPress={() =>
+                    router.push({
+                      pathname: "/app/transactions-modal",
+                      params: {
+                        transactions: JSON.stringify(transactions),
+                      },
+                    })
+                  }
                   className="text-[#0061FF] font-semibold text-center"
                 >
                   See all
@@ -221,13 +228,6 @@ export default function Home() {
               </View>
             )}
           </ScrollView>
-          {/* <TransactionsList
-          transactions={transactions}
-          loading={refreshing}
-          setLoading={setRefreshing}
-          setTransactions={setTransactions}
-          getTransactions={getUserTransactions}
-        /> */}
         </View>
       </SafeAreaView>
     </LinearGradient>

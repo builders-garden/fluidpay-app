@@ -27,7 +27,6 @@ export default function SendModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
   const chain = useChainStore((state) => state.chain);
-  console.log(chain);
   const transfer = useERC20Transfer({
     network: chain.id,
     address: tokens.USDC[chain.id] as `0x${string}`,
@@ -41,7 +40,6 @@ export default function SendModal() {
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
 
-  console.log();
 
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
   // const canSend = true;
