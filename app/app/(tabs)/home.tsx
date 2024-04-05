@@ -18,7 +18,6 @@ import {
 } from "@buildersgarden/privy-wagmi-provider";
 import AppButton from "../../../components/app-button";
 import tokens from "../../../constants/tokens";
-import { sepolia } from "viem/chains";
 import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
@@ -48,7 +47,7 @@ export default function Home() {
 
   useEffect(() => {
     const refresh = async () => {
-      await Promise.all([fetchPayments(), refetchBalance()]);
+      await Promise.all([refetchBalance()]);
     };
 
     navigation.addListener("focus", refresh);
@@ -60,15 +59,16 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      fetchPayments();
+      refetchBalance();
+      fetchPayments(chain.id);
     }
-  }, [user]);
+  }, [chain]);
 
-  const fetchPayments = async () => {
+  const fetchPayments = async (chainId: number) => {
     if (!user) return;
     const res = await getPayments(user!.token, {
       limit: 10,
-      chainId: chain.id,
+      chainId: chainId,
     });
     setTransactions(res as any[]);
   };
