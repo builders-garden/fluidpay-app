@@ -45,7 +45,7 @@ export default function ExpenseItem({
                   return distance.startsWith("less than a minute") ? (
                     "now"
                   ) : (
-                    <TimeAgo dateTo={new Date(createdAt)} />
+                    <TimeAgo dateTo={new Date(date)} />
                   );
                 })()}
               </Text>
