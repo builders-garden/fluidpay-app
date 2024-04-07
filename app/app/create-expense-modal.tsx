@@ -6,7 +6,7 @@ import { useUserStore } from "../../store";
 import { ArrowLeft, ChevronDown } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
-import { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import Avatar from "../../components/avatar";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
@@ -15,6 +15,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import SelectPaidByModal from "./select-paid-by-modal";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DatePicker from "../../components/date-picker";
 
 export default function CreateExpenseModal() {
   const { group } = useLocalSearchParams();
@@ -27,15 +29,17 @@ export default function CreateExpenseModal() {
   const [selected, setSelected] = useState<boolean[]>(
     data?.members?.map(() => false)
   );
+  const [isLoading, setIsLoading] = useState(false);
   const [paidById, setPaidById] = useState<number>(user?.id!);
   const [category, setCategory] = useState<string | null>(null);
+  const [date, setDate] = useState(new Date());
 
   const createExpense = async () => {
     const expenseData = {
       category: category!,
       paidById,
       description,
-      date: new Date().toISOString(),
+      date: date.toISOString(),
       amount,
       splitAmongIds: data.members
         .filter((member: any, index: number) => selected[index])
@@ -50,9 +54,6 @@ export default function CreateExpenseModal() {
   // callbacks
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
-  }, []);
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
   }, []);
 
   return (
@@ -111,17 +112,22 @@ export default function CreateExpenseModal() {
                 lagAutoFocus={false}
               />
             </View>
-            <TextInput
-              value={description}
-              onChangeText={setDescription}
-              autoCapitalize="none"
-              autoComplete="off"
-              autoCorrect={false}
-              placeholder="Description"
-              placeholderTextColor={"#8F8F91"}
-              clearButtonMode="always"
-              className="text-white bg-[#232324] px-3 py-4 rounded-lg"
-            />
+            <View>
+              <TextInput
+                value={description}
+                onChangeText={setDescription}
+                autoCapitalize="none"
+                autoComplete="off"
+                autoCorrect={false}
+                placeholder="Description"
+                placeholderTextColor={"#8F8F91"}
+                clearButtonMode="always"
+                className="text-white bg-[#232324] px-3 py-4 rounded-lg"
+              />
+            </View>
+            <View>
+              <DatePicker date={date} setDate={setDate} />
+            </View>
             <View className="bg-[#232324] rounded-lg px-3 py-4 mb-4">
               <RNPickerSelect
                 style={{
@@ -141,7 +147,7 @@ export default function CreateExpenseModal() {
           <Text className="text-2xl text-white font-bold">Split among</Text>
           <View className="rounded-lg flex flex-col space-y-4 bg-[#232324] py-4 px-2 mt-2">
             {data?.members?.map((member: any, index: number) => (
-              <View className="flex flex-row items-center" key={index}>
+              <View className="flex flex-row items-center" key={"mem-" + index}>
                 <Checkbox.Android
                   status={selected[index] ? "checked" : "unchecked"}
                   color="#0061FF"
@@ -166,6 +172,7 @@ export default function CreateExpenseModal() {
           <AppButton
             text="Create"
             variant="primary"
+            loading={isLoading}
             onPress={() => createExpense()}
           />
         </SafeAreaView>

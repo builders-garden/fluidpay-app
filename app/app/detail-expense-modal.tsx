@@ -6,7 +6,7 @@ import { useUserStore } from "../../store";
 import { ArrowLeft, ChevronDown, Edit, Trash2 } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Avatar from "../../components/avatar";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
@@ -19,6 +19,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import SelectPaidByModal from "./select-paid-by-modal";
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import DatePicker from "../../components/date-picker";
 
 export default function DetailExpenseModal() {
   const { expense, group } = useLocalSearchParams();
@@ -35,6 +37,8 @@ export default function DetailExpenseModal() {
   const [updateButtonDisabled, setUpdateButtonDisabled] = useState(true);
   const navigation = useNavigation();
   const [category, setCategory] = useState<string | null>(expenseData.category);
+  const [date, setDate] = useState(new Date(expenseData.date));
+  const [isLoading, setIsLoading] = useState(false);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -80,12 +84,13 @@ export default function DetailExpenseModal() {
   };
 
   const updateExpense = async () => {
+    setIsLoading(true);
     const updatedExpenseData = {
       category: category!,
       paidById,
       description,
       amount,
-      date: expenseData.date,
+      date: date.toISOString(),
       splitAmongIds: groupData.members
         .filter((member: any, index: number) => selected[index])
         .map((member: any) => member.user.id),
@@ -95,6 +100,7 @@ export default function DetailExpenseModal() {
       { id: expenseData.groupId, expenseId: expenseData.id },
       updatedExpenseData
     );
+    setIsLoading(false);
     router.back();
   };
 
@@ -172,6 +178,9 @@ export default function DetailExpenseModal() {
               clearButtonMode="always"
               className="text-white bg-[#232324] px-3 py-4 rounded-lg"
             />
+            <View>
+              <DatePicker date={date} setDate={setDate} />
+            </View>
             <View className="bg-[#232324] rounded-lg px-3 py-4 mb-4">
               <RNPickerSelect
                 style={{
@@ -216,6 +225,7 @@ export default function DetailExpenseModal() {
           <View className="mb-4">
             <AppButton
               text="Save"
+              loading={isLoading}
               variant={updateButtonDisabled ? "disabled" : "primary"}
               onPress={() => {
                 if (!updateButtonDisabled) {

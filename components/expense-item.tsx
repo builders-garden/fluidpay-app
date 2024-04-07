@@ -14,7 +14,7 @@ export default function ExpenseItem({
   expense: any;
   index: number;
 }) {
-  const { date, paidBy, amount, description, category } = expense;
+  const { date, paidBy, amount, description, category, createdAt } = expense;
   return (
     <View key={`transaction-${index}`}>
       <View className="flex flex-row items-center justify-between py-3">
@@ -41,11 +41,11 @@ export default function ExpenseItem({
               <Text className="text-[#8F8F91]">
                 {paidBy.username} -{" "}
                 {(() => {
-                  const distance = formatDistanceToNow(new Date(date));
+                  const distance = formatDistanceToNow(new Date(createdAt));
                   return distance.startsWith("less than a minute") ? (
                     "now"
                   ) : (
-                    <TimeAgo dateTo={new Date(date)} />
+                    <TimeAgo dateTo={new Date(createdAt)} />
                   );
                 })()}
               </Text>
