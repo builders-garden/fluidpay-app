@@ -2,6 +2,7 @@ import {
   EmbeddedWalletState,
   PrivyEmbeddedWalletProvider,
 } from "@privy-io/expo";
+import { ethers } from "ethers";
 
 export const signMessageWithPrivy = async (
   provider: PrivyEmbeddedWalletProvider,
@@ -27,4 +28,12 @@ export const getAddress = async (provider: PrivyEmbeddedWalletProvider) => {
   } catch (error) {
     console.log("error: ", error);
   }
+};
+
+export const getEthersProvider = (provider: PrivyEmbeddedWalletProvider) => {
+  return new ethers.providers.Web3Provider(provider);
+};
+
+export const getEthersSigner = (provider: PrivyEmbeddedWalletProvider) => {
+  return getEthersProvider(provider).getSigner();
 };

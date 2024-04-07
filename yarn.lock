@@ -4052,153 +4052,180 @@
   dependencies:
     nanoid "^3.1.23"
 
-"@requestnetwork/advanced-logic@0.39.0":
-  version "0.39.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/advanced-logic/-/advanced-logic-0.39.0.tgz#49bf15680a2d374192beeeddd484d76e3df47e41"
-  integrity sha512-bxJj2xv0WJU5yXzL7Re3jV4q14vmiHBrCvHK9U6ZrCaVaKlnumomXaeXK9AHH9I3o2ZEVlNgF/Wz/BI5zuOOjQ==
+"@requestnetwork/advanced-logic@0.40.0":
+  version "0.40.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/advanced-logic/-/advanced-logic-0.40.0.tgz#fc62d2fc6e9f50c19c99bbcf973795c46c3c07e3"
+  integrity sha512-SOjMAS5djIALRipr5Uoj5AWe324jI6wvYDrM9WTr47oP6pZSA1wSmhiDqcMxyfnxdbNQ/EnvzcsQ922OQvkTog==
   dependencies:
-    "@requestnetwork/currency" "0.13.0"
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
+    "@requestnetwork/currency" "0.14.0"
+    "@requestnetwork/types" "0.41.0"
+    "@requestnetwork/utils" "0.41.0"
     tslib "2.5.0"
 
-"@requestnetwork/currency@0.13.0":
-  version "0.13.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/currency/-/currency-0.13.0.tgz#d85ada8f6733dc8f97d8a76860e801903775ca86"
-  integrity sha512-tOTX12w43fgP64sUcbKsH7aIrjj6sUb/aWwn6mMu92551AFc+/1oPVWlDhGdrGXGjZ/5NPtQML/Ukl9Afr0qpg==
+"@requestnetwork/currency@0.14.0":
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/currency/-/currency-0.14.0.tgz#170c753eef350c1843abdbab7b73d507eeddd86b"
+  integrity sha512-MorQn6OkrRdX/WxotMzsImiV6yVv7Sq79Tenlfmxomm93n2Q513VcjncgFyVTbzmyIWr34FUP345cYQbmdnybw==
   dependencies:
     "@metamask/contract-metadata" "1.31.0"
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
+    "@requestnetwork/types" "0.41.0"
+    "@requestnetwork/utils" "0.41.0"
     multicoin-address-validator "0.5.15"
     node-dijkstra "2.5.0"
     tslib "2.5.0"
 
-"@requestnetwork/data-access@0.31.0":
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/data-access/-/data-access-0.31.0.tgz#77be51a967cec007796737de39634be778abb59b"
-  integrity sha512-oCmsAU1SRd2iqKUL76/SgzfUN9uxzVGO6Q2ZpiLYJaNHhLO56Ix231lTQLI6kZ/x5VQ7FTXIdgYsPjOAjYR5KQ==
+"@requestnetwork/currency@0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/currency/-/currency-0.15.0.tgz#49170200475d6ecd551e6a935068f3381ade0a02"
+  integrity sha512-iuKFzSXCnxDCaXD1VxEh8h8jsQOUIoguX+Pt69IhWcGSKWSMv3Ay01Y75Mw8zraDHmVEzrGvyAFTlds+xBy1vw==
   dependencies:
-    "@requestnetwork/multi-format" "0.15.14"
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
+    "@metamask/contract-metadata" "1.31.0"
+    "@requestnetwork/types" "0.42.0"
+    "@requestnetwork/utils" "0.42.0"
+    multicoin-address-validator "0.5.15"
+    node-dijkstra "2.5.0"
     tslib "2.5.0"
 
-"@requestnetwork/data-format@0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/data-format/-/data-format-0.14.0.tgz#d9a5c9dd6dfd544010b7f2c3d6488c46451bb52b"
-  integrity sha512-OmeKjwGOs/DOtuXV0WDneUaBwr35Z4fjqHdaQ0tSsuz2t1++hx5mryFrY23HixTdadlRrvWI/eqEzFOK5G8W9w==
+"@requestnetwork/data-access@0.32.0":
+  version "0.32.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/data-access/-/data-access-0.32.0.tgz#3d051270aedcb56fdbd3c0caf0535c077928ca93"
+  integrity sha512-fqCYdcOpkw13D5kigy7Fgy2VmFNCThspFgNJlmsvb4m/S1ETuP5Q4OqErVRsLm37KoOWz2D4BCW0yrJiygL4UQ==
+  dependencies:
+    "@requestnetwork/multi-format" "0.15.15"
+    "@requestnetwork/types" "0.41.0"
+    "@requestnetwork/utils" "0.41.0"
+    tslib "2.5.0"
+
+"@requestnetwork/data-format@0.15.0":
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/data-format/-/data-format-0.15.0.tgz#08875c6917ddf1a58a3ee902cf0dd54801c142df"
+  integrity sha512-5cj6n9p+PmF3IaeQ+0KxDf3iPcnknZc2LQ0NHv4B+q9yj1inGl21jN4BRwKUwf1ActG7aDSCJpgRiYxRzrNAUQ==
   dependencies:
     ajv "6.12.4"
     ethers "5.5.1"
     tslib "2.5.0"
 
-"@requestnetwork/epk-signature@0.5.39":
-  version "0.5.39"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/epk-signature/-/epk-signature-0.5.39.tgz#d206320c1213fb1b1101a7c0ca1dae23803b49c5"
-  integrity sha512-30+yxSuhs4B6Ug4lRfqWr7DjT/j9CRjW8tUSEd9JEwZhv5OzJsruDk24nINBWNZQfhjetNsb1XYYMUCcYRb5Dg==
+"@requestnetwork/epk-signature@0.5.40":
+  version "0.5.40"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/epk-signature/-/epk-signature-0.5.40.tgz#542fde123ed426a296b40d6a54901bec4f33c2ab"
+  integrity sha512-jtIyGlaEoAmudoujNf5oxBuaWdzo2MZjWj60yuzUoa6pWfn8tX5ZwLtdTeoRLgX8nz0FkVQnWPlKKltc3lAqQA==
   dependencies:
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
+    "@requestnetwork/types" "0.41.0"
+    "@requestnetwork/utils" "0.41.0"
     tslib "2.5.0"
 
-"@requestnetwork/multi-format@0.15.14":
-  version "0.15.14"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/multi-format/-/multi-format-0.15.14.tgz#e90976d5eeb49b612b14dc6a6908d6f5dc6b4817"
-  integrity sha512-pobob2Gee0KHXef19ovpsoLzIjzaTIVEPCohwSn0EKxeUl7pVYW1nfiOZ8ou2o8Mmm8Z1+1pqKLJnydcNikuKw==
+"@requestnetwork/multi-format@0.15.15":
+  version "0.15.15"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/multi-format/-/multi-format-0.15.15.tgz#8370511977c40e3cf28892953940ebca8a9c1423"
+  integrity sha512-brWCZLNAOR4ROY8QTaWepPkPlQZRV3OzQTiZ90LwLjI+6GZLdZwRrA0WS+uDC+IgG4JjiyUaDW2e0nN4UKDKDg==
   dependencies:
-    "@requestnetwork/types" "0.40.0"
+    "@requestnetwork/types" "0.41.0"
     tslib "2.5.0"
 
-"@requestnetwork/payment-detection@0.40.0":
-  version "0.40.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/payment-detection/-/payment-detection-0.40.0.tgz#bfeb00427426767f131b27866c99e61cc8b1a865"
-  integrity sha512-NBDSl/Od8Bl+E8D1cQ4dgWvySnn7KjyR3R8Sa5aXO7a00u8jRwpjfPEcYQ4fAKHm2wu5xy6yiB6winWKfYDv2w==
+"@requestnetwork/payment-detection@0.41.0":
+  version "0.41.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/payment-detection/-/payment-detection-0.41.0.tgz#c564ddc0d4a1cc4099f6ae93297a2339e6dc349e"
+  integrity sha512-Fyp0dWr5eHY/gAc3E1IaOeU3yUAvrTfel4N3ybjS3pWReEzK/a7pxZEcvvtenN7lsFl/P/y36YktM9WFRSnuLQ==
   dependencies:
-    "@requestnetwork/currency" "0.13.0"
-    "@requestnetwork/smart-contracts" "0.33.0"
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
+    "@requestnetwork/currency" "0.14.0"
+    "@requestnetwork/smart-contracts" "0.34.0"
+    "@requestnetwork/types" "0.41.0"
+    "@requestnetwork/utils" "0.41.0"
     ethers "5.5.1"
     graphql "16.8.1"
     graphql-request "6.1.0"
     graphql-tag "2.12.6"
-    lodash "4.17.21"
     satoshi-bitcoin "1.0.4"
     tslib "2.5.0"
 
-"@requestnetwork/payment-processor@^0.42.0":
+"@requestnetwork/payment-detection@0.42.0":
   version "0.42.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/payment-processor/-/payment-processor-0.42.0.tgz#5bfab4e6fac6a9ff938193552eabba2ca771b84f"
-  integrity sha512-neKs4Z/ePimU16nWEUeIDl7fbIVAUM0UztdIN8E2xGDRBFLiA/3Hye9bbHzJeZEVODeUdLEC66L2beGFM3Kn1A==
+  resolved "https://registry.yarnpkg.com/@requestnetwork/payment-detection/-/payment-detection-0.42.0.tgz#085a7516745b292124f9b9ed5f60ffca1cf1e16a"
+  integrity sha512-YSFlHep2a14XeGoUi/oOlK5jAO8aaZuiT6YqhQtTteKoxbHkFtayRnKTh5+p5iL6g0tat5Z71ttIfyiIcCHRFg==
+  dependencies:
+    "@requestnetwork/currency" "0.15.0"
+    "@requestnetwork/smart-contracts" "0.35.0"
+    "@requestnetwork/types" "0.42.0"
+    "@requestnetwork/utils" "0.42.0"
+    ethers "5.5.1"
+    graphql "16.8.1"
+    graphql-request "6.1.0"
+    graphql-tag "2.12.6"
+    satoshi-bitcoin "1.0.4"
+    tslib "2.5.0"
+
+"@requestnetwork/payment-processor@^0.44.0":
+  version "0.44.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/payment-processor/-/payment-processor-0.44.0.tgz#8cfee8e7d09a77f0066a19c0c6bf40f3188d37de"
+  integrity sha512-7PN8yHkWDYON+RAScGRNP3JqdfCVIJJ1cFqcTnbxdu8HoDoeKieiONMMJkQ9okaZ+L3ThLTqfyaKIgDp9tbaPw==
   dependencies:
     "@openzeppelin/contracts" "4.9.5"
-    "@requestnetwork/currency" "0.13.0"
-    "@requestnetwork/payment-detection" "0.40.0"
-    "@requestnetwork/smart-contracts" "0.33.0"
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
+    "@requestnetwork/currency" "0.15.0"
+    "@requestnetwork/payment-detection" "0.42.0"
+    "@requestnetwork/smart-contracts" "0.35.0"
+    "@requestnetwork/types" "0.42.0"
+    "@requestnetwork/utils" "0.42.0"
     "@superfluid-finance/sdk-core" "0.5.0"
     ethers "5.5.1"
     near-api-js "2.1.4"
     tslib "2.5.0"
 
-"@requestnetwork/request-client.js@^0.44.0":
-  version "0.44.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/request-client.js/-/request-client.js-0.44.0.tgz#1c65274c5a2f9d4963574f32bfc5277d775899b7"
-  integrity sha512-9xaodJTzLn99dYznO49hztuy1qPW1wDeGKr8g+3wvnpLmgsMrcP4GO8If2A/pOwSXToFUndxxTrQQVuTaVxU0w==
+"@requestnetwork/request-client.js@^0.45.0":
+  version "0.45.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/request-client.js/-/request-client.js-0.45.0.tgz#30db89084c9b460c706b247a5cf095e573c5a146"
+  integrity sha512-6WdtHYfDuPZNhSFLd9sDDFdTU6Gf3tfb0XbPLE+s2ia2v7msXZPtCentiUuoe3VOQc8zmGI+IzfhpEvZeVe8Vw==
   dependencies:
-    "@requestnetwork/advanced-logic" "0.39.0"
-    "@requestnetwork/currency" "0.13.0"
-    "@requestnetwork/data-access" "0.31.0"
-    "@requestnetwork/data-format" "0.14.0"
-    "@requestnetwork/epk-signature" "0.5.39"
-    "@requestnetwork/multi-format" "0.15.14"
-    "@requestnetwork/payment-detection" "0.40.0"
-    "@requestnetwork/request-logic" "0.30.0"
-    "@requestnetwork/smart-contracts" "0.33.0"
-    "@requestnetwork/transaction-manager" "0.31.0"
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
+    "@requestnetwork/advanced-logic" "0.40.0"
+    "@requestnetwork/currency" "0.14.0"
+    "@requestnetwork/data-access" "0.32.0"
+    "@requestnetwork/data-format" "0.15.0"
+    "@requestnetwork/epk-signature" "0.5.40"
+    "@requestnetwork/multi-format" "0.15.15"
+    "@requestnetwork/payment-detection" "0.41.0"
+    "@requestnetwork/request-logic" "0.31.0"
+    "@requestnetwork/smart-contracts" "0.34.0"
+    "@requestnetwork/transaction-manager" "0.32.0"
+    "@requestnetwork/types" "0.41.0"
+    "@requestnetwork/utils" "0.41.0"
     ethers "5.5.1"
     qs "6.11.2"
     tslib "2.5.0"
 
-"@requestnetwork/request-logic@0.30.0":
-  version "0.30.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/request-logic/-/request-logic-0.30.0.tgz#233d1a69f7c598deaf6427cda1f3d8092f80a070"
-  integrity sha512-PC7snzbqQrGRLMSs7NWZZg0wJt/Y+5zIUk7pjY0ULhfqU7jB/qqp1gR92akf2IOvCCmlzaeS4o6c9+KArQ3zmw==
+"@requestnetwork/request-logic@0.31.0":
+  version "0.31.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/request-logic/-/request-logic-0.31.0.tgz#3b1c61237074d68f803c6a44f2e02bee185e2a69"
+  integrity sha512-JnbQvZpbyO341Edr2PY11XOd/qLtaNm2jPEOODTzlv1g/Nbm4RI4KyXw+0TLv/A03uXUcLV2i+M6w7Q2XjHQCQ==
   dependencies:
-    "@requestnetwork/advanced-logic" "0.39.0"
-    "@requestnetwork/multi-format" "0.15.14"
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
+    "@requestnetwork/advanced-logic" "0.40.0"
+    "@requestnetwork/multi-format" "0.15.15"
+    "@requestnetwork/types" "0.41.0"
+    "@requestnetwork/utils" "0.41.0"
     semver "7.5.4"
     tslib "2.5.0"
 
-"@requestnetwork/smart-contracts@0.33.0":
-  version "0.33.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/smart-contracts/-/smart-contracts-0.33.0.tgz#a7ce62bcd8242985b59980ed90028fef1d6a81db"
-  integrity sha512-/o1ETlKw0GfsNq6Ov7aPn+0GCmhzG+mqntaPX0kkbe1BZr39BAcodYV4P38K2xTd2FHOL2qrCMPY+QnVogmXjg==
+"@requestnetwork/smart-contracts@0.34.0":
+  version "0.34.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/smart-contracts/-/smart-contracts-0.34.0.tgz#12360bfa980bf2ac746504fefb36945154ab849b"
+  integrity sha512-yLB2jG0cO4ybfgNq6jeRdqpLZLxxEObc+QtzLVdl3FVB/wkKOUFciz0LEzYJdOZ7AbZnOMG1EkEbdMAS2JYwsw==
   dependencies:
     tslib "2.5.0"
 
-"@requestnetwork/transaction-manager@0.31.0":
-  version "0.31.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/transaction-manager/-/transaction-manager-0.31.0.tgz#375abe6189f3bbd37b6fbcd9415ff56eeed3ac89"
-  integrity sha512-tAzaRGmCqubYRrb+BvwT/0Ts2AtT8Q5a5taZ+DZTjg49CwwWM+lLHZq9eczTemVwGLyxkcScVxeoF4JFUELcWQ==
+"@requestnetwork/smart-contracts@0.35.0":
+  version "0.35.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/smart-contracts/-/smart-contracts-0.35.0.tgz#fcbbb2655d64512bd9e00165f41015647006ca9d"
+  integrity sha512-RGqqaUMdqkNeBmXxaChg+868zi3bc0JFSwX5CnbxwCAmZSkk1nWKPuni/8Iz3oBj0ZP8ZMD8zzdUvUlt+H3M1Q==
   dependencies:
-    "@requestnetwork/multi-format" "0.15.14"
-    "@requestnetwork/types" "0.40.0"
-    "@requestnetwork/utils" "0.40.0"
     tslib "2.5.0"
 
-"@requestnetwork/types@0.40.0":
-  version "0.40.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/types/-/types-0.40.0.tgz#9fca23958e37a691fe7852a7b14963005184864b"
-  integrity sha512-hDtmqsf9fZPLucEus17Y1NfERPEy3G8VgIjso2ZPzCLSSTitLn3rcd9WzsUWo3mUAuYg6G2HADVsSQRWUTCefQ==
+"@requestnetwork/transaction-manager@0.32.0":
+  version "0.32.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/transaction-manager/-/transaction-manager-0.32.0.tgz#030fffc157ed5ea88549761bde4e6b5b583e52e1"
+  integrity sha512-6dsQlGWv0zGGbOfBYXgRXunUXDfB8T6PDqOhnu+b55Q66369vmqFi0UOFmjYKephwRkdo3sfsHhnPOGKAECziw==
   dependencies:
-    ethers "5.5.1"
+    "@requestnetwork/multi-format" "0.15.15"
+    "@requestnetwork/types" "0.41.0"
+    "@requestnetwork/utils" "0.41.0"
+    tslib "2.5.0"
 
 "@requestnetwork/types@0.41.0":
   version "0.41.0"
@@ -4207,16 +4234,12 @@
   dependencies:
     ethers "5.5.1"
 
-"@requestnetwork/utils@0.40.0":
-  version "0.40.0"
-  resolved "https://registry.yarnpkg.com/@requestnetwork/utils/-/utils-0.40.0.tgz#7275390ad2a4573995dd5f4757d274567918a538"
-  integrity sha512-xR9QtkCFrubWH14mBYA+l8sirC2fYo2GqYheBkHrkY7RR9LLpeswFyyj35i4ulYWfdFB+5klpxqO1P+4ngoPvQ==
+"@requestnetwork/types@0.42.0":
+  version "0.42.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/types/-/types-0.42.0.tgz#92facc7a7320c16cccd8155eac732a43547f6f51"
+  integrity sha512-XFR63v9nFipPGLhaqOiir4RqAzYWMsBY/8y3UHNxYZVUAkIOxx1253POLSEQb9bdSI/1xMkTpFx0njOYqob91g==
   dependencies:
-    "@requestnetwork/types" "0.40.0"
-    "@toruslabs/eccrypto" "4.0.0"
     ethers "5.5.1"
-    secp256k1 "4.0.2"
-    tslib "2.5.0"
 
 "@requestnetwork/utils@0.41.0":
   version "0.41.0"
@@ -4224,6 +4247,17 @@
   integrity sha512-YBo7TSPY+o2B3KA627S/5O7TTT0/caMCO0WmnzAz5CnHC3SeZycjPSoKk8kSOCXwMmZ7iLbyM0D5YOTNAIPbZQ==
   dependencies:
     "@requestnetwork/types" "0.41.0"
+    "@toruslabs/eccrypto" "4.0.0"
+    ethers "5.5.1"
+    secp256k1 "4.0.2"
+    tslib "2.5.0"
+
+"@requestnetwork/utils@0.42.0":
+  version "0.42.0"
+  resolved "https://registry.yarnpkg.com/@requestnetwork/utils/-/utils-0.42.0.tgz#20aaafa6ff4ac64f247f410838cf545dfe6fb7d6"
+  integrity sha512-WUeZwIhPgeq2JsJo6oLzUMQnDvVpkPQyhWTzG24Jcly8pB35LEVhKWojPZVpkwYnE4J4cyEcvwmtlaBh7zJfWQ==
+  dependencies:
+    "@requestnetwork/types" "0.42.0"
     "@toruslabs/eccrypto" "4.0.0"
     ethers "5.5.1"
     secp256k1 "4.0.2"
@@ -9255,7 +9289,7 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==
 
-lodash@4.17.21, lodash@^4.17.13, lodash@^4.17.21, lodash@^4.17.4:
+lodash@^4.17.13, lodash@^4.17.21, lodash@^4.17.4:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

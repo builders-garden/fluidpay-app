@@ -1,7 +1,8 @@
+import { PrivyEmbeddedWalletProvider } from "@privy-io/expo";
 import { RequestNetwork } from "@requestnetwork/request-client.js";
 import { Web3SignatureProvider } from "@requestnetwork/web3-signature";
 
-export const getRequestClient = (provider: any) => {
+export const getRequestClient = (provider: PrivyEmbeddedWalletProvider) => {
   const web3SignatureProvider = new Web3SignatureProvider(provider);
   return new RequestNetwork({
     nodeConnectionConfig: {
