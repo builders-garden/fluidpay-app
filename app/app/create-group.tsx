@@ -1,8 +1,14 @@
 import { router } from "expo-router";
-import { ArrowLeft, ChevronRight, Search } from "lucide-react-native";
+import {
+  ArrowLeft,
+  ChevronRight,
+  Search,
+  X,
+  XCircle,
+} from "lucide-react-native";
 import { useState } from "react";
 import { SafeAreaView, TextInput, Text, View, Pressable } from "react-native";
-import { Appbar, Badge, Searchbar } from "react-native-paper";
+import { Appbar, Badge, Checkbox, Searchbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import AppButton from "../../components/app-button";
 import { createGroup, getUsers } from "../../lib/api";
@@ -102,53 +108,72 @@ export default function CreateGroupPage() {
             // traileringIcon={() => <QrCode size={20} color={"white"} />}
             theme={{ colors: { onSurfaceVariant: "#FFF" } }}
           />
-          <View className="flex flex-row space-x-4">
-            {addedMembers.map((user: any) => (
-              <Pressable
-                onPress={() =>
-                  setAddedMembers(
-                    addedMembers.filter((member: any) => member.id !== user.id)
-                  )
-                }
-              >
-                <View className="flex flex-col space-y-2 items-center justify-center">
-                  <Avatar name={user.username.charAt(0).toUpperCase()} />
-                  <Text className="text-white font-semibold">
-                    {user.username}
-                  </Text>
-                </View>
-                <Badge className={"absolute -top-1 -right-2"} visible={true}>
-                  -
-                </Badge>
-              </Pressable>
-            ))}
-            {results
-              .filter(
-                (user: any) =>
-                  addedMembers.filter((member: any) => member.id === user.id)
-                    .length === 0
-              )
-              .map((user: any) => (
+
+          <View className="flex flex-col space-y-4">
+            <View className="flex flex-row space-x-4">
+              {addedMembers.map((user: any) => (
                 <Pressable
-                  onPress={() => {
-                    setAddedMembers(addedMembers.concat([user]));
-                  }}
+                  key={"added-member-" + user.id}
+                  onPress={() =>
+                    setAddedMembers(
+                      addedMembers.filter(
+                        (member: any) => member.id !== user.id
+                      )
+                    )
+                  }
                 >
                   <View className="flex flex-col space-y-2 items-center justify-center">
-                    <Avatar name={user.username.charAt(0).toUpperCase()} />
+                    <View>
+                      <Avatar name={user.username.charAt(0).toUpperCase()} />
+                      <View className="bg-red-600 rounded-full absolute -top-1 -right-1 border border-black p-1">
+                        <X size={8} color={"black"} className={" text-black"} />
+                      </View>
+                    </View>
                     <Text className="text-white font-semibold">
                       {user.username}
                     </Text>
                   </View>
-                  <Badge
-                    className={"absolute -top-1 -right-2"}
-                    style={{ backgroundColor: "green" }}
-                    visible={true}
-                  >
-                    +
-                  </Badge>
                 </Pressable>
               ))}
+            </View>
+            {results.length > 0 && (
+              <View className="flex flex-col space-y-2">
+                <Text className="text-white text-xl font-semibold">
+                  Search results
+                </Text>
+                <View className="rounded-lg flex flex-col space-y-4 w-full py-4 px-2 bg-greyInput">
+                  {results.map((user: any, index) => (
+                    <Pressable
+                      onPress={() => {
+                        if (!addedMembers.find((m) => m.id === user.id)) {
+                          setAddedMembers([...addedMembers, user]);
+                        } else {
+                          setAddedMembers(
+                            addedMembers.filter((m) => m.id !== user.id)
+                          );
+                        }
+                      }}
+                    >
+                      <View className="flex flex-row items-center" key={index}>
+                        <Checkbox.Android
+                          status={
+                            addedMembers.find((m) => m.id === user.id)
+                              ? "checked"
+                              : "unchecked"
+                          }
+                          color="#0061FF"
+                          uncheckedColor="#8F8F91"
+                        />
+                        <Avatar name={user.username.charAt(0).toUpperCase()} />
+                        <Text className="text-white font-semibold text-lg ml-2">
+                          {user.username}
+                        </Text>
+                      </View>
+                    </Pressable>
+                  ))}
+                </View>
+              </View>
+            )}
           </View>
         </View>
         <View className="px-4">
