@@ -37,6 +37,7 @@ export default function SelectPaidByModal({
               <Text className="text-2xl text-white font-bold">Paid by</Text>
               {members?.map((member: any, index: number) => (
                 <Pressable
+                  key={`${member.id}-${index}`}
                   onPress={() => {
                     setPaidById(member.userId);
                     bottomSheetModalRef.current?.dismiss();

@@ -48,6 +48,13 @@ export default function AppLayout() {
         }}
       />
       <Stack.Screen
+        name="select-split-type-modal"
+        options={{
+          presentation: "containedTransparentModal",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="group-settings-modal"
         options={{ presentation: "modal", headerShown: false }}
       />
