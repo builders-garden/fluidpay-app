@@ -37,7 +37,7 @@ export const createRequestParameters = ({
       currency: {
         type: Types.RequestLogic.CURRENCY.ERC20,
         value: currencyAddress,
-        network: chain.name as any,
+        network: chain.name.toLowerCase() as any,
       },
       expectedAmount: expectedAmount,
       payee: {
@@ -53,7 +53,7 @@ export const createRequestParameters = ({
     paymentNetwork: {
       id: Types.Extension.PAYMENT_NETWORK_ID.ERC20_FEE_PROXY_CONTRACT as any, // ANY_TO_ERC20_PROXY maybe we should use this for swap-and-pay
       parameters: {
-        paymentNetworkName: chain.name as any,
+        paymentNetworkName: chain.name.toLowerCase() as any,
         paymentAddress: paymentAddress, // should be equal to payeeIdentity for simplicity. But it's not mandatory
         feeAddress: "0x0000000000000000000000000000000000000000",
         feeAmount: "0",

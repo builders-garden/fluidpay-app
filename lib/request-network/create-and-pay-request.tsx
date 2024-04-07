@@ -4,6 +4,7 @@ import { CreateRequestParams, createRequestParameters } from "./create-request";
 import { processPayment, sendPaymentTransaction } from "./pay-request";
 import { getRequestData } from "./retrieve-requests";
 import { getEthersProvider, getEthersSigner } from "../privy";
+import { randomBytes } from "ethers/lib/utils";
 
 export const createAndPayRequest = async (
   requestParams: CreateRequestParams,
@@ -13,7 +14,12 @@ export const createAndPayRequest = async (
   console.log("Getting request client...");
   const requestClient = getRequestClient(provider);
 
-  console.log("Creating request..." + requestCreateParameters);
+  console.log(
+    "Creating request...",
+    JSON.stringify(requestCreateParameters, null, 2)
+  );
+  console.log([0, 1, 2, 3, 4].slice(0, 2));
+  console.log(randomBytes(32));
   const createdRequest = await requestClient.createRequest(
     requestCreateParameters
   );
@@ -45,5 +51,5 @@ export const createAndPayRequest = async (
   }
 
   // Send payment transaction
-  await sendPaymentTransaction(requestData, ethersSigner!);
+  return await sendPaymentTransaction(requestData, ethersSigner!);
 };
