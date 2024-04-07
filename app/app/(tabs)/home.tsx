@@ -24,6 +24,7 @@ import PillButton from "../../../components/pill-button";
 
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
+
   // const [refreshing, setRefreshing] = React.useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);

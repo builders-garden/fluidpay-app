@@ -5,8 +5,8 @@ import {
 
 export const signMessageWithPrivy = async (
   provider: PrivyEmbeddedWalletProvider,
-  message: `0x${string}`
-) => {
+  message: string
+): Promise<string> => {
   // Get the wallet address
   const accounts = await provider.request({
     method: "eth_requestAccounts",

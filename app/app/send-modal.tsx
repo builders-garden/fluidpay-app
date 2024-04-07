@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, Appbar } from "react-native-paper";
 import { Text } from "react-native";
-import { useSendStore, useUserStore } from "../../store";
+import { useUserStore } from "../../store";
 import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../../components/app-button";
@@ -60,8 +60,6 @@ export default function SendModal() {
       txHash: (txReceipt as TransactionReceipt)
         .transactionHash as `0x${string}`,
     };
-
-    console.log(txReceipt);
     await createPayment(user!.token, payment);
     setIsLoadingTransfer(false);
 
