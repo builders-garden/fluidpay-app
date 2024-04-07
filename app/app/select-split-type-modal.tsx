@@ -24,7 +24,6 @@ export default function SelectSplitTypeModal({
   bottomSheetModalRef: any;
   setSplitType: (splitType: SplitType) => void;
 }) {
-  const user = useUserStore((state) => state.user);
   const splitTypes = useMemo(
     () => [SplitType.PERCENTAGE, SplitType.AMOUNT],
     []
