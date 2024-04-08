@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { KeyboardAvoidingView, View } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, Appbar } from "react-native-paper";
 import { Text } from "react-native";
@@ -93,57 +93,61 @@ export default function SendModal() {
           titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
-      <View className="flex flex-col items-center mt-4 space-y-2">
-        <Avatar name={sendUser?.username.charAt(0).toUpperCase()} size={72} />
-        <Text className="text-white text-3xl text-center font-semibold">
-          @{sendUser?.username}
-        </Text>
-        <Text className="text-[#8F8F91] text-lg text-ellipsis">
-          {shortenAddress(sendUser?.smartAccountAddress)}
-        </Text>
-
-        <AmountChooser
-          dollars={amount}
-          onSetDollars={setAmount}
-          showAmountAvailable
-          autoFocus={paramsAmount ? false : true}
-          lagAutoFocus={false}
-        />
-        {isLoadingBalance ? (
-          <ActivityIndicator animating={true} color={"#667DFF"} />
-        ) : (
-          <Text className="text-[#8F8F91] font-semibold">
-            ${formatBigInt(balance!, 2)} available
+      <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
+        <View className="flex flex-col items-center mt-4 space-y-2">
+          <Avatar name={sendUser?.username.charAt(0).toUpperCase()} size={72} />
+          <Text className="text-white text-3xl text-center font-semibold">
+            @{sendUser?.username}
           </Text>
-        )}
-      </View>
-      <SafeAreaView className="mt-auto">
-        {isLoadingBalance || isLoadingTransfer ? (
-          <View className="flex flex-col space-y-4">
+          <Text className="text-[#8F8F91] text-lg text-ellipsis">
+            {shortenAddress(sendUser?.smartAccountAddress)}
+          </Text>
+
+          <AmountChooser
+            dollars={amount}
+            onSetDollars={setAmount}
+            showAmountAvailable
+            autoFocus={paramsAmount ? false : true}
+            lagAutoFocus={false}
+          />
+          {isLoadingBalance ? (
             <ActivityIndicator animating={true} color={"#667DFF"} />
-            {isLoadingTransfer ? (
-              <Text className="text-primary text-center mt-4">Sending...</Text>
-            ) : null}
-          </View>
-        ) : (
-          <View className="flex flex-col px-4">
-            <View className="mb-4">
+          ) : (
+            <Text className="text-[#8F8F91] font-semibold">
+              ${formatBigInt(balance!, 2)} available
+            </Text>
+          )}
+        </View>
+        <SafeAreaView className="mt-auto">
+          {isLoadingBalance || isLoadingTransfer ? (
+            <View className="flex flex-col space-y-4">
+              <ActivityIndicator animating={true} color={"#667DFF"} />
+              {isLoadingTransfer ? (
+                <Text className="text-primary text-center mt-4">
+                  Sending...
+                </Text>
+              ) : null}
+            </View>
+          ) : (
+            <View className="flex flex-col px-4">
+              <View className="mb-4">
+                <AppButton
+                  text={"Send"}
+                  onPress={() => sendTokens()}
+                  variant={canSend ? "primary" : "disabled"}
+                />
+              </View>
               <AppButton
-                text={"Send"}
-                onPress={() => sendTokens()}
-                variant={canSend ? "primary" : "disabled"}
+                text="Cancel"
+                onPress={() => {
+                  router.back();
+                }}
+                variant="ghost"
               />
             </View>
-            <AppButton
-              text="Cancel"
-              onPress={() => {
-                router.back();
-              }}
-              variant="ghost"
-            />
-          </View>
-        )}
-      </SafeAreaView>
+          )}
+        </SafeAreaView>
+      </KeyboardAvoidingView>
     </View>
   );
 }
