@@ -17,7 +17,11 @@ export default function AppButton({
   const content = loading ? (
     <ActivityIndicator size="small" color="#FFF" />
   ) : (
-    <Text className="text-lg text-white font-semibold">{text}</Text>
+    <Text
+      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-gray-500" : variant === "disabled" ? "text-gray-300" : "text-black"}`}
+    >
+      {text}
+    </Text>
   );
 
   if (variant === "ghost") {
@@ -45,7 +49,7 @@ export default function AppButton({
       <TouchableOpacity
         onPress={onPress}
         disabled={disabled || loading}
-        className="bg-white border-2 border-white rounded-full flex items-center justify-center py-3 px-4"
+        className="bg-white border-2 border-white rounded-full flex items-center justify-center py-3 px-4 text-black"
       >
         {content}
       </TouchableOpacity>

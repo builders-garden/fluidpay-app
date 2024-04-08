@@ -43,7 +43,7 @@ export default function AddMoneyModal() {
         </Text>
         <View className="bg-[#232324] rounded-xl flex flex-row justify-between items-center mt-4 px-4 py-2">
           <Text className="text-[#8F8F91] text-lg text-ellipsis">
-            {shortenAddress(user?.address!)}
+            {shortenAddress(user?.smartAccountAddress!)}
           </Text>
           <Pressable
             onPress={async () => {

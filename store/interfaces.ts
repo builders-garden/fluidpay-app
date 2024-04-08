@@ -6,6 +6,7 @@ export interface SimpleUser {
 
 export interface DBUser {
   address: string;
+  smartAccountAddress: `0x${string}`;
   avatarUrl: string | null;
   createdAt: string;
   displayName: string;

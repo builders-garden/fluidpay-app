@@ -54,6 +54,7 @@
     "lucide-react-native": "^0.330.0",
     "nativewind": "^2.0.11",
     "node-libs-browser": "^2.2.1",
+    "permissionless": "^0.1.14",
     "prettier": "^3.2.5",
     "react": "18.2.0",
     "react-native": "0.72.4",
@@ -79,7 +80,7 @@
     "react-native-webview": "13.2.2",
     "rn-qr-generator": "^1.4.0",
     "use-eth-price": "^1.1.0",
-    "viem": "^2.8.16",
+    "viem": "^2.9.8",
     "wagmi": "^2.5.12",
     "zustand": "^4.4.7"
   },

@@ -10,7 +10,6 @@ import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
 import { getMe, getPayments, getGroups } from "../lib/api";
 import { useChainStore } from "../store/use-chain-store";
-import { sepolia } from "viem/chains";
 
 export enum LoginStatus {
   INITIAL = "initial",

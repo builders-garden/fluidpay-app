@@ -43,7 +43,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
       <View className="flex flex-row items-center justify-between px-4 pb-8">
         <View className="flex space-y-2">
           <Text className="text-3xl text-white font-bold">
-            {shortenAddress(user?.address!)}
+            {shortenAddress(user?.smartAccountAddress!)}
           </Text>
           <Text className="font-bold text-[#0061FF]">@{user?.username}</Text>
         </View>

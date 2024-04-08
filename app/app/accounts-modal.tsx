@@ -15,11 +15,13 @@ import { formatBigInt } from "../../lib/utils";
 import { useEmbeddedWallet } from "@privy-io/expo";
 import { useSwitchChain } from "wagmi";
 import { router } from "expo-router";
+import { useUserStore } from "../../store";
 
 export default function AccountsModal() {
   const { isConnected, isReady, address } = usePrivyWagmiProvider();
   const chain = useChainStore((state) => state.chain);
   const setChain = useChainStore((state) => state.setChain);
+  const user = useUserStore((state) => state.user);
   const [selectedChain, setSelectedChain] = useState(chain);
   const wallet = useEmbeddedWallet();
   const { switchChain } = useSwitchChain();
@@ -27,14 +29,14 @@ export default function AccountsModal() {
   const { balance: sepoliaBalance, isLoading: isLoadingSepoliaBalance } =
     useERC20BalanceOf({
       network: sepolia.id,
-      args: [address!],
+      args: [user!.smartAccountAddress],
       address: tokens.USDC[sepolia.id] as `0x${string}`,
     });
 
   const { balance: baseBalance, isLoading: isLoadingBaseBalance } =
     useERC20BalanceOf({
       network: base.id,
-      args: [address!],
+      args: [user!.smartAccountAddress],
       address: tokens.USDC[base.id] as `0x${string}`,
     });
 

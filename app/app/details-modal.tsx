@@ -14,7 +14,6 @@ import {
   usePrivyWagmiProvider,
   useERC20BalanceOf,
 } from "@buildersgarden/privy-wagmi-provider";
-import { sepolia } from "viem/chains";
 import { formatBigInt, shortenAddress } from "../../lib/utils";
 import { useChainStore } from "../../store/use-chain-store";
 
@@ -27,7 +26,7 @@ export default function DetailsModal() {
 
   const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
     network: chain.id,
-    args: [address!],
+    args: [user!.smartAccountAddress],
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
 
@@ -93,7 +92,7 @@ export default function DetailsModal() {
             <View className="flex space-y-2">
               <Text className="text-gray-400 text-lg font-medium">Address</Text>
               <Text className="text-[#0061FF] text-lg font-medium">
-                {shortenAddress(address!)}
+                {shortenAddress(user?.smartAccountAddress!)}
               </Text>
             </View>
 

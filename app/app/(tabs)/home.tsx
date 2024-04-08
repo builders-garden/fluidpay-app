@@ -21,10 +21,12 @@ import tokens from "../../../constants/tokens";
 import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
+import { useEmbeddedWallet } from "@privy-io/expo";
+import { getPimlicoSmartAccountClient } from "../../../lib/pimlico";
 
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
-
+  const wallet = useEmbeddedWallet();
   // const [refreshing, setRefreshing] = React.useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
@@ -41,7 +43,7 @@ export default function Home() {
     refetch: refetchBalance,
   } = useERC20BalanceOf({
     network: chain.id,
-    args: [address!],
+    args: [user?.smartAccountAddress!],
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
   const navigation = useNavigation();
@@ -49,6 +51,12 @@ export default function Home() {
   useEffect(() => {
     const refresh = async () => {
       await Promise.all([refetchBalance()]);
+      const smartAccountClient = await getPimlicoSmartAccountClient(
+        address as `0x${string}`,
+        chain,
+        wallet
+      );
+      console.log(smartAccountClient.account.address);
     };
 
     navigation.addListener("focus", refresh);
@@ -185,6 +193,7 @@ export default function Home() {
               <AppButton
                 text="Make your first payment!"
                 variant="secondary"
+                loading={false}
                 onPress={() => {
                   router.push("/app/transfers");
                 }}
