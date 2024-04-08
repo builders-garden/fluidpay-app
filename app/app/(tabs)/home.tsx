@@ -51,12 +51,6 @@ export default function Home() {
   useEffect(() => {
     const refresh = async () => {
       await Promise.all([refetchBalance()]);
-      const smartAccountClient = await getPimlicoSmartAccountClient(
-        address as `0x${string}`,
-        chain,
-        wallet
-      );
-      console.log(smartAccountClient.account.address);
     };
 
     navigation.addListener("focus", refresh);
