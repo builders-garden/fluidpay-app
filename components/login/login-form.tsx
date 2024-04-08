@@ -1,5 +1,4 @@
 import { KeyboardAvoidingView, View } from "react-native";
-import { setCode } from "viem/actions";
 import AppButton from "../app-button";
 import CodeInput from "./code-input";
 import EmailInput from "./email-input";
@@ -31,6 +30,7 @@ import * as SecureStore from "expo-secure-store";
 import { LoginStatus } from "../../app/index";
 import { useChainStore } from "../../store/use-chain-store";
 import { sepolia } from "viem/chains";
+import { getPimlicoSmartAccountClient } from "../../lib/pimlico";
 
 export default function LoginForm({
   loginStatus,
@@ -63,11 +63,6 @@ export default function LoginForm({
     onLoginSuccess(user) {
       console.log("Logged in", user);
     },
-  });
-
-  console.log({
-    state,
-    address,
   });
 
   useEffect(() => {
@@ -112,14 +107,16 @@ export default function LoginForm({
       provider,
       message as `0x${string}`
     );
+    const smartAccount = await getPimlicoSmartAccountClient(
+      address as `0x${string}`,
+      chain,
+      wallet
+    );
     const { isNewUser, token } = await signIn({
       address: address || getUserEmbeddedWallet(user)?.address!,
+      smartAccountAddress: smartAccount.account.address,
       signature: signedMessage!,
       nonce,
-    });
-    console.log({
-      isNewUser,
-      token,
     });
     await SecureStore.setItemAsync(`token-${address}`, token);
     if (isNewUser) {

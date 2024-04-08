@@ -51,7 +51,7 @@ export default function CodeInput({
   useEffect(() => {
     inputRefs.current = inputRefs.current.slice(0, code.length);
   }, [code]);
-
+  console.log("Code", code.join(""));
   return (
     <View className="w-full flex flex-col">
       <Text className="text-white text-xl text-center mb-4">
@@ -74,8 +74,9 @@ export default function CodeInput({
 
       <AppButton
         // Keeps button disabled until the code has been sent
-        disabled={code.join("").length === 6}
+        disabled={code.join("").length !== 6}
         onPress={async () => {
+          console.log("Logging in with code", code.join(""));
           setIsLoading(true);
           setLoadingMessage("Verifying code...");
           await loginWithCode({

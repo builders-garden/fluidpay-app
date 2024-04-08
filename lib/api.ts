@@ -11,6 +11,7 @@ export type AuthNonceResponse = {
 
 export type AuthSignInBody = {
   address: string;
+  smartAccountAddress: string;
   signature: string;
   nonce: number;
 };

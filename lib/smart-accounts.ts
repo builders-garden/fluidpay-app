@@ -3,7 +3,6 @@ import {
   PrivyEmbeddedWalletProvider,
 } from "@privy-io/expo";
 import { createWalletClient, custom, Chain } from "viem";
-import { signMessageWithPrivy } from "./privy";
 
 export const getLightSigner = (
   address: string,

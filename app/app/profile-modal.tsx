@@ -84,10 +84,10 @@ export default function ProfileModal() {
               </Text>
               <View className="bg-mutedGrey/50 rounded-lg p-1 flex flex-row items-center space-x-2">
                 <Text className="text-white text-xs">
-                  {shortenAddress(profileUser.address)}
+                  {shortenAddress(profileUser.smartAccountAddress)}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => Clipboard.setStringAsync(profileUser!.address)}
+                  onPress={() => Clipboard.setStringAsync(profileUser!.smartAccountAddress)}
                 >
                   <Copy size={12} color="white" />
                 </TouchableOpacity>

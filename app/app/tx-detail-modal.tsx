@@ -13,7 +13,6 @@ export default function TransactionDetailModal() {
   const { transaction } = useLocalSearchParams();
   const data = JSON.parse(transaction as string);
   const isPresented = router.canGoBack();
-  const user = useUserStore((state) => state.user);
 
   return (
     <SafeAreaView

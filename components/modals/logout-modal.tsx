@@ -17,6 +17,7 @@ export default function LogoutModal({
   hideModal: () => void;
 }) {
   const user = useUserStore((state) => state.user);
+  const setUser = useUserStore((state) => state.setUser);
   const { disconnect } = useDisconnect();
   const { logout } = usePrivy();
   return (
@@ -35,6 +36,7 @@ export default function LogoutModal({
             onPress={async () => {
               await SecureStore.deleteItemAsync(`token-${user?.address}`);
               await logout();
+              setUser(undefined);
               await disconnect();
               router.replace("/");
             }}

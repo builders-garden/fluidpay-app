@@ -13,52 +13,53 @@ import { createPayment } from "../../lib/api";
 import tokens from "../../constants/tokens";
 import { formatBigInt, shortenAddress } from "../../lib/utils";
 import {
-  useBiconomySmartAccount,
   useERC20BalanceOf,
-  useERC20Transfer,
   usePrivyWagmiProvider,
 } from "@buildersgarden/privy-wagmi-provider";
 import { useChainStore } from "../../store/use-chain-store";
-import { TransactionReceipt } from "viem";
+import { encodeFunctionData, erc20Abi } from "viem";
+import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
+import { useEmbeddedWallet } from "@privy-io/expo";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
     useLocalSearchParams();
   const sendUser = JSON.parse(sendUserData as string);
   const isPresented = router.canGoBack();
-  const user = useUserStore((state) => state.user);
   const chain = useChainStore((state) => state.chain);
-  const transfer = useERC20Transfer({
-    network: chain.id,
-    address: tokens.USDC[chain.id] as `0x${string}`,
-  });
+  const user = useUserStore((state) => state.user);
   const [amount, setAmount] = useState(paramsAmount as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
   const { address } = usePrivyWagmiProvider();
   const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
     network: chain.id,
-    args: [address!],
+    args: [user!.smartAccountAddress],
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
-
+  const wallet = useEmbeddedWallet();
   const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
-  // const canSend = true;
   const sendTokens = async () => {
     if (!amount || amount < 0) return;
     setIsLoadingTransfer(true);
-    const txReceipt = await transfer!({
-      to: sendUser!.address as `0x${string}`,
-      amount: BigInt(amount * 10 ** 6),
-      waitForTx: true,
-    });
+    const smartAccountClient = await getPimlicoSmartAccountClient(
+      address as `0x${string}`,
+      chain,
+      wallet
+    );
+    const txHash = await transferUSDC(
+      smartAccountClient,
+      amount,
+      chain,
+      sendUser!.smartAccountAddress
+    );
+
     const payment = {
       payerId: user!.id,
       payeeId: sendUser!.id,
       chainId: chain.id,
       amount: amount,
       description: "",
-      txHash: (txReceipt as TransactionReceipt)
-        .transactionHash as `0x${string}`,
+      txHash,
     };
     await createPayment(user!.token, payment);
     setIsLoadingTransfer(false);
@@ -98,7 +99,7 @@ export default function SendModal() {
           @{sendUser?.username}
         </Text>
         <Text className="text-[#8F8F91] text-lg text-ellipsis">
-          {shortenAddress(sendUser?.address)}
+          {shortenAddress(sendUser?.smartAccountAddress)}
         </Text>
 
         <AmountChooser
@@ -118,7 +119,12 @@ export default function SendModal() {
       </View>
       <SafeAreaView className="mt-auto">
         {isLoadingBalance || isLoadingTransfer ? (
-          <ActivityIndicator animating={true} color={"#667DFF"} />
+          <View className="flex flex-col space-y-4">
+            <ActivityIndicator animating={true} color={"#667DFF"} />
+            {isLoadingTransfer ? (
+              <Text className="text-primary text-center mt-4">Sending...</Text>
+            ) : null}
+          </View>
         ) : (
           <View className="flex flex-col px-4">
             <View className="mb-4">
