@@ -47,7 +47,7 @@ export default function AddMoneyModal() {
           </Text>
           <Pressable
             onPress={async () => {
-              await Clipboard.setStringAsync(user!.address);
+              await Clipboard.setStringAsync(user!.smartAccountAddress);
               setCopied(true);
               setTimeout(() => {
                 setCopied(false);

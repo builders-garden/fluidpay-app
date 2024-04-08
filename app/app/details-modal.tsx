@@ -22,8 +22,6 @@ export default function DetailsModal() {
   const user = useUserStore((state) => state.user);
   const chain = useChainStore((state) => state.chain);
 
-  const { address } = usePrivyWagmiProvider();
-
   const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
     network: chain.id,
     args: [user!.smartAccountAddress],
@@ -97,7 +95,9 @@ export default function DetailsModal() {
             </View>
 
             <TouchableOpacity
-              onPress={() => Clipboard.setStringAsync(user!.address)}
+              onPress={() =>
+                Clipboard.setStringAsync(user!.smartAccountAddress)
+              }
             >
               <Copy size={20} color="#0061FF" />
             </TouchableOpacity>
