@@ -21,6 +21,7 @@
     "@react-native-community/netinfo": "^9.4.1",
     "@react-native-picker/picker": "2.4.10",
     "@react-native-segmented-control/segmented-control": "^2.5.0",
+    "@react-navigation/native": "^6.1.17",
     "@requestnetwork/payment-processor": "^0.44.0",
     "@requestnetwork/request-client.js": "^0.45.0",
     "@requestnetwork/web3-signature": "^0.4.40",

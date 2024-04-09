@@ -56,14 +56,14 @@ export default function RequestModal() {
           <TouchableOpacity
             onPress={async () => {
               await Clipboard.setStringAsync(
-                `https://crumina.builders.garden/${user?.username}`
+                `https://fluidpay.xyz/u/${user?.username}`
               );
             }}
           >
             <View className="flex flex-row items-center space-x-2">
               <Copy size={20} color="#0061FF" />
               <Text className="text-[#0061FF] font-bold text-lg">
-                crumina.builders.garden/{user?.username}
+                fluidpay.xyz/u/{user?.username}
               </Text>
             </View>
           </TouchableOpacity>
@@ -76,7 +76,7 @@ export default function RequestModal() {
               variant="primary"
               onPress={async () => {
                 await Share.share({
-                  message: `gm! join me on crumina using this link: https://crumina.builders.garden/${user?.username}`,
+                  message: `gm! join me on fluidpay using this link: https://fluidpay.xyz/u/${user?.username}`,
                 });
               }}
             />

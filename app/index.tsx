@@ -84,13 +84,16 @@ const Home = () => {
 
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
-      <View>
-        <Image className="mt-24" source={require("../images/crumina.png")} />
+      <View className="text-center flex flex-col space-y-4 justify-center items-center">
+        <Image
+          className="mt-24 h-14 w-56"
+          source={require("../images/fluidpay.png")}
+        />
         <View className="px-16">
           <Text
-            className={`text-[#0061FF] text-2xl text-center leading-tight font-semibold`}
+            className={`text-white text-xl text-center leading-tight font-semibold`}
           >
-            Crypto made simple, payments made easy.
+            To anyone, from everywhere.
           </Text>
         </View>
       </View>

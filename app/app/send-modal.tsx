@@ -17,7 +17,6 @@ import {
   usePrivyWagmiProvider,
 } from "@buildersgarden/privy-wagmi-provider";
 import { useChainStore } from "../../store/use-chain-store";
-import { encodeFunctionData, erc20Abi } from "viem";
 import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
 import { useEmbeddedWallet } from "@privy-io/expo";
 

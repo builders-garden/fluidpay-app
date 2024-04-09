@@ -60,7 +60,6 @@ const toastConfig: ToastConfig = {
 };
 
 export default function AppLayout() {
-  //   const [fontsLoaded] = useFonts({});
   return (
     <>
       <PaperProvider

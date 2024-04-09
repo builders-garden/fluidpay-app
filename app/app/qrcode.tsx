@@ -58,7 +58,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
       <Text className="text-gray-400 text-center pt-4">
         Get paid with{" "}
         <Text className="font-bold text-[#0061FF]">
-          crumina.xyz/{user?.username}
+          fluidpay.xyz/u/{user?.username}
         </Text>
       </Text>
       <View className="mt-8">
