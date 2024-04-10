@@ -66,7 +66,6 @@ export default function AppLayout() {
   const url = Linking.useURL();
 
   useEffect(() => {
-    console.log("url", url);
     if (url) {
       handleDeepLinks(url);
     }
