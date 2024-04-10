@@ -1,6 +1,7 @@
-import { Slot } from "expo-router";
+import { Slot, router } from "expo-router";
 import { LogBox, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
+import * as Linking from "expo-linking";
 import Toast, {
   BaseToast,
   ErrorToast,
@@ -17,6 +18,8 @@ import { createConfig } from "wagmi";
 import { http } from "viem";
 import { base, sepolia } from "viem/chains";
 import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
+import { useEffect } from "react";
+import { handleDeepLinks } from "../lib/deeplinks";
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
@@ -60,6 +63,15 @@ const toastConfig: ToastConfig = {
 };
 
 export default function AppLayout() {
+  const url = Linking.useURL();
+
+  useEffect(() => {
+    console.log("url", url);
+    if (url) {
+      handleDeepLinks(url);
+    }
+  }, [url]);
+
   return (
     <>
       <PaperProvider

@@ -130,6 +130,7 @@ export type UsersByIdUsernameOrAddressResponse = {
   username: string;
   displayName: string;
   avatarUrl: string;
+  smartAccountAddress?: string;
 };
 
 export type UpdateMeBody = {

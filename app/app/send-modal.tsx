@@ -3,13 +3,13 @@ import { Link, router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, Appbar } from "react-native-paper";
 import { Text } from "react-native";
 import { useUserStore } from "../../store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
 import Avatar from "../../components/avatar";
 import { ArrowLeft } from "lucide-react-native";
-import { createPayment } from "../../lib/api";
+import { createPayment, getUserByIdUsernameOrAddress } from "../../lib/api";
 import tokens from "../../constants/tokens";
 import { formatBigInt, shortenAddress } from "../../lib/utils";
 import {
@@ -27,7 +27,10 @@ export default function SendModal() {
   const isPresented = router.canGoBack();
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
-  const [amount, setAmount] = useState(paramsAmount as number);
+  const [sendUserAddress, setSendUserAddress] = useState<string | null>(
+    sendUser?.smartAccountAddress
+  );
+  const [amount, setAmount] = useState(Number(paramsAmount) as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
   const { address } = usePrivyWagmiProvider();
   const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
@@ -36,7 +39,8 @@ export default function SendModal() {
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
   const wallet = useEmbeddedWallet();
-  const canSend = Number(amount) <= Number(balance) && Number(amount) > 0;
+  const canSend =
+    Number(amount) <= Number(balance) && Number(amount) > 0 && sendUserAddress;
   const sendTokens = async () => {
     if (!amount || amount < 0) return;
     setIsLoadingTransfer(true);
@@ -65,6 +69,19 @@ export default function SendModal() {
 
     router.back();
   };
+
+  useEffect(() => {
+    console.log("sendUserAddress", sendUserAddress);
+    if (!sendUserAddress) {
+      getUserByIdUsernameOrAddress(user?.token!, {
+        idOrUsernameOrAddress: sendUser?.username,
+      }).then((result) => {
+        if (result) {
+          setSendUserAddress(result.smartAccountAddress!);
+        }
+      });
+    }
+  }, []);
 
   if (!sendUser) {
     return <View className="flex-1 flex-col px-4 bg-black"></View>;
@@ -98,9 +115,13 @@ export default function SendModal() {
           <Text className="text-white text-3xl text-center font-semibold">
             @{sendUser?.username}
           </Text>
-          <Text className="text-[#8F8F91] text-lg text-ellipsis">
-            {shortenAddress(sendUser?.smartAccountAddress)}
-          </Text>
+          {sendUserAddress ? (
+            <Text className="text-[#8F8F91] text-lg text-ellipsis">
+              {shortenAddress(sendUserAddress!)}
+            </Text>
+          ) : (
+            <ActivityIndicator animating={true} color={"#8F8F91"} />
+          )}
 
           <AmountChooser
             dollars={amount}
@@ -131,6 +152,7 @@ export default function SendModal() {
             <View className="flex flex-col px-4">
               <View className="mb-4">
                 <AppButton
+                  disabled={!canSend}
                   text={"Send"}
                   onPress={() => sendTokens()}
                   variant={canSend ? "primary" : "disabled"}
