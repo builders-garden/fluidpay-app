@@ -80,7 +80,7 @@ const Home = () => {
         if (!userData.username) {
           router.push("/onboarding");
         } else {
-          router.push("/app/home");
+          router.push("/pin");
         }
       }
     } catch (e) {

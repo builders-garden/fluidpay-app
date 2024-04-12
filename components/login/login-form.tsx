@@ -129,7 +129,7 @@ export default function LoginForm({
     if (!userData.username) {
       return "/onboarding";
     } else {
-      return "/app/home";
+      return "/pin";
     }
   };
   return (

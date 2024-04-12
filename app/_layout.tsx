@@ -45,7 +45,7 @@ const toastConfig: ToastConfig = {
       {...props}
       style={{
         borderLeftColor: "green",
-        backgroundColor: "#21202E",
+        backgroundColor: "#232324",
       }}
       text1Style={{ color: "white", fontWeight: "bold", fontSize: 16 }}
       text2Style={{ color: "white" }}
@@ -54,7 +54,7 @@ const toastConfig: ToastConfig = {
   info: (props) => (
     <InfoToast
       {...props}
-      style={{ borderLeftColor: "blue", backgroundColor: "#21202E" }}
+      style={{ borderLeftColor: "blue", backgroundColor: "#232324" }}
       text1Style={{ color: "white", fontWeight: "bold", fontSize: 16 }}
       text2Style={{ color: "white" }}
     />
@@ -62,7 +62,7 @@ const toastConfig: ToastConfig = {
   error: (props) => (
     <ErrorToast
       {...props}
-      style={{ borderLeftColor: "red", backgroundColor: "#21202E" }}
+      style={{ borderLeftColor: "red", backgroundColor: "#232324" }}
       text1Style={{ color: "white", fontWeight: "bold", fontSize: 16 }}
       text2Style={{ color: "#8F8F91" }}
     />

@@ -50,7 +50,7 @@ export default function Onboarding() {
       setUser({ ...res, token } as DBUser);
       setTransactions(payments as any[]);
       setGroups(groups);
-      router.push("/app/home");
+      router.push("/pin");
     }
   };
 
