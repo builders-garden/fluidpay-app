@@ -10,6 +10,7 @@ import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
 import { getMe, getPayments, getGroups } from "../lib/api";
 import { useChainStore } from "../store/use-chain-store";
+import { useAuthenticate, useIsAddressRegistered } from "@sefu/react-sdk";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -22,12 +23,15 @@ export enum LoginStatus {
 const Home = () => {
   const { isReady, user, getAccessToken } = usePrivy();
   const { address } = usePrivyWagmiProvider();
+  const { isAddressRegistered } = useIsAddressRegistered(
+    (address as `0x${string}`) || "0x132"
+  );
+  const { isAuthenticated: isFkeyAuthenticated } = useAuthenticate();
   const setUser = useUserStore((state) => state.setUser);
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
-  const setChain = useChainStore((state) => state.setChain);
   const chain = useChainStore((state) => state.chain);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -38,11 +42,7 @@ const Home = () => {
 
   useEffect(() => {
     if (address && user) {
-      setIsLoading(true);
-      setLoadingMessage("Logging in...");
-      getToken(address).then(() => {
-        setIsLoading(false);
-      });
+      getToken(address);
     }
   }, [address, user]);
 
@@ -71,14 +71,22 @@ const Home = () => {
   };
 
   const getToken = async (address: string) => {
-    const token = await SecureStore.getItemAsync(`token-${address}`);
-    if (token) {
-      const userData = await fetchUserData(token);
-      if (!userData.username) {
-        router.push("/onboarding");
-      } else {
-        router.push("/app/home");
+    try {
+      setIsLoading(true);
+      setLoadingMessage("Logging in...");
+      const token = await SecureStore.getItemAsync(`token-${address}`);
+      if (token) {
+        const userData = await fetchUserData(token);
+        if (!userData.username) {
+          router.push("/onboarding");
+        } else {
+          router.push("/app/home");
+        }
       }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,7 +113,7 @@ const Home = () => {
           </Text>
         </View>
       )}
-      {isReady && (
+      {isReady && !user && (
         <LoginForm
           setIsLoading={setIsLoading}
           setLoadingMessage={setLoadingMessage}

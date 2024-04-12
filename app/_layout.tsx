@@ -20,6 +20,13 @@ import { base, sepolia } from "viem/chains";
 import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
 import { useEffect } from "react";
 import { handleDeepLinks } from "../lib/deeplinks";
+import { FluidkeyClient, FluidkeyProvider } from "@sefu/react-sdk";
+
+const sefuClient = new FluidkeyClient({
+  clientId: process.env.EXPO_PUBLIC_FLUIDKEY_APP_ID!,
+  clientKey: process.env.EXPO_PUBLIC_FLUIDKEY_APP_KEY!,
+  isExperimental: true,
+});
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
@@ -84,9 +91,11 @@ export default function AppLayout() {
           supportedChains={[sepolia, base]}
         >
           <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
-            <View className="bg-black flex-1">
-              <Slot />
-            </View>
+            <FluidkeyProvider client={sefuClient}>
+              <View className="bg-black flex-1">
+                <Slot />
+              </View>
+            </FluidkeyProvider>
           </PrivyWagmiProvider>
         </PrivyProvider>
       </PaperProvider>

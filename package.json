@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@andordavoti/react-native-timeago": "^0.0.14",
+    "@apollo/client": "^3.9.11",
     "@babel/plugin-transform-flow-strip-types": "^7.24.1",
     "@biconomy/account": "^4.1.1",
     "@buildersgarden/privy-wagmi-provider": "^0.6.0",
@@ -25,6 +26,7 @@
     "@requestnetwork/payment-processor": "^0.44.0",
     "@requestnetwork/request-client.js": "^0.45.0",
     "@requestnetwork/web3-signature": "^0.4.40",
+    "@sefu/react-sdk": "^0.3.8",
     "@thirdweb-dev/react-native-compat": "^0.4",
     "@toruslabs/eccrypto": "^4.0.0",
     "amazon-cognito-identity-js": "^6.3.6",
@@ -51,6 +53,7 @@
     "fast-text-encoding": "^1.0.6",
     "fastestsmallesttextencoderdecoder": "^1.0.22",
     "firebase": "^10.7.1",
+    "graphql": "^16.8.1",
     "ky": "^1.2.0",
     "lucide-react-native": "^0.330.0",
     "nativewind": "^2.0.11",
