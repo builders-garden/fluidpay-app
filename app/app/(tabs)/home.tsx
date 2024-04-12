@@ -41,12 +41,17 @@ export default function Home() {
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
-  const { smartAccountList } = useGetUserSmartAccounts();
+  const { smartAccountList, error } = useGetUserSmartAccounts();
   // TODO: perchè è undefined questo?
-  console.log(smartAccountList, chain);
+  console.log({
+    smartAccountList,
+    error,
+  });
   const { data: fkeyBalance, refetch: refetchFkeyBalance } =
     useGetSmartAccountBalance({
-      idSmartAccount: smartAccountList![0].idSmartAccount,
+      idSmartAccount: smartAccountList
+        ? smartAccountList[0].idSmartAccount
+        : "",
       chainId: chain.id,
     });
   console.log(fkeyBalance);
