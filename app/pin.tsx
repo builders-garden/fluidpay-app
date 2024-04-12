@@ -2,7 +2,6 @@ import {
   SafeAreaView,
   View,
   Text,
-  TextInput,
   KeyboardAvoidingView,
   ActivityIndicator,
 } from "react-native";
@@ -13,14 +12,44 @@ import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import PinInput from "../components/login/pin-input";
 import { router } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import {
+  useAuthenticate,
+  useGenerateKeys,
+  useGetUser,
+  useGetUserSmartAccounts,
+  useIsAddressRegistered,
+  useRegisterUser,
+  useSetUsername,
+} from "@sefu/react-sdk";
+import { getWalletClient } from "../lib/smart-accounts";
+import { useChainStore } from "../store/use-chain-store";
+import { useEmbeddedWallet } from "@privy-io/expo";
+import { UserImportStatus } from "@sefu/react-sdk/lib/core/graphql/codegen/generatedTS/graphql";
+import { useUserStore } from "../store";
 
 export default function Pin() {
   const [isLoading, setIsLoading] = useState(true);
+  const user = useUserStore((state) => state.user);
+  const chain = useChainStore((state) => state.chain);
+  const wallet = useEmbeddedWallet();
   const { address } = usePrivyWagmiProvider();
   const [pin, setPin] = useState(Array(4).fill(""));
   const [storedPin, setStoredPin] = useState<string | null>(null);
   const [hasPin, setHasPin] = useState(false);
-  const [error, setError] = useState(false);
+  const [pinError, setPinError] = useState(false);
+  const { registerUser } = useRegisterUser();
+  const { authenticate } = useAuthenticate();
+  const { setUsername } = useSetUsername();
+  const { smartAccountList } = useGetUserSmartAccounts();
+
+  const { user: fkeyUser } = useGetUser({
+    pollingOnStatusImporting: true,
+  });
+
+  const { isAddressRegistered } = useIsAddressRegistered(
+    address as `0x${string}`
+  );
+  const { generateKeys } = useGenerateKeys();
 
   useEffect(() => {
     SecureStore.getItemAsync(`pin-${address}`).then((pin) => {
@@ -30,28 +59,69 @@ export default function Pin() {
       }
       setIsLoading(false);
     });
-  });
+  }, []);
 
   const storePin = async () => {
     const pinString = pin.join("");
     await SecureStore.setItemAsync(`pin-${address}`, pinString);
-    router.push("/app/home");
+    setStoredPin(pinString);
+    checkPin();
   };
 
   const checkPin = async () => {
+    setIsLoading(true);
     const pinString = pin.join("");
+    console.log({
+      pinString,
+      storedPin,
+    });
     if (pinString === storedPin) {
-      router.push("/app/home");
+      const walletClient = getWalletClient(address!, chain, wallet);
+      // @ts-expect-error
+      await generateKeys(walletClient, pinString);
+      if (isAddressRegistered) {
+        await authenticate();
+        console.log("authenticated!");
+        router.push("/app/home");
+        setIsLoading(false);
+      } else {
+        // @ts-expect-error
+        await registerUser({ walletClient, whitelistCode: "SCC5IT" });
+      }
     } else {
-      setError(true);
+      setPinError(true);
+      setIsLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (
+      fkeyUser?._importStatus === UserImportStatus.Success &&
+      smartAccountList &&
+      smartAccountList?.length > 0 &&
+      !hasPin
+    ) {
+      setIsLoading(true);
+      // TODO: check if username is available with useIsUsernameAvailable
+      setUsername(smartAccountList[0].idSmartAccount, user?.username!)
+        .then(() => {
+          router.push("/app/home");
+          setIsLoading(false);
+        })
+        .catch((e) => {
+          console.error(e);
+          setIsLoading(false);
+        });
+    }
+  }, [fkeyUser, smartAccountList]);
   return (
     <SafeAreaView className="flex-1 bg-black px-4">
       {isLoading && (
-        <View className="justify-center items-center">
-          <ActivityIndicator color="white" />
+        <View className="flex flex-col mx-auto my-auto justify-center items-center space-y-4">
+          <ActivityIndicator color="blue" />
+          <Text className="text-primary text-lg font-semibold">
+            {hasPin ? "Summoning unicorns" : "Baking digital cookies..."}
+          </Text>
         </View>
       )}
       {!isLoading && (
@@ -69,7 +139,7 @@ export default function Pin() {
                   ? "Please enter your 4-digit PIN to continue"
                   : "Please set a 4-digit PIN to secure your account"}
               </Text>
-              {error && (
+              {pinError && (
                 <View className="bg-red-500/10  rounded-lg flex flex-row space-x-2 p-4 items-center">
                   <Icon name={"error"} color="red" size={24} />
                   <Text className="text-red-500 text-left">

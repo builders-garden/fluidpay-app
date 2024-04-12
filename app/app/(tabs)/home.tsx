@@ -22,6 +22,11 @@ import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import {
+  useGetSmartAccountBalance,
+  useGetUserSmartAccounts,
+  useInitializedWalletAddress,
+} from "@sefu/react-sdk";
 
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
@@ -36,6 +41,16 @@ export default function Home() {
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
+  const { smartAccountList } = useGetUserSmartAccounts();
+  // TODO: perchè è undefined questo?
+  console.log(smartAccountList, chain);
+  const { data: fkeyBalance, refetch: refetchFkeyBalance } =
+    useGetSmartAccountBalance({
+      idSmartAccount: smartAccountList![0].idSmartAccount,
+      chainId: chain.id,
+    });
+  console.log(fkeyBalance);
+
   const {
     balance,
     isLoading: isLoadingBalance,
@@ -49,7 +64,7 @@ export default function Home() {
 
   useEffect(() => {
     const refresh = async () => {
-      await Promise.all([refetchBalance()]);
+      await Promise.all([refetchBalance(), refetchFkeyBalance()]);
     };
 
     navigation.addListener("focus", refresh);
