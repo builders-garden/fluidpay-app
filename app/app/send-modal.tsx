@@ -49,13 +49,6 @@ export default function SendModal() {
   } = useGenerateWithdrawalQuote();
   const { confirmWithdrawal, error: confirmWithdrawalError, errorInfo, isError } =
     useConfirmWithdrawal();
-
-  console.log({
-    requestQuoteError,
-    confirmWithdrawalError,
-    isError,
-    errorInfo,
-  });
   const {
     data: fkeyBalance,
     refetch: refetchFkeyBalance,
@@ -99,13 +92,11 @@ export default function SendModal() {
     });
 
     const idProcedure = requestQuoteResponse?.withdrawalProcedure?.idProcedure!;
-    console.log(idProcedure);
 
     await confirmWithdrawal({
       idProcedure: requestQuoteResponse?.withdrawalProcedure?.idProcedure!,
     });
 
-    console.log("confirmed withdrawal")
 
     const payment = {
       payerId: user!.id,
@@ -134,7 +125,6 @@ export default function SendModal() {
       resolveEnsName(`${sendUser?.username}.fkeydev.eth`).then((result) => {
         if (result) {
           setSendUserAddress(result);
-          console.log(result);
         }
       });
     }

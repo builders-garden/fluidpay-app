@@ -30,10 +30,11 @@ export function amountToDollars(
 }
 
 export function colorHash(inputString: string) {
+  if (!inputString) return "#8F8F91";
   let sum = 0;
 
   for (let char of inputString) {
-    sum += char.charCodeAt(0);
+    sum += char?.charCodeAt(0);
   }
 
   let r = ~~(

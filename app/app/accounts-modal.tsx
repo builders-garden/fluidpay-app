@@ -39,7 +39,6 @@ export default function AccountsModal() {
 
 
   useEffect(() => {
-    console.log("Refetching balance", smartAccountList);
     refetchBaseFkeyBalance();
     refetchSepoliaFkeyBalance();
   }, []);

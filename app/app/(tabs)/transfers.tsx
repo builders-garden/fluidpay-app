@@ -106,8 +106,11 @@ export default function Send() {
               {results.length === 0 && (
                 <Text className="text-white font-semibold">No results</Text>
               )}
-              {results.map((result) => (
-                <UserSearchResult user={result} />
+              {results.map((result, index) => (
+                <UserSearchResult
+                  user={result}
+                  key={"search-result-" + index + "-" + result.id}
+                />
               ))}
             </View>
           </>

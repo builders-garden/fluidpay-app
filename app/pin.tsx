@@ -61,15 +61,6 @@ export default function Pin() {
     });
   }, []);
 
-  const storePin = async () => {
-    setIsLoading(true);
-    const pinString = pin.join("");
-    await SecureStore.setItemAsync(`pin-${address}`, pinString);
-    setStoredPin(pinString);
-    await fkeyRegisterUser();
-    setIsLoading(false);
-  };
-
   const generateFkeyKeys = async () => {
     const walletClient = getWalletClient(address!, chain, wallet);
     // @ts-expect-error
@@ -78,26 +69,35 @@ export default function Pin() {
   };
 
   const fkeyAuthenticateUser = async () => {
-    console.log("authenticating");
     await generateFkeyKeys();
     await authenticate();
     router.push("/app/home");
   };
 
   const fkeyRegisterUser = async () => {
-    console.log("registering");
+    console.log("registering user");
     const walletClient = await generateFkeyKeys();
     // @ts-expect-error
-    await registerUser({ walletClient, whitelistCode: "E0ZOSB" });
+    await registerUser({ walletClient, whitelistCode: "FTAGPP" });
+    console.log("user registered");
+  };
+
+  const storePin = async () => {
+    console.log("storing pin");
+    setIsLoading(true);
+    const pinString = pin.join("");
+    console.log("pinString", pinString);
+    await SecureStore.setItemAsync(`pin-${address}`, pinString);
+    console.log("pin stored");
+    setStoredPin(pinString);
+    await fkeyRegisterUser();
   };
 
   const checkPin = async () => {
     setIsLoading(true);
     const pinString = pin.join("");
-    if (pinString === storedPin) {
-      if (isAddressRegistered) {
-        await fkeyAuthenticateUser();
-      }
+    if (pinString === storedPin && isAddressRegistered) {
+      await fkeyAuthenticateUser();
     } else {
       setPinError(true);
       setIsLoading(false);
@@ -109,10 +109,9 @@ export default function Pin() {
       fkeyUser?._importStatus === UserImportStatus.Success &&
       smartAccountList &&
       smartAccountList?.length > 0 &&
-      !smartAccountList[0].username &&
-      !hasPin
+      !hasPin &&
+      !isLoading
     ) {
-      setIsLoading(true);
       // TODO: check if username is available with useIsUsernameAvailable
       setUsername(smartAccountList[0].idSmartAccount, user?.username!)
         .then(() => {
@@ -125,7 +124,7 @@ export default function Pin() {
           setIsLoading(false);
         });
     }
-  }, [fkeyUser, smartAccountList]);
+  }, [isLoading, fkeyUser, smartAccountList]);
   return (
     <SafeAreaView className="flex-1 bg-black px-4">
       {isLoading && (

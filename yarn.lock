@@ -4413,10 +4413,10 @@
     "@noble/hashes" "~1.3.2"
     "@scure/base" "~1.1.4"
 
-"@sefu/react-sdk@^0.3.8":
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/@sefu/react-sdk/-/react-sdk-0.3.8.tgz#1c3301e17db669138541ba096dc67be0dfa7f31a"
-  integrity sha512-kRycOg6EqG22Qivm7boxdWJ2QAut5qsmY/Ea5uL8PsQ0lC24dLLFwsfz8xgnTQyhQaQ8OpD9VJ7qX1y4qOM0Ig==
+"@sefu/react-sdk@^0.3.10":
+  version "0.3.10"
+  resolved "https://registry.yarnpkg.com/@sefu/react-sdk/-/react-sdk-0.3.10.tgz#93413b9d30e7a7e8f374ce31c7784f3aaf6e76fa"
+  integrity sha512-iEzeFSOkN3+EXQXvqv9YD+wMhDwgPTjs+VbeyHGHDwHlbgVhbhI0X4rRMY0n+5JeZRRfhMDKnvrpHpOZumyGBw==
   dependencies:
     "@apollo/client" "3.9.4"
     "@fluidkey/stealth-account-kit" "0.0.29"

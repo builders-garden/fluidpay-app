@@ -10,7 +10,6 @@ import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
 import { getMe, getPayments, getGroups } from "../lib/api";
 import { useChainStore } from "../store/use-chain-store";
-import { useAuthenticate, useIsAddressRegistered } from "@sefu/react-sdk";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -23,10 +22,6 @@ export enum LoginStatus {
 const Home = () => {
   const { isReady, user, getAccessToken } = usePrivy();
   const { address } = usePrivyWagmiProvider();
-  const { isAddressRegistered } = useIsAddressRegistered(
-    (address as `0x${string}`) || "0x132"
-  );
-  const { isAuthenticated: isFkeyAuthenticated } = useAuthenticate();
   const setUser = useUserStore((state) => state.setUser);
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
@@ -42,9 +37,10 @@ const Home = () => {
 
   useEffect(() => {
     if (address && user) {
+      console.log("getting token");
       getToken(address);
     }
-  }, [address, user]);
+  }, [isReady, address, user]);
 
   useEffect(() => {
     getAccessToken()

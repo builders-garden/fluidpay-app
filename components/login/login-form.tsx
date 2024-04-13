@@ -70,11 +70,12 @@ export default function LoginForm({
       try {
         setIsLoading(true);
         handleConnection().then((path: string) => {
-          setIsLoading(false);
           router.push(path);
         });
       } catch (e) {
         router.replace("/");
+      } finally {
+        setIsLoading(false);
       }
     } else if (state.status === "initial") {
       setLoginStatus(LoginStatus.INITIAL);

@@ -1,5 +1,5 @@
 import { Link, Redirect, useNavigation } from "expo-router";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, ActivityIndicator } from "react-native";
 import { Buffer } from "react-native-buffer";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
@@ -9,9 +9,9 @@ import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
 import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
-import { ChevronRight } from "lucide-react-native";
+import { Activity, ChevronRight, RefreshCwIcon } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getPayments } from "../../../lib/api";
 import {
   useERC20BalanceOf,
@@ -35,6 +35,7 @@ import {
 } from "@sefu/react-sdk";
 import { SmartAccountTransferStatus } from "@sefu/react-sdk/lib/core/graphql/codegen/generatedTS/graphql";
 import { keccak256 } from "viem";
+import { IconButton } from "react-native-paper";
 
 export default function Home() {
   const { isConnected, isReady } = usePrivyWagmiProvider();
@@ -57,6 +58,7 @@ export default function Home() {
         : "",
       chainId: chain.id,
     });
+  const [isRefreshLoading, setRefreshLoading] = useState(false);
   const {
     data: fkeyBalance,
     refetch: refetchFkeyBalance,
@@ -88,7 +90,6 @@ export default function Home() {
 
   useEffect(() => {
     if (transfers && !transferLoading) {
-      console.log(transfers.map((t) => t.status));
       const awaitingTransfers = transfers.filter(
         (transfer) =>
           transfer.status === SmartAccountTransferStatus.AwaitingSignatures
@@ -97,22 +98,15 @@ export default function Home() {
         awaitingTransfers.sort((a, b) => {
           return a.createdAt! - b.createdAt!;
         })
-      ).then((result) => {
-        console.log("confirmed");
-      });
+      );
     }
   }, [transfers, transferLoading]);
-
-  console.log({
-    confirmWithdrawalError,
-  });
 
   const confirmPendingQuotes = async (transfers: SmartAccountTransfer[]) => {
     for (const transfer of transfers) {
       await confirmWithdrawal({
         idProcedure: transfer.idProcedure!,
       });
-      console.log("confirmed", transfer.idProcedure);
     }
   };
 
@@ -127,21 +121,6 @@ export default function Home() {
       navigation.removeListener("focus", refresh);
     };
   }, []);
-
-  useEffect(() => {
-    if (user && smartAccountList && smartAccountList?.length > 0) {
-      if (user?.username !== smartAccountList[0].username) {
-        // update username
-        /*setUsername(smartAccountList[0].idSmartAccount, user?.username!)
-          .then(() => {
-            console.log("username set", user?.username);
-          })
-          .catch((e) => {
-            console.error(e);
-          });*/
-      }
-    }
-  }, [smartAccountList, user]);
 
   useEffect(() => {
     if (user) {
@@ -194,12 +173,27 @@ export default function Home() {
                 <Avatar name={user.username.charAt(0).toUpperCase()} />
               </Link>
             </View>
-            {/* <View className="flex flex-row items-center space-x-0">
-              <IconButton
-                icon={() => <Bell size={24} color={"white"} />}
-                onPress={() => router.push("/app/qrcode")}
-              />
-            </View> */}
+            {
+              <View className="flex flex-row items-center">
+                <IconButton
+                  icon={() =>
+                    !isRefreshLoading ? (
+                      <RefreshCwIcon size={24} color={"white"} />
+                    ) : (
+                      <ActivityIndicator size="small" color="white" />
+                    )
+                  }
+                  onPress={async () => {
+                    setRefreshLoading(true);
+                    await Promise.all([
+                      refetchFkeyBalance(),
+                      fetchPayments(chain.id),
+                    ]);
+                    setRefreshLoading(false);
+                  }}
+                />
+              </View>
+            }
           </View>
           <ScrollView className="px-4" scrollEnabled={transactions.length > 0}>
             <View className="py-8 flex flex-col space-y-16">
