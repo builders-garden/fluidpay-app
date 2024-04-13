@@ -1,5 +1,6 @@
 import { Link, Redirect, useNavigation } from "expo-router";
 import { View, Text, Pressable } from "react-native";
+import { Buffer } from "react-native-buffer";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
@@ -23,16 +24,20 @@ import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
 import { useEmbeddedWallet } from "@privy-io/expo";
 import {
+  SmartAccountTransfer,
+  useConfirmWithdrawal,
+  useFluidkeyClient,
   useGetSmartAccountBalance,
+  useGetSmartAccountTransfers,
   useGetUserSmartAccounts,
   useInitializedWalletAddress,
   useSetUsername,
 } from "@sefu/react-sdk";
+import { SmartAccountTransferStatus } from "@sefu/react-sdk/lib/core/graphql/codegen/generatedTS/graphql";
+import { keccak256 } from "viem";
 
 export default function Home() {
-  const { address, isConnected, isReady } = usePrivyWagmiProvider();
-  const wallet = useEmbeddedWallet();
-  const { setUsername } = useSetUsername();
+  const { isConnected, isReady } = usePrivyWagmiProvider();
 
   // const [refreshing, setRefreshing] = React.useState(false);
   const chain = useChainStore((state) => state.chain);
@@ -45,6 +50,13 @@ export default function Home() {
     (state) => state.setTransactions
   );
   const { smartAccountList, error } = useGetUserSmartAccounts();
+  const { data: transfers, isLoading: transferLoading } =
+    useGetSmartAccountTransfers({
+      idSmartAccount: smartAccountList
+        ? smartAccountList[0].idSmartAccount
+        : "",
+      chainId: chain.id,
+    });
   const {
     data: fkeyBalance,
     refetch: refetchFkeyBalance,
@@ -67,6 +79,43 @@ export default function Home() {
 
   const navigation = useNavigation();
 
+  const {
+    confirmWithdrawal,
+    error: confirmWithdrawalError,
+    errorInfo,
+    isError,
+  } = useConfirmWithdrawal();
+
+  useEffect(() => {
+    if (transfers && !transferLoading) {
+      console.log(transfers.map((t) => t.status));
+      const awaitingTransfers = transfers.filter(
+        (transfer) =>
+          transfer.status === SmartAccountTransferStatus.AwaitingSignatures
+      );
+      confirmPendingQuotes(
+        awaitingTransfers.sort((a, b) => {
+          return a.createdAt! - b.createdAt!;
+        })
+      ).then((result) => {
+        console.log("confirmed");
+      });
+    }
+  }, [transfers, transferLoading]);
+
+  console.log({
+    confirmWithdrawalError,
+  });
+
+  const confirmPendingQuotes = async (transfers: SmartAccountTransfer[]) => {
+    for (const transfer of transfers) {
+      await confirmWithdrawal({
+        idProcedure: transfer.idProcedure!,
+      });
+      console.log("confirmed", transfer.idProcedure);
+    }
+  };
+
   useEffect(() => {
     const refresh = async () => {
       await Promise.all([refetchFkeyBalance()]);
@@ -83,13 +132,13 @@ export default function Home() {
     if (user && smartAccountList && smartAccountList?.length > 0) {
       if (user?.username !== smartAccountList[0].username) {
         // update username
-        setUsername(smartAccountList[0].idSmartAccount, user?.username!)
+        /*setUsername(smartAccountList[0].idSmartAccount, user?.username!)
           .then(() => {
             console.log("username set", user?.username);
           })
           .catch((e) => {
             console.error(e);
-          });
+          });*/
       }
     }
   }, [smartAccountList, user]);

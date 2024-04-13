@@ -10,8 +10,8 @@ import { AmountChooser } from "../../components/amount-chooser";
 import Avatar from "../../components/avatar";
 import { ArrowLeft } from "lucide-react-native";
 import { createPayment, getUserByIdUsernameOrAddress } from "../../lib/api";
-import tokens from "../../constants/tokens";
-import { formatBigInt, shortenAddress } from "../../lib/utils";
+import tokens, { idTokens } from "../../constants/tokens";
+import { formatBigInt, resolveEnsName, shortenAddress } from "../../lib/utils";
 import {
   useERC20BalanceOf,
   usePrivyWagmiProvider,
@@ -20,9 +20,12 @@ import { useChainStore } from "../../store/use-chain-store";
 import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
 import { useEmbeddedWallet } from "@privy-io/expo";
 import {
+  useConfirmWithdrawal,
+  useGenerateWithdrawalQuote,
   useGetSmartAccountBalance,
   useGetUserSmartAccounts,
 } from "@sefu/react-sdk";
+import { getEnsAddress } from "viem/actions";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -31,17 +34,28 @@ export default function SendModal() {
   const isPresented = router.canGoBack();
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
-  const [sendUserAddress, setSendUserAddress] = useState<string | null>(
-    sendUser?.smartAccountAddress
-  );
+  const [sendUserAddress, setSendUserAddress] = useState<string | null>();
   const [sendUserDisplayName, setSendUserDisplayName] = useState<string | null>(
     sendUser?.displayName
   );
   const [amount, setAmount] = useState(Number(paramsAmount) as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
-  const { address } = usePrivyWagmiProvider();
-  const { smartAccountList, error } = useGetUserSmartAccounts();
+  const { smartAccountList, error } =
+    useGetUserSmartAccounts();
+  const {
+    data: withdrawalQuoteData,
+    requestQuote,
+    error: requestQuoteError,
+  } = useGenerateWithdrawalQuote();
+  const { confirmWithdrawal, error: confirmWithdrawalError, errorInfo, isError } =
+    useConfirmWithdrawal();
 
+  console.log({
+    requestQuoteError,
+    confirmWithdrawalError,
+    isError,
+    errorInfo,
+  });
   const {
     data: fkeyBalance,
     refetch: refetchFkeyBalance,
@@ -65,31 +79,42 @@ export default function SendModal() {
         2
       )
     : "0.00";
-  const wallet = useEmbeddedWallet();
   const canSend =
-    Number(amount) <= Number(balance) && Number(amount) > 0 && sendUserAddress;
+    Number(amount) <= Number(balance) &&
+    Number(amount) > 0 &&
+    sendUserAddress &&
+    smartAccountList &&
+    smartAccountList?.length > 0;
+
   const sendTokens = async () => {
     if (!amount || amount < 0) return;
     setIsLoadingTransfer(true);
-    const smartAccountClient = await getPimlicoSmartAccountClient(
-      address as `0x${string}`,
-      chain,
-      wallet
-    );
-    const txHash = await transferUSDC(
-      smartAccountClient,
-      amount,
-      chain,
-      sendUser!.smartAccountAddress
-    );
+    const requestQuoteResponse = await requestQuote({
+      idToken: idTokens.USDC[chain.id],
+      amount: BigInt(amount * 10 ** 6),
+      to: sendUserAddress!,
+      chainId: chain.id,
+      idSmartAccount: smartAccountList![0].idSmartAccount,
+      epochControlStructure: 0,
+    });
+
+    const idProcedure = requestQuoteResponse?.withdrawalProcedure?.idProcedure!;
+    console.log(idProcedure);
+
+    await confirmWithdrawal({
+      idProcedure: requestQuoteResponse?.withdrawalProcedure?.idProcedure!,
+    });
+
+    console.log("confirmed withdrawal")
 
     const payment = {
       payerId: user!.id,
       payeeId: sendUser!.id,
       chainId: chain.id,
       amount: amount,
-      description: "",
-      txHash,
+      description: `idProcedure:${idProcedure}`,
+      // TODO: save idProcedure and not txHash
+      txHash: "0xaaaa" as `0x${string}`,
     };
     await createPayment(user!.token, payment);
     setIsLoadingTransfer(false);
@@ -103,8 +128,13 @@ export default function SendModal() {
         idOrUsernameOrAddress: sendUser?.username,
       }).then((result) => {
         if (result) {
-          setSendUserAddress(result.smartAccountAddress!);
           setSendUserDisplayName(result.displayName);
+        }
+      });
+      resolveEnsName(`${sendUser?.username}.fkeydev.eth`).then((result) => {
+        if (result) {
+          setSendUserAddress(result);
+          console.log(result);
         }
       });
     }

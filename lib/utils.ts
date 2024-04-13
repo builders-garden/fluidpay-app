@@ -1,4 +1,6 @@
-import { parseUnits } from "viem";
+import { createPublicClient, http, parseUnits } from "viem";
+import { getEnsAddress } from "viem/actions";
+import { mainnet } from "viem/chains";
 
 /** Returns token units, 6000000 for $6 USDC */
 export function dollarsToAmount(
@@ -88,4 +90,14 @@ export const formatBigInt = (value: bigint, decimalPlaces = 2) => {
   const remainderBigInt = value % divisorBigInt;
   const remainderStr = remainderBigInt.toString().padStart(decimalPlaces, "0"); // Pad with leading zeros
   return `${quotientBigInt}.${remainderStr.slice(0, decimalPlaces)}`;
+};
+
+export const resolveEnsName = async (name: string): Promise<string | null> => {
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  });
+  return await publicClient.getEnsAddress({
+    name,
+  });
 };
