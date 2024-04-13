@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { ArrowLeft, Cog } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import AppButton from "../../components/app-button";
 import { SegmentSlider } from "../../components/segment-slider";
@@ -26,10 +26,11 @@ export default function GroupPage() {
   const [tab, setTab] = useState<GroupOptions>("Expenses");
   const tabs = useRef(["Expenses", "Balances"] as GroupOptions[]).current;
   const navigation = useNavigation();
-  const setSendUser = useSendStore((state) => state.setSendUser);
 
   const [transactions, setTransactions] = useState<any[]>([]);
   const [balances, setBalances] = useState<any[]>([]);
+
+  console.log(user?.token);
 
   useEffect(() => {
     const refresh = async () => {
