@@ -22,7 +22,6 @@ export default function Send() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const user = useUserStore((state) => state.user);
-  const setSendUser = useSendStore((state) => state.setSendUser);
   const transactions = useTransactionsStore((state) => state.transactions);
 
   const onChangeText = async (text: string) => {
@@ -48,12 +47,12 @@ export default function Send() {
       [];
 
     transactions.forEach((transaction) => {
-      if (transaction.payeeId === user!.id) {
+      if (transaction.payeeId === user?.id) {
         interactedUsers.push({
           user: transaction.payer,
           lastTransaction: transaction,
         });
-      } else if (transaction.payerId === user!.id) {
+      } else if (transaction.payerId === user?.id) {
         interactedUsers.push({
           user: transaction.payee,
           lastTransaction: transaction,
@@ -80,7 +79,7 @@ export default function Send() {
       <View className="flex flex-row items-center justify-between px-4 max-w-screen">
         <View className="flex flex-row items-center space-x-4 pl-2">
           <Link href={"/app/settings"}>
-            <Avatar name={user!.username.charAt(0).toUpperCase()} />
+            <Avatar name={user?.username.charAt(0).toUpperCase()!} />
           </Link>
         </View>
         <Searchbar

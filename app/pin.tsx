@@ -62,31 +62,41 @@ export default function Pin() {
   }, []);
 
   const storePin = async () => {
+    setIsLoading(true);
     const pinString = pin.join("");
     await SecureStore.setItemAsync(`pin-${address}`, pinString);
     setStoredPin(pinString);
-    checkPin();
+    await fkeyRegisterUser();
+    setIsLoading(false);
+  };
+
+  const generateFkeyKeys = async () => {
+    const walletClient = getWalletClient(address!, chain, wallet);
+    // @ts-expect-error
+    await generateKeys(walletClient, pin.join(""));
+    return walletClient;
+  };
+
+  const fkeyAuthenticateUser = async () => {
+    console.log("authenticating");
+    await generateFkeyKeys();
+    await authenticate();
+    router.push("/app/home");
+  };
+
+  const fkeyRegisterUser = async () => {
+    console.log("registering");
+    const walletClient = await generateFkeyKeys();
+    // @ts-expect-error
+    await registerUser({ walletClient, whitelistCode: "E0ZOSB" });
   };
 
   const checkPin = async () => {
     setIsLoading(true);
     const pinString = pin.join("");
-    console.log({
-      pinString,
-      storedPin,
-    });
     if (pinString === storedPin) {
-      const walletClient = getWalletClient(address!, chain, wallet);
-      // @ts-expect-error
-      await generateKeys(walletClient, pinString);
       if (isAddressRegistered) {
-        await authenticate();
-        console.log("authenticated!");
-        router.push("/app/home");
-        setIsLoading(false);
-      } else {
-        // @ts-expect-error
-        await registerUser({ walletClient, whitelistCode: "SCC5IT" });
+        await fkeyAuthenticateUser();
       }
     } else {
       setPinError(true);
@@ -99,12 +109,14 @@ export default function Pin() {
       fkeyUser?._importStatus === UserImportStatus.Success &&
       smartAccountList &&
       smartAccountList?.length > 0 &&
+      !smartAccountList[0].username &&
       !hasPin
     ) {
       setIsLoading(true);
       // TODO: check if username is available with useIsUsernameAvailable
       setUsername(smartAccountList[0].idSmartAccount, user?.username!)
         .then(() => {
+          console.log("username set", user?.username);
           router.push("/app/home");
           setIsLoading(false);
         })

@@ -19,6 +19,10 @@ import {
 import { useChainStore } from "../../store/use-chain-store";
 import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import {
+  useGetSmartAccountBalance,
+  useGetUserSmartAccounts,
+} from "@sefu/react-sdk";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -30,15 +34,37 @@ export default function SendModal() {
   const [sendUserAddress, setSendUserAddress] = useState<string | null>(
     sendUser?.smartAccountAddress
   );
-  const [sendUserDisplayName, setSendUserDisplayName] = useState<string | null>(sendUser?.displayName);
+  const [sendUserDisplayName, setSendUserDisplayName] = useState<string | null>(
+    sendUser?.displayName
+  );
   const [amount, setAmount] = useState(Number(paramsAmount) as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
   const { address } = usePrivyWagmiProvider();
-  const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
-    network: chain.id,
-    args: [user!.smartAccountAddress],
-    address: tokens.USDC[chain.id] as `0x${string}`,
+  const { smartAccountList, error } = useGetUserSmartAccounts();
+
+  const {
+    data: fkeyBalance,
+    refetch: refetchFkeyBalance,
+    isLoading: isLoadingBalance,
+  } = useGetSmartAccountBalance({
+    idSmartAccount: smartAccountList ? smartAccountList[0].idSmartAccount : "",
+    chainId: chain.id,
   });
+  const balance = fkeyBalance.find((b) => b.token.symbol === "USDC")
+    ? fkeyBalance.find(
+        (b) => b.token.symbol === "USDC" && b.token.chainId === chain.id
+      )!.amount
+    : 0;
+  const fkeyUsdcBalance = fkeyBalance.find((b) => b.token.symbol === "USDC")
+    ? formatBigInt(
+        BigInt(
+          fkeyBalance.find(
+            (b) => b.token.symbol === "USDC" && b.token.chainId === chain.id
+          )!.amount
+        ),
+        2
+      )
+    : "0.00";
   const wallet = useEmbeddedWallet();
   const canSend =
     Number(amount) <= Number(balance) && Number(amount) > 0 && sendUserAddress;
@@ -119,15 +145,6 @@ export default function SendModal() {
           <Text className="text-[#8F8F91] text-xl text-ellipsis text-center">
             @{sendUser?.username}
           </Text>
-          {/*
-          sendUserAddress ? (
-            <Text className="text-[#8F8F91] text-lg text-ellipsis">
-              {shortenAddress(sendUserAddress!)}
-            </Text>
-          ) : (
-            <ActivityIndicator animating={true} color={"#8F8F91"} />
-          )
-        */}
 
           <AmountChooser
             dollars={amount}
@@ -140,7 +157,7 @@ export default function SendModal() {
             <ActivityIndicator animating={true} color={"#667DFF"} />
           ) : (
             <Text className="text-[#8F8F91] font-semibold">
-              ${formatBigInt(balance!, 2)} available
+              ${fkeyUsdcBalance} available
             </Text>
           )}
         </View>

@@ -26,11 +26,14 @@ import {
   useGetSmartAccountBalance,
   useGetUserSmartAccounts,
   useInitializedWalletAddress,
+  useSetUsername,
 } from "@sefu/react-sdk";
 
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
   const wallet = useEmbeddedWallet();
+  const { setUsername } = useSetUsername();
+
   // const [refreshing, setRefreshing] = React.useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
@@ -42,31 +45,31 @@ export default function Home() {
     (state) => state.setTransactions
   );
   const { smartAccountList, error } = useGetUserSmartAccounts();
-
-  
-  const { data: fkeyBalance, refetch: refetchFkeyBalance } =
-    useGetSmartAccountBalance({
-      idSmartAccount: smartAccountList
-        ? smartAccountList[0].idSmartAccount
-        : "",
-      chainId: chain.id,
-    });
-  console.log(fkeyBalance);
-
   const {
-    balance,
-    isLoading: isLoadingBalance,
-    refetch: refetchBalance,
-  } = useERC20BalanceOf({
-    network: chain.id,
-    args: [user?.smartAccountAddress!],
-    address: tokens.USDC[chain.id] as `0x${string}`,
+    data: fkeyBalance,
+    refetch: refetchFkeyBalance,
+    error: balanceError,
+  } = useGetSmartAccountBalance({
+    idSmartAccount: smartAccountList ? smartAccountList[0].idSmartAccount : "",
+    chainId: chain.id,
   });
+
+  const fkeyUsdcBalance = fkeyBalance.find((b) => b.token.symbol === "USDC")
+    ? formatBigInt(
+        BigInt(
+          fkeyBalance.find(
+            (b) => b.token.symbol === "USDC" && b.token.chainId === chain.id
+          )!.amount
+        ),
+        2
+      )
+    : "0.00";
+
   const navigation = useNavigation();
 
   useEffect(() => {
     const refresh = async () => {
-      await Promise.all([refetchBalance(), refetchFkeyBalance()]);
+      await Promise.all([refetchFkeyBalance()]);
     };
 
     navigation.addListener("focus", refresh);
@@ -77,8 +80,23 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    if (user && smartAccountList && smartAccountList?.length > 0) {
+      if (user?.username !== smartAccountList[0].username) {
+        // update username
+        setUsername(smartAccountList[0].idSmartAccount, user?.username!)
+          .then(() => {
+            console.log("username set", user?.username);
+          })
+          .catch((e) => {
+            console.error(e);
+          });
+      }
+    }
+  }, [smartAccountList, user]);
+
+  useEffect(() => {
     if (user) {
-      refetchBalance();
+      refetchFkeyBalance();
       fetchPayments(chain.id);
     }
   }, [chain]);
@@ -141,7 +159,7 @@ export default function Home() {
                   {chain.name} • USDC
                 </Text>
                 <Text className="text-white font-bold text-center text-5xl">
-                  ${formatBigInt(balance!, 2)}
+                  ${fkeyUsdcBalance}
                 </Text>
                 <View>
                   <PillButton

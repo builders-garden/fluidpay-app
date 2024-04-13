@@ -1,44 +1,68 @@
 import { View, Text, Image, Pressable } from "react-native";
 import { Appbar } from "react-native-paper";
-import {
-  useERC20BalanceOf,
-  usePrivyWagmiProvider,
-} from "@buildersgarden/privy-wagmi-provider";
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { useChainStore } from "../../store/use-chain-store";
 import { Chain, base, sepolia } from "viem/chains";
-import tokens from "../../constants/tokens";
 import { formatBigInt } from "../../lib/utils";
-import { useEmbeddedWallet } from "@privy-io/expo";
 import { useSwitchChain } from "wagmi";
 import { router } from "expo-router";
-import { useUserStore } from "../../store";
+import {
+  useGetUserSmartAccounts,
+  useGetSmartAccountBalance,
+} from "@sefu/react-sdk";
 
 export default function AccountsModal() {
-  const { isConnected, isReady, address } = usePrivyWagmiProvider();
   const chain = useChainStore((state) => state.chain);
   const setChain = useChainStore((state) => state.setChain);
-  const user = useUserStore((state) => state.user);
   const [selectedChain, setSelectedChain] = useState(chain);
-  const wallet = useEmbeddedWallet();
   const { switchChain } = useSwitchChain();
 
-  const { balance: sepoliaBalance, isLoading: isLoadingSepoliaBalance } =
-    useERC20BalanceOf({
-      network: sepolia.id,
-      args: [user!.smartAccountAddress],
-      address: tokens.USDC[sepolia.id] as `0x${string}`,
-    });
+  const { smartAccountList, error } = useGetUserSmartAccounts();
+  const {
+    data: fkeyBaseBalance,
+    refetch: refetchBaseFkeyBalance,
+  } = useGetSmartAccountBalance({
+    idSmartAccount: smartAccountList ? smartAccountList[0].idSmartAccount : "",
+    chainId: base.id,
+  });
 
-  const { balance: baseBalance, isLoading: isLoadingBaseBalance } =
-    useERC20BalanceOf({
-      network: base.id,
-      args: [user!.smartAccountAddress],
-      address: tokens.USDC[base.id] as `0x${string}`,
-    });
+  const {
+    data: fkeySepoliaBalance,
+    refetch: refetchSepoliaFkeyBalance,
+  } = useGetSmartAccountBalance({
+    idSmartAccount: smartAccountList ? smartAccountList[0].idSmartAccount : "",
+    chainId: sepolia.id,
+  });
+
+
+  useEffect(() => {
+    console.log("Refetching balance", smartAccountList);
+    refetchBaseFkeyBalance();
+    refetchSepoliaFkeyBalance();
+  }, []);
+
+  const sepoliaBalance = fkeySepoliaBalance.find(
+    (b) => b.token.symbol === "USDC"
+  )
+    ? formatBigInt(
+        BigInt(fkeySepoliaBalance.find((b) => b.token.symbol === "USDC")!.amount),
+        2
+      )
+    : "0.00";
+
+  const baseBalance = fkeyBaseBalance.find((b) => b.token.symbol === "USDC")
+    ? formatBigInt(
+        BigInt(
+          fkeyBaseBalance.find(
+            (b) => b.token.symbol === "USDC"
+          )!.amount
+        ),
+        2
+      )
+    : "0.00";
 
   const switchSelectedChain = async (newChain: Chain) => {
     switchChain({
@@ -96,7 +120,7 @@ export default function AccountsModal() {
                   <Text className="text-white text-lg font-semibold">Base</Text>
                 </View>
                 <Text className="text-white text-lg font-semibold">
-                  ${formatBigInt(baseBalance!, 2)}
+                  ${baseBalance}
                 </Text>
               </Pressable>
               <Pressable
@@ -116,7 +140,7 @@ export default function AccountsModal() {
                   </Text>
                 </View>
                 <Text className="text-white text-lg font-semibold">
-                  ${formatBigInt(sepoliaBalance!, 2)}
+                  ${sepoliaBalance}
                 </Text>
               </Pressable>
             </View>

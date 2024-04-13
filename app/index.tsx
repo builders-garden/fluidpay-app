@@ -113,7 +113,7 @@ const Home = () => {
           </Text>
         </View>
       )}
-      {isReady && !user && (
+      {isReady && (
         <LoginForm
           setIsLoading={setIsLoading}
           setLoadingMessage={setLoadingMessage}

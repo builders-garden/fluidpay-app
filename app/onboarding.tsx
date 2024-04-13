@@ -10,18 +10,6 @@ import { getGroups, getPayments, updateMe } from "../lib/api";
 import { DBUser } from "../store/interfaces";
 import { useChainStore } from "../store/use-chain-store";
 
-const generatePassword = () => {
-  const chars =
-    "0123456789abcdefghijklmnopqrstuvwxyz!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const passwordLength = 12;
-  let password = "";
-  for (let i = 0; i <= passwordLength; i++) {
-    const randomNumber = Math.floor(Math.random() * chars.length);
-    password += chars.substring(randomNumber, randomNumber + 1);
-  }
-  return password;
-};
-
 export default function Onboarding() {
   const [step] = useState(0);
   const [username, setUsername] = useState("");
@@ -33,25 +21,30 @@ export default function Onboarding() {
     (state) => state.setTransactions
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
+  const [isLoading, setIsLoading] = useState(false);
 
   const finishOnboarding = async () => {
+    setIsLoading(true);
     const data = {
       displayName: name,
       username,
     };
     const token = await SecureStore.getItemAsync(`token-${address}`);
     if (token) {
-      const res = await updateMe(token, data);
-
+      try {
+        const res = await updateMe(token, data);
+        setUser({ ...res, token } as DBUser);
+      } catch (e) {
+      }
       const [payments, groups] = await Promise.all([
         getPayments(token, { limit: 10, chainId: chain.id }),
         getGroups(token),
       ]);
-      setUser({ ...res, token } as DBUser);
       setTransactions(payments as any[]);
       setGroups(groups);
       router.push("/pin");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -99,9 +92,12 @@ export default function Onboarding() {
             </View>
           </View>
           <AppButton
-            text="Done!"
+            text={isLoading ? "Loading..." : "Done!"}
+            disabled={username.length < 3 || name.length < 3 || isLoading}
             variant={
-              username.length > 3 && name.length > 3 ? "primary" : "disabled"
+              username.length > 3 && name.length > 3 && !isLoading
+                ? "primary"
+                : "disabled"
             }
             onPress={() => finishOnboarding()}
           />
