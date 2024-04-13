@@ -228,11 +228,11 @@ export default function Home() {
                   icon="Send"
                   onPress={() => router.push("/app/transfers")}
                 />
-                <CircularButton
+                {/*<CircularButton
                   text="Details"
                   icon="Server"
                   onPress={() => router.push("/app/details-modal")}
-                />
+                />*/}
               </View>
             </View>
             {transactions.length > 0 && (

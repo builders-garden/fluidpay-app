@@ -11,7 +11,7 @@ export default function InteractedUser({
   user: DBUser;
   transaction: DBTransaction;
 }) {
-  const direction = transaction.payeeId === user.id ? "from" : "to";
+  const direction = transaction.payerId === user.id ? "from" : "to";
   return (
     <Pressable
       className="flex flex-row justify-between py-4"
