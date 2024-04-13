@@ -143,7 +143,7 @@ export default function GroupPage() {
                 .filter((balance: any) => balance.debtor?.id === user?.id)
                 ?.map((balance: any) => (
                   <BalanceItem
-                    key={`balance-${balance.creditor?.id}-${balance.debitor?.id}`}
+                    key={`cred-balance-${balance.debtor?.id}-${balance.id}`}
                     balance={balance}
                   />
                 ))}
@@ -152,7 +152,7 @@ export default function GroupPage() {
                 .filter((balance: any) => balance.creditor?.id === user?.id)
                 ?.map((balance: any) => (
                   <BalanceItem
-                    key={`balance-${balance.creditor?.id}-${balance.debitor?.id}`}
+                    key={`debt-balance-${balance.creditor?.id}-${balance.id}`}
                     balance={balance}
                   />
                 ))}

@@ -99,7 +99,10 @@ export default function SplitAmong({
       </View>
       <View className="rounded-lg flex flex-col space-y-4 bg-[#232324] py-4 px-4 mt-2">
         {members?.map((member: any, index: number) => (
-          <View className="flex flex-row justify-between items-center">
+          <View
+            className="flex flex-row justify-between items-center"
+            key={`member-split-${index}`}
+          >
             <View
               className="flex flex-row items-center space-x-4"
               key={"mem-" + index}
@@ -184,13 +187,13 @@ export default function SplitAmong({
               )}
               {splitAmong
                 .filter((split) => split.userId === member.userId)
-                .map((split) =>
+                .map((split, index) =>
                   splitType === SplitType.PERCENTAGE ? (
-                    <Text className="text-white">
+                    <Text className="text-white" key={`split-${index}`}>
                       {split.amount.toFixed(0)}%
                     </Text>
                   ) : (
-                    <Text className="text-white">
+                    <Text className="text-white" key={`split-${index}`}>
                       ${split.amount.toFixed(2)}
                     </Text>
                   )

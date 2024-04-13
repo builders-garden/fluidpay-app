@@ -85,7 +85,6 @@ const Home = () => {
       setIsLoading(false);
     }
   };
-
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
       <View className="text-center flex flex-col space-y-4 justify-center items-center">

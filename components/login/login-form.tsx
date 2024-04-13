@@ -124,9 +124,8 @@ export default function LoginForm({
     }
     setLoadingMessage("Fetching user data...");
     const userData = await fetchUserData(token);
-
-    console.log(userData);
-    setChain(base);
+    // setChain(base);
+    setChain(sepolia);
     if (!userData.username) {
       return "/onboarding";
     } else {
