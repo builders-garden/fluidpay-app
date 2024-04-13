@@ -30,6 +30,7 @@ export default function SendModal() {
   const [sendUserAddress, setSendUserAddress] = useState<string | null>(
     sendUser?.smartAccountAddress
   );
+  const [sendUserDisplayName, setSendUserDisplayName] = useState<string | null>(sendUser?.displayName);
   const [amount, setAmount] = useState(Number(paramsAmount) as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
   const { address } = usePrivyWagmiProvider();
@@ -71,13 +72,13 @@ export default function SendModal() {
   };
 
   useEffect(() => {
-    console.log("sendUserAddress", sendUserAddress);
     if (!sendUserAddress) {
       getUserByIdUsernameOrAddress(user?.token!, {
         idOrUsernameOrAddress: sendUser?.username,
       }).then((result) => {
         if (result) {
           setSendUserAddress(result.smartAccountAddress!);
+          setSendUserDisplayName(result.displayName);
         }
       });
     }
@@ -113,15 +114,20 @@ export default function SendModal() {
         <View className="flex flex-col items-center mt-4 space-y-2">
           <Avatar name={sendUser?.username.charAt(0).toUpperCase()} size={72} />
           <Text className="text-white text-3xl text-center font-semibold">
+            {sendUserDisplayName}
+          </Text>
+          <Text className="text-[#8F8F91] text-xl text-ellipsis text-center">
             @{sendUser?.username}
           </Text>
-          {sendUserAddress ? (
+          {/*
+          sendUserAddress ? (
             <Text className="text-[#8F8F91] text-lg text-ellipsis">
               {shortenAddress(sendUserAddress!)}
             </Text>
           ) : (
             <ActivityIndicator animating={true} color={"#8F8F91"} />
-          )}
+          )
+        */}
 
           <AmountChooser
             dollars={amount}

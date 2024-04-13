@@ -42,11 +42,8 @@ export default function Home() {
     (state) => state.setTransactions
   );
   const { smartAccountList, error } = useGetUserSmartAccounts();
-  // TODO: perchè è undefined questo?
-  console.log({
-    smartAccountList,
-    error,
-  });
+
+  
   const { data: fkeyBalance, refetch: refetchFkeyBalance } =
     useGetSmartAccountBalance({
       idSmartAccount: smartAccountList

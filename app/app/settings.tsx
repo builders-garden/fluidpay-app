@@ -58,11 +58,11 @@ export default function Settings() {
             <View className="flex flex-col items-center mt-4 space-y-3">
               <Avatar name={user?.username.charAt(0).toUpperCase()} size={64} />
               <Text className="text-white text-4xl text-center font-semibold">
-                @{user?.username}
+                {user?.displayName}
               </Text>
               <View className="flex flex-row space-x-2 items-center">
                 <Text className="text-[#8F8F91] text-xl text-ellipsis">
-                  {shortenAddress(user?.smartAccountAddress)}
+                  @{user?.username}
                 </Text>
                 <QrCode
                   onPress={() => {

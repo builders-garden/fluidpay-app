@@ -45,7 +45,6 @@ export default function ProfileModal() {
     return <View className="flex-1 flex-col px-4 bg-black"></View>;
   }
 
-
   return (
     <View className="flex-1 flex-col bg-black">
       {!isPresented && <Link href="../">Dismiss</Link>}
@@ -78,11 +77,12 @@ export default function ProfileModal() {
             <Text className="text-white text-4xl text-center font-semibold">
               {profileUser?.displayName}
             </Text>
-            <View className="flex flex-row items-center space-x-2">
+            <View className="flex flex-row items-center justify-center space-x-2">
               <Text className="text-[#8F8F91] text-xl text-ellipsis text-center">
-                @{profileUser?.username} •
+                @{profileUser?.username}
               </Text>
-              <View className="bg-mutedGrey/50 rounded-lg p-1 flex flex-row items-center space-x-2">
+              {/*
+                <View className="bg-mutedGrey/50 rounded-lg p-1 flex flex-row items-center space-x-2">
                 <Text className="text-white text-xs">
                   {shortenAddress(profileUser.smartAccountAddress)}
                 </Text>
@@ -92,6 +92,7 @@ export default function ProfileModal() {
                   <Copy size={12} color="white" />
                 </TouchableOpacity>
               </View>
+        */}
             </View>
           </View>
         </View>
