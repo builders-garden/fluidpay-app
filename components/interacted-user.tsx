@@ -11,7 +11,7 @@ export default function InteractedUser({
   user: DBUser;
   transaction: DBTransaction;
 }) {
-  const direction = transaction.payeeId === user.id ? "from" : "to";
+  const direction = transaction.payerId === user.id ? "from" : "to";
   return (
     <Pressable
       className="flex flex-row justify-between py-4"
@@ -32,7 +32,7 @@ export default function InteractedUser({
           <Text className="text-gray-500 font-semibold text-sm">
             {direction === "from"
               ? `🤑 Sent you $${transaction.amount.toFixed(2)}`
-              : `${transaction.payeeId === user.id ? `from` : `to`}`}
+              : `💸 You sent $${transaction.amount.toFixed(2)}`}
           </Text>
         </View>
       </View>

@@ -24,13 +24,19 @@ export default function CircularButton({
   text,
   icon,
   onPress,
+  disabled,
 }: {
   text: string;
   icon: string;
   onPress?: () => void;
+  disabled?: boolean;
 }) {
   return (
-    <Pressable onPress={onPress}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      className={`${disabled ? "opacity-25" : ""}`}
+    >
       <View className="flex flex-col items-center justify-center space-y-2">
         <View className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center">
           <Icon name={icon} color="white" size={24} />

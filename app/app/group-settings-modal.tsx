@@ -34,7 +34,6 @@ export default function GroupSettingsModal() {
     const updateGroupData = {
       name: groupName,
       memberIds: [
-        ...data.members.map((m: any) => m.user.id),
         ...addedMembers.map((m: any) => m.id),
       ],
     };

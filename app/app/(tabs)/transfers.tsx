@@ -29,7 +29,7 @@ export default function Send() {
     setSearchQuery(text);
     if (text) {
       // const docs = await getDocs()
-      const users = await getUsers(user!.token, {
+      const users = await getUsers(user?.token!, {
         limit: 10,
         query: text,
         page: 0,
@@ -63,10 +63,10 @@ export default function Send() {
 
     // Remove duplicates and keep the last transaction
     const uniqueInteractedUsers = Array.from(
-      new Set(interactedUsers.map(({ user }) => user!.id))
+      new Set(interactedUsers.map(({ user }) => user?.id))
     )
       .map((id) =>
-        interactedUsers.reverse().find(({ user }) => user!.id === id)
+        interactedUsers.reverse().find(({ user }) => user?.id === id)
       )
       .filter((user) => user !== undefined); // Filter out undefined values
 
@@ -80,7 +80,7 @@ export default function Send() {
       <View className="flex flex-row items-center justify-between px-4 max-w-screen">
         <View className="flex flex-row items-center space-x-4 pl-2">
           <Link href={"/app/settings"}>
-            <Avatar name={user!.username.charAt(0).toUpperCase()} />
+            <Avatar name={user?.displayName.charAt(0).toUpperCase()!} />
           </Link>
         </View>
         <Searchbar
@@ -107,8 +107,11 @@ export default function Send() {
               {results.length === 0 && (
                 <Text className="text-white font-semibold">No results</Text>
               )}
-              {results.map((result) => (
-                <UserSearchResult user={result} />
+              {results.map((result, index) => (
+                <UserSearchResult
+                  user={result}
+                  key={"search-result-" + index + "-" + result.id}
+                />
               ))}
             </View>
           </>
@@ -118,7 +121,7 @@ export default function Send() {
               ?.slice(0, 5)
               .map((user, index) => (
                 <InteractedUser
-                  user={user.user!}
+                  user={user.user}
                   transaction={user.lastTransaction}
                   key={"interacted-user-" + index}
                 />

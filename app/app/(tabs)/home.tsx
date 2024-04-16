@@ -22,7 +22,6 @@ import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
 import { useEmbeddedWallet } from "@privy-io/expo";
-import { getPimlicoSmartAccountClient } from "../../../lib/pimlico";
 
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
@@ -144,6 +143,7 @@ export default function Home() {
                 <CircularButton
                   text="Request"
                   icon="Download"
+                  disabled={true}
                   onPress={() => router.push("/app/request-modal")}
                 />
                 <CircularButton
@@ -151,11 +151,11 @@ export default function Home() {
                   icon="Send"
                   onPress={() => router.push("/app/transfers")}
                 />
-                <CircularButton
+                {/*<CircularButton
                   text="Details"
                   icon="Server"
                   onPress={() => router.push("/app/details-modal")}
-                />
+                />*/}
               </View>
             </View>
             {transactions.length > 0 && (

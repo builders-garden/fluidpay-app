@@ -161,9 +161,10 @@ export default function CreateExpenseModal() {
                 value={category}
                 placeholder={{ label: "Select a category", value: null }}
                 onValueChange={(value) => setCategory(value)}
-                items={Object.keys(CATEGORIES).map((key: string) => ({
+                items={Object.keys(CATEGORIES).map((key: string, index: number) => ({
                   value: key,
                   label: CATEGORIES[key as keyof typeof CATEGORIES],
+                  key: `kk-${index}`,
                 }))}
               />
             </View>
