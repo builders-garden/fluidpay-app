@@ -19,6 +19,7 @@ import {
 import { useChainStore } from "../../store/use-chain-store";
 import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import { createAndPayRequest } from "../../lib/request-network/create-and-pay-request";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -44,16 +45,19 @@ export default function SendModal() {
   const sendTokens = async () => {
     if (!amount || amount < 0) return;
     setIsLoadingTransfer(true);
-    const smartAccountClient = await getPimlicoSmartAccountClient(
-      address as `0x${string}`,
-      chain,
-      wallet
-    );
-    const txHash = await transferUSDC(
-      smartAccountClient,
-      amount,
-      chain,
-      sendUser!.smartAccountAddress
+    const provider = await wallet.getProvider!();
+    const request = await createAndPayRequest(
+      {
+        payeeIdentity: user!.smartAccountAddress,
+        payerIdentity: sendUserAddress!,
+        signerIdentity: user!.smartAccountAddress,
+        expectedAmount: amount * 10 ** 6,
+        paymentAddress: sendUserAddress!,
+        reason: "Reason",
+        currencyAddress: tokens.USDC[chain.id] as `0x${string}`,
+        chain,
+      },
+      provider
     );
 
     const payment = {
@@ -62,7 +66,7 @@ export default function SendModal() {
       chainId: chain.id,
       amount: amount,
       description: "",
-      txHash,
+      txHash: request.transactionHash as `0x${string}`,
     };
     await createPayment(user!.token, payment);
     setIsLoadingTransfer(false);
