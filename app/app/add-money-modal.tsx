@@ -1,17 +1,46 @@
 import { Pressable, View, Text } from "react-native";
 import { Link, router } from "expo-router";
-import { Appbar } from "react-native-paper";
+import { ActivityIndicator, Appbar } from "react-native-paper";
 import * as Clipboard from "expo-clipboard";
-import React from "react";
+import React, { useEffect } from "react";
 import { useUserStore } from "../../store";
 import QRCode from "../../components/qrcode";
-import { ArrowLeft, Check, Copy } from "lucide-react-native";
+import {
+  ArrowLeft,
+  Check,
+  Copy,
+  ExternalLink,
+  Link2Icon,
+  Link2OffIcon,
+  QrCode,
+  RefreshCwIcon,
+  ShareIcon,
+} from "lucide-react-native";
 import { shortenAddress } from "../../lib/utils";
+import {
+  useGenerateStealthAddress,
+  useGetUserSmartAccounts,
+} from "@sefu/react-sdk";
+import { useChainStore } from "../../store/use-chain-store";
 
 export default function AddMoneyModal() {
   const isPresented = router.canGoBack();
-  const user = useUserStore((state) => state.user);
   const [copied, setCopied] = React.useState(false);
+  const { smartAccountList } = useGetUserSmartAccounts();
+  const chain = useChainStore((state) => state.chain);
+
+  const { stealthAddressCreated, generateNewStealthAddress, isLoading } =
+    useGenerateStealthAddress({
+      idSmartAccount: smartAccountList
+        ? smartAccountList[0].idSmartAccount
+        : "",
+    });
+
+  useEffect(() => {
+    if (smartAccountList && smartAccountList.length > 0) {
+      generateNewStealthAddress();
+    }
+  }, []);
 
   return (
     <View className="flex-1 flex-col bg-[#161618]">
@@ -33,36 +62,57 @@ export default function AddMoneyModal() {
           titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
-      <View className="flex px-4 space-y-2">
-        <Text className="text-3xl text-white font-bold">Add money</Text>
-        <Text className="text-[#8F8F91] font-semibold mt-8">
-          Add money to account
-        </Text>
-        <Text className="text-white font-semibold">
-          Send USDC to your address below on Base.
-        </Text>
-        <View className="bg-[#232324] rounded-xl flex flex-row justify-between items-center mt-4 px-4 py-2">
-          <Text className="text-[#8F8F91] text-lg text-ellipsis">
-            {shortenAddress(user?.smartAccountAddress!)}
-          </Text>
-          <Pressable
-            onPress={async () => {
-              await Clipboard.setStringAsync(user!.smartAccountAddress);
-              setCopied(true);
-              setTimeout(() => {
-                setCopied(false);
-              }, 1500);
-            }}
-          >
-            {copied ? (
-              <Check size={16} color={"green"} />
-            ) : (
-              <Copy size={16} color={"#8F8F91"} />
-            )}
-          </Pressable>
+      <View className="flex px-4 space-y-4">
+        <View>
+          <Text className="text-3xl text-white font-bold">Add money</Text>
         </View>
-        <View className="bg-[#161618] mx-auto rounded-lg p-8">
-          <QRCode />
+
+        <View className="flex flex-col space-y-4">
+          <View className="bg-primary/10 rounded-lg p-4 flex flex-row justify-between items-center">
+            <View className="flex flex-col space-y-2">
+              <Text className="text-primary text-lg font-semibold">
+                Deposit from Coinbase
+              </Text>
+              <Text className="text-primary">
+                Send from Coinbase through Coinbase Pay.
+              </Text>
+            </View>
+            <View>
+              <ExternalLink size={24} color={"#0061FF"} />
+            </View>
+          </View>
+          <View className="bg-greyInput rounded-lg p-4 flex flex-row justify-between items-center">
+            <View className="flex flex-col space-y-2">
+              <Text className="text-mutedGrey text-lg font-semibold">
+                Send USDC to your address on {chain.name}
+              </Text>
+
+              <Text className="text-[#8F8F91] text-ellipsis">
+                {!isLoading
+                  ? shortenAddress(stealthAddressCreated?.address!)
+                  : "Generating stealth address..."}
+              </Text>
+            </View>
+            <View className="bg-[#232324] rounded-xl flex flex-col justify-center items-center text-center">
+              <Pressable
+                onPress={async () => {
+                  await Clipboard.setStringAsync(
+                    stealthAddressCreated?.address!
+                  );
+                  setCopied(true);
+                  setTimeout(() => {
+                    setCopied(false);
+                  }, 1500);
+                }}
+              >
+                {copied ? (
+                  <Check size={24} color={"green"} />
+                ) : (
+                  <Copy size={24} color={"#8F8F91"} />
+                )}
+              </Pressable>
+            </View>
+          </View>
         </View>
       </View>
     </View>

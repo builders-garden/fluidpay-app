@@ -31,12 +31,10 @@ export default function GroupSettingsModal() {
 
   const update = async () => {
     setIsUpdateLoading(true);
+    console.log([...addedMembers.map((m: any) => m.id)]);
     const updateGroupData = {
       name: groupName,
-      memberIds: [
-        ...data.members.map((m: any) => m.user.id),
-        ...addedMembers.map((m: any) => m.id),
-      ],
+      memberIds: [...addedMembers.map((m: any) => m.id)],
     };
     await updateGroup(user!.token, { id: parsedGroup!.id }, updateGroupData);
     setIsUpdateLoading(false);

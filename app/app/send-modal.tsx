@@ -10,8 +10,8 @@ import { AmountChooser } from "../../components/amount-chooser";
 import Avatar from "../../components/avatar";
 import { ArrowLeft } from "lucide-react-native";
 import { createPayment, getUserByIdUsernameOrAddress } from "../../lib/api";
-import tokens from "../../constants/tokens";
-import { formatBigInt, shortenAddress } from "../../lib/utils";
+import tokens, { idTokens } from "../../constants/tokens";
+import { formatBigInt, resolveEnsName, shortenAddress } from "../../lib/utils";
 import {
   useERC20BalanceOf,
   usePrivyWagmiProvider,
@@ -19,6 +19,13 @@ import {
 import { useChainStore } from "../../store/use-chain-store";
 import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import {
+  useConfirmWithdrawal,
+  useGenerateWithdrawalQuote,
+  useGetSmartAccountBalance,
+  useGetUserSmartAccounts,
+} from "@sefu/react-sdk";
+import { getEnsAddress } from "viem/actions";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -27,42 +34,78 @@ export default function SendModal() {
   const isPresented = router.canGoBack();
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
-  const [sendUserAddress, setSendUserAddress] = useState<string | null>(
-    sendUser?.smartAccountAddress
+  const [sendUserAddress, setSendUserAddress] = useState<string | null>();
+  const [sendUserDisplayName, setSendUserDisplayName] = useState<string | null>(
+    sendUser?.displayName
   );
   const [amount, setAmount] = useState(Number(paramsAmount) as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
-  const { address } = usePrivyWagmiProvider();
-  const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
-    network: chain.id,
-    args: [user!.smartAccountAddress],
-    address: tokens.USDC[chain.id] as `0x${string}`,
+  const { smartAccountList, error } =
+    useGetUserSmartAccounts();
+  const {
+    data: withdrawalQuoteData,
+    requestQuote,
+    error: requestQuoteError,
+  } = useGenerateWithdrawalQuote();
+  const { confirmWithdrawal, error: confirmWithdrawalError, errorInfo, isError } =
+    useConfirmWithdrawal();
+  const {
+    data: fkeyBalance,
+    refetch: refetchFkeyBalance,
+    isLoading: isLoadingBalance,
+  } = useGetSmartAccountBalance({
+    idSmartAccount: smartAccountList ? smartAccountList[0].idSmartAccount : "",
+    chainId: chain.id,
   });
-  const wallet = useEmbeddedWallet();
+  const balance = fkeyBalance.find((b) => b.token.symbol === "USDC")
+    ? fkeyBalance.find(
+        (b) => b.token.symbol === "USDC" && b.token.chainId === chain.id
+      )!.amount
+    : 0;
+  const fkeyUsdcBalance = fkeyBalance.find((b) => b.token.symbol === "USDC")
+    ? formatBigInt(
+        BigInt(
+          fkeyBalance.find(
+            (b) => b.token.symbol === "USDC" && b.token.chainId === chain.id
+          )!.amount
+        ),
+        2
+      )
+    : "0.00";
   const canSend =
-    Number(amount) <= Number(balance) && Number(amount) > 0 && sendUserAddress;
+    Number(amount) <= Number(balance) &&
+    Number(amount) > 0 &&
+    sendUserAddress &&
+    smartAccountList &&
+    smartAccountList?.length > 0;
+
   const sendTokens = async () => {
     if (!amount || amount < 0) return;
     setIsLoadingTransfer(true);
-    const smartAccountClient = await getPimlicoSmartAccountClient(
-      address as `0x${string}`,
-      chain,
-      wallet
-    );
-    const txHash = await transferUSDC(
-      smartAccountClient,
-      amount,
-      chain,
-      sendUser!.smartAccountAddress
-    );
+    const requestQuoteResponse = await requestQuote({
+      idToken: idTokens.USDC[chain.id],
+      amount: BigInt(amount * 10 ** 6),
+      to: sendUserAddress!,
+      chainId: chain.id,
+      idSmartAccount: smartAccountList![0].idSmartAccount,
+      epochControlStructure: 0,
+    });
+
+    const idProcedure = requestQuoteResponse?.withdrawalProcedure?.idProcedure!;
+
+    await confirmWithdrawal({
+      idProcedure: requestQuoteResponse?.withdrawalProcedure?.idProcedure!,
+    });
+
 
     const payment = {
       payerId: user!.id,
       payeeId: sendUser!.id,
       chainId: chain.id,
       amount: amount,
-      description: "",
-      txHash,
+      description: `idProcedure:${idProcedure}`,
+      // TODO: save idProcedure and not txHash
+      txHash: "0xaaaa" as `0x${string}`,
     };
     await createPayment(user!.token, payment);
     setIsLoadingTransfer(false);
@@ -71,13 +114,17 @@ export default function SendModal() {
   };
 
   useEffect(() => {
-    console.log("sendUserAddress", sendUserAddress);
     if (!sendUserAddress) {
       getUserByIdUsernameOrAddress(user?.token!, {
         idOrUsernameOrAddress: sendUser?.username,
       }).then((result) => {
         if (result) {
-          setSendUserAddress(result.smartAccountAddress!);
+          setSendUserDisplayName(result.displayName);
+        }
+      });
+      resolveEnsName(`${sendUser?.username}.fkeydev.eth`).then((result) => {
+        if (result) {
+          setSendUserAddress(result);
         }
       });
     }
@@ -113,15 +160,11 @@ export default function SendModal() {
         <View className="flex flex-col items-center mt-4 space-y-2">
           <Avatar name={sendUser?.username.charAt(0).toUpperCase()} size={72} />
           <Text className="text-white text-3xl text-center font-semibold">
+            {sendUserDisplayName}
+          </Text>
+          <Text className="text-[#8F8F91] text-xl text-ellipsis text-center">
             @{sendUser?.username}
           </Text>
-          {sendUserAddress ? (
-            <Text className="text-[#8F8F91] text-lg text-ellipsis">
-              {shortenAddress(sendUserAddress!)}
-            </Text>
-          ) : (
-            <ActivityIndicator animating={true} color={"#8F8F91"} />
-          )}
 
           <AmountChooser
             dollars={amount}
@@ -134,7 +177,7 @@ export default function SendModal() {
             <ActivityIndicator animating={true} color={"#667DFF"} />
           ) : (
             <Text className="text-[#8F8F91] font-semibold">
-              ${formatBigInt(balance!, 2)} available
+              ${fkeyUsdcBalance} available
             </Text>
           )}
         </View>

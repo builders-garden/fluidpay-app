@@ -1,4 +1,6 @@
-import { parseUnits } from "viem";
+import { createPublicClient, http, parseUnits } from "viem";
+import { getEnsAddress } from "viem/actions";
+import { mainnet } from "viem/chains";
 
 /** Returns token units, 6000000 for $6 USDC */
 export function dollarsToAmount(
@@ -28,10 +30,11 @@ export function amountToDollars(
 }
 
 export function colorHash(inputString: string) {
+  if (!inputString) return "#8F8F91";
   let sum = 0;
 
   for (let char of inputString) {
-    sum += char.charCodeAt(0);
+    sum += char?.charCodeAt(0);
   }
 
   let r = ~~(
@@ -78,7 +81,7 @@ export function colorHash(inputString: string) {
 
 export const shortenAddress = (address: string) => {
   if (!address) return "undefined";
-  return `${address.slice(0, 4)}...${address.slice(-2)}`;
+  return `${address.slice(0, 4)}...${address.slice(-4)}`;
 };
 
 export const formatBigInt = (value: bigint, decimalPlaces = 2) => {
@@ -88,4 +91,14 @@ export const formatBigInt = (value: bigint, decimalPlaces = 2) => {
   const remainderBigInt = value % divisorBigInt;
   const remainderStr = remainderBigInt.toString().padStart(decimalPlaces, "0"); // Pad with leading zeros
   return `${quotientBigInt}.${remainderStr.slice(0, decimalPlaces)}`;
+};
+
+export const resolveEnsName = async (name: string): Promise<string | null> => {
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  });
+  return await publicClient.getEnsAddress({
+    name,
+  });
 };

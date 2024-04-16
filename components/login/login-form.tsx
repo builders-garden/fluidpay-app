@@ -29,7 +29,7 @@ import { DBUser } from "../../store/interfaces";
 import * as SecureStore from "expo-secure-store";
 import { LoginStatus } from "../../app/index";
 import { useChainStore } from "../../store/use-chain-store";
-import { sepolia } from "viem/chains";
+import { base, sepolia } from "viem/chains";
 import { getPimlicoSmartAccountClient } from "../../lib/pimlico";
 
 export default function LoginForm({
@@ -70,11 +70,12 @@ export default function LoginForm({
       try {
         setIsLoading(true);
         handleConnection().then((path: string) => {
-          setIsLoading(false);
           router.push(path);
         });
       } catch (e) {
         router.replace("/");
+      } finally {
+        setIsLoading(false);
       }
     } else if (state.status === "initial") {
       setLoginStatus(LoginStatus.INITIAL);
@@ -96,11 +97,9 @@ export default function LoginForm({
   const handleConnection = async (): Promise<string> => {
     if (isNotCreated(wallet)) {
       setLoadingMessage("Creating wallet...");
-      console.log("creating wallet");
       await wallet.create!();
     }
     setLoadingMessage("Signing in...");
-    console.log("signing in...");
     const { message, nonce } = await getAuthNonce();
     const provider = await wallet.getProvider!();
     const signedMessage = await signMessageWithPrivy(
@@ -120,16 +119,17 @@ export default function LoginForm({
     });
     await SecureStore.setItemAsync(`token-${address}`, token);
     if (isNewUser) {
+      console.log("New user");
       return "/onboarding";
     }
     setLoadingMessage("Fetching user data...");
-    console.log("Fetching user data...");
     const userData = await fetchUserData(token);
+    // setChain(base);
     setChain(sepolia);
     if (!userData.username) {
       return "/onboarding";
     } else {
-      return "/app/home";
+      return "/pin";
     }
   };
   return (

@@ -10,23 +10,34 @@ import * as Clipboard from "expo-clipboard";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import tokens from "../../constants/tokens";
 
-import {
-  usePrivyWagmiProvider,
-  useERC20BalanceOf,
-} from "@buildersgarden/privy-wagmi-provider";
 import { formatBigInt, shortenAddress } from "../../lib/utils";
 import { useChainStore } from "../../store/use-chain-store";
+import { useGetUserSmartAccounts, useGetSmartAccountBalance } from "@sefu/react-sdk";
 
 export default function DetailsModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
   const chain = useChainStore((state) => state.chain);
 
-  const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
-    network: chain.id,
-    args: [user!.smartAccountAddress],
-    address: tokens.USDC[chain.id] as `0x${string}`,
+  const { smartAccountList, error } = useGetUserSmartAccounts();
+  const {
+    data: fkeyBalance,
+    refetch: refetchFkeyBalance,
+    isLoading: isLoadingBalance,
+  } = useGetSmartAccountBalance({
+    idSmartAccount: smartAccountList ? smartAccountList[0].idSmartAccount : "",
+    chainId: chain.id,
   });
+  const fkeyUsdcBalance = fkeyBalance.find((b) => b.token.symbol === "USDC")
+    ? formatBigInt(
+        BigInt(
+          fkeyBalance.find(
+            (b) => b.token.symbol === "USDC" && b.token.chainId === chain.id
+          )!.amount
+        ),
+        2
+      )
+    : "0.00";
 
   return (
     <SafeAreaView
@@ -57,7 +68,7 @@ export default function DetailsModal() {
         <View className="flex flex-row items-center justify-between space-x-2">
           <View className="flex space-y-2">
             <Text className="text-3xl text-white font-bold">
-              {isLoadingBalance ? "Loading..." : `${formatBigInt(balance!, 2)}`}
+              {isLoadingBalance ? "Loading..." : `${fkeyUsdcBalance}`}
             </Text>
             <Text className="text-white text-lg font-semibold">
               {chain.name} • USDC

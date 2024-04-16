@@ -22,7 +22,6 @@ export default function Send() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const user = useUserStore((state) => state.user);
-  const setSendUser = useSendStore((state) => state.setSendUser);
   const transactions = useTransactionsStore((state) => state.transactions);
 
   const onChangeText = async (text: string) => {
@@ -80,7 +79,7 @@ export default function Send() {
       <View className="flex flex-row items-center justify-between px-4 max-w-screen">
         <View className="flex flex-row items-center space-x-4 pl-2">
           <Link href={"/app/settings"}>
-            <Avatar name={user!.username.charAt(0).toUpperCase()} />
+            <Avatar name={user?.username.charAt(0).toUpperCase()!} />
           </Link>
         </View>
         <Searchbar
@@ -107,8 +106,11 @@ export default function Send() {
               {results.length === 0 && (
                 <Text className="text-white font-semibold">No results</Text>
               )}
-              {results.map((result) => (
-                <UserSearchResult user={result} />
+              {results.map((result, index) => (
+                <UserSearchResult
+                  user={result}
+                  key={"search-result-" + index + "-" + result.id}
+                />
               ))}
             </View>
           </>

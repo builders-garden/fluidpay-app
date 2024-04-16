@@ -27,7 +27,6 @@ const Home = () => {
     (state) => state.setTransactions
   );
   const setGroups = useGroupsStore((state) => state.setGroups);
-  const setChain = useChainStore((state) => state.setChain);
   const chain = useChainStore((state) => state.chain);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -38,13 +37,10 @@ const Home = () => {
 
   useEffect(() => {
     if (address && user) {
-      setIsLoading(true);
-      setLoadingMessage("Logging in...");
-      getToken(address).then(() => {
-        setIsLoading(false);
-      });
+      console.log("getting token");
+      getToken(address);
     }
-  }, [address, user]);
+  }, [isReady, address, user]);
 
   useEffect(() => {
     getAccessToken()
@@ -71,17 +67,24 @@ const Home = () => {
   };
 
   const getToken = async (address: string) => {
-    const token = await SecureStore.getItemAsync(`token-${address}`);
-    if (token) {
-      const userData = await fetchUserData(token);
-      if (!userData.username) {
-        router.push("/onboarding");
-      } else {
-        router.push("/app/home");
+    try {
+      setIsLoading(true);
+      setLoadingMessage("Logging in...");
+      const token = await SecureStore.getItemAsync(`token-${address}`);
+      if (token) {
+        const userData = await fetchUserData(token);
+        if (!userData.username) {
+          router.push("/onboarding");
+        } else {
+          router.push("/pin");
+        }
       }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
-
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
       <View className="text-center flex flex-col space-y-4 justify-center items-center">

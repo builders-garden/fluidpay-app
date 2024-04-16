@@ -1,5 +1,6 @@
 import { Link, Redirect, useNavigation } from "expo-router";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, ActivityIndicator } from "react-native";
+import { Buffer } from "react-native-buffer";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
@@ -8,9 +9,9 @@ import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
 import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
-import { ChevronRight } from "lucide-react-native";
+import { Activity, ChevronRight, RefreshCwIcon } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getPayments } from "../../../lib/api";
 import {
   useERC20BalanceOf,
@@ -22,11 +23,23 @@ import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
 import { useEmbeddedWallet } from "@privy-io/expo";
-import { getPimlicoSmartAccountClient } from "../../../lib/pimlico";
+import {
+  SmartAccountTransfer,
+  useConfirmWithdrawal,
+  useFluidkeyClient,
+  useGetSmartAccountBalance,
+  useGetSmartAccountTransfers,
+  useGetUserSmartAccounts,
+  useInitializedWalletAddress,
+  useSetUsername,
+} from "@sefu/react-sdk";
+import { SmartAccountTransferStatus } from "@sefu/react-sdk/lib/core/graphql/codegen/generatedTS/graphql";
+import { keccak256 } from "viem";
+import { IconButton } from "react-native-paper";
 
 export default function Home() {
-  const { address, isConnected, isReady } = usePrivyWagmiProvider();
-  const wallet = useEmbeddedWallet();
+  const { isConnected, isReady } = usePrivyWagmiProvider();
+
   // const [refreshing, setRefreshing] = React.useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
@@ -37,20 +50,69 @@ export default function Home() {
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
+  const { smartAccountList, error } = useGetUserSmartAccounts();
+  const { data: transfers, isLoading: transferLoading } =
+    useGetSmartAccountTransfers({
+      idSmartAccount: smartAccountList
+        ? smartAccountList[0].idSmartAccount
+        : "",
+      chainId: chain.id,
+    });
+  const [isRefreshLoading, setRefreshLoading] = useState(false);
   const {
-    balance,
-    isLoading: isLoadingBalance,
-    refetch: refetchBalance,
-  } = useERC20BalanceOf({
-    network: chain.id,
-    args: [user?.smartAccountAddress!],
-    address: tokens.USDC[chain.id] as `0x${string}`,
+    data: fkeyBalance,
+    refetch: refetchFkeyBalance,
+    error: balanceError,
+  } = useGetSmartAccountBalance({
+    idSmartAccount: smartAccountList ? smartAccountList[0].idSmartAccount : "",
+    chainId: chain.id,
   });
+
+  const fkeyUsdcBalance = fkeyBalance.find((b) => b.token.symbol === "USDC")
+    ? formatBigInt(
+        BigInt(
+          fkeyBalance.find(
+            (b) => b.token.symbol === "USDC" && b.token.chainId === chain.id
+          )!.amount
+        ),
+        2
+      )
+    : "0.00";
+
   const navigation = useNavigation();
+
+  const {
+    confirmWithdrawal,
+    error: confirmWithdrawalError,
+    errorInfo,
+    isError,
+  } = useConfirmWithdrawal();
+
+  useEffect(() => {
+    if (transfers && !transferLoading) {
+      const awaitingTransfers = transfers.filter(
+        (transfer) =>
+          transfer.status === SmartAccountTransferStatus.AwaitingSignatures
+      );
+      confirmPendingQuotes(
+        awaitingTransfers.sort((a, b) => {
+          return a.createdAt! - b.createdAt!;
+        })
+      );
+    }
+  }, [transfers, transferLoading]);
+
+  const confirmPendingQuotes = async (transfers: SmartAccountTransfer[]) => {
+    for (const transfer of transfers) {
+      await confirmWithdrawal({
+        idProcedure: transfer.idProcedure!,
+      });
+    }
+  };
 
   useEffect(() => {
     const refresh = async () => {
-      await Promise.all([refetchBalance()]);
+      await Promise.all([refetchFkeyBalance()]);
     };
 
     navigation.addListener("focus", refresh);
@@ -62,7 +124,7 @@ export default function Home() {
 
   useEffect(() => {
     if (user) {
-      refetchBalance();
+      refetchFkeyBalance();
       fetchPayments(chain.id);
     }
   }, [chain]);
@@ -111,12 +173,27 @@ export default function Home() {
                 <Avatar name={user.username.charAt(0).toUpperCase()} />
               </Link>
             </View>
-            {/* <View className="flex flex-row items-center space-x-0">
-              <IconButton
-                icon={() => <Bell size={24} color={"white"} />}
-                onPress={() => router.push("/app/qrcode")}
-              />
-            </View> */}
+            {
+              <View className="flex flex-row items-center">
+                <IconButton
+                  icon={() =>
+                    !isRefreshLoading ? (
+                      <RefreshCwIcon size={24} color={"white"} />
+                    ) : (
+                      <ActivityIndicator size="small" color="white" />
+                    )
+                  }
+                  onPress={async () => {
+                    setRefreshLoading(true);
+                    await Promise.all([
+                      refetchFkeyBalance(),
+                      fetchPayments(chain.id),
+                    ]);
+                    setRefreshLoading(false);
+                  }}
+                />
+              </View>
+            }
           </View>
           <ScrollView className="px-4" scrollEnabled={transactions.length > 0}>
             <View className="py-8 flex flex-col space-y-16">
@@ -125,7 +202,7 @@ export default function Home() {
                   {chain.name} • USDC
                 </Text>
                 <Text className="text-white font-bold text-center text-5xl">
-                  ${formatBigInt(balance!, 2)}
+                  ${fkeyUsdcBalance}
                 </Text>
                 <View>
                   <PillButton
@@ -151,11 +228,11 @@ export default function Home() {
                   icon="Send"
                   onPress={() => router.push("/app/transfers")}
                 />
-                <CircularButton
+                {/*<CircularButton
                   text="Details"
                   icon="Server"
                   onPress={() => router.push("/app/details-modal")}
-                />
+                />*/}
               </View>
             </View>
             {transactions.length > 0 && (

@@ -20,6 +20,13 @@ import { base, sepolia } from "viem/chains";
 import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
 import { useEffect } from "react";
 import { handleDeepLinks } from "../lib/deeplinks";
+import { FluidkeyClient, FluidkeyProvider } from "@sefu/react-sdk";
+
+const sefuClient = new FluidkeyClient({
+  clientId: process.env.EXPO_PUBLIC_FLUIDKEY_APP_ID!,
+  clientKey: process.env.EXPO_PUBLIC_FLUIDKEY_APP_KEY!,
+  isExperimental: true,
+});
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
@@ -38,7 +45,7 @@ const toastConfig: ToastConfig = {
       {...props}
       style={{
         borderLeftColor: "green",
-        backgroundColor: "#21202E",
+        backgroundColor: "#232324",
       }}
       text1Style={{ color: "white", fontWeight: "bold", fontSize: 16 }}
       text2Style={{ color: "white" }}
@@ -47,7 +54,7 @@ const toastConfig: ToastConfig = {
   info: (props) => (
     <InfoToast
       {...props}
-      style={{ borderLeftColor: "blue", backgroundColor: "#21202E" }}
+      style={{ borderLeftColor: "blue", backgroundColor: "#232324" }}
       text1Style={{ color: "white", fontWeight: "bold", fontSize: 16 }}
       text2Style={{ color: "white" }}
     />
@@ -55,7 +62,7 @@ const toastConfig: ToastConfig = {
   error: (props) => (
     <ErrorToast
       {...props}
-      style={{ borderLeftColor: "red", backgroundColor: "#21202E" }}
+      style={{ borderLeftColor: "red", backgroundColor: "#232324" }}
       text1Style={{ color: "white", fontWeight: "bold", fontSize: 16 }}
       text2Style={{ color: "#8F8F91" }}
     />
@@ -84,9 +91,11 @@ export default function AppLayout() {
           supportedChains={[sepolia, base]}
         >
           <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
-            <View className="bg-black flex-1">
-              <Slot />
-            </View>
+            <FluidkeyProvider client={sefuClient}>
+              <View className="bg-black flex-1">
+                <Slot />
+              </View>
+            </FluidkeyProvider>
           </PrivyWagmiProvider>
         </PrivyProvider>
       </PaperProvider>
