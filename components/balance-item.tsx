@@ -12,10 +12,12 @@ export default function BalanceItem(balanceData: any, index: number) {
     <Pressable
       onPress={() => {
         if (isCurrentUserDebtor) {
-          setSendUser(balance.creditor);
           router.push({
             pathname: "/app/send-modal",
-            params: { amount: balance.amount.toFixed(2) },
+            params: {
+              amount: balance.amount.toFixed(2),
+              user: JSON.stringify(balance.creditor),
+            },
           });
           return;
         } else {

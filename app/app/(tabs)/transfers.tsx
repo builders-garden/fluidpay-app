@@ -48,12 +48,12 @@ export default function Send() {
       [];
 
     transactions.forEach((transaction) => {
-      if (transaction.payeeId === user!.id) {
+      if (transaction.payeeId === user?.id) {
         interactedUsers.push({
           user: transaction.payer,
           lastTransaction: transaction,
         });
-      } else if (transaction.payerId === user!.id) {
+      } else if (transaction.payerId === user?.id) {
         interactedUsers.push({
           user: transaction.payee,
           lastTransaction: transaction,
