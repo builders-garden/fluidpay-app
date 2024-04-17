@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Slot, router } from "expo-router";
 import { LogBox, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
@@ -18,7 +19,6 @@ import { createConfig } from "wagmi";
 import { http } from "viem";
 import { base, sepolia } from "viem/chains";
 import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
-import { useEffect } from "react";
 import { handleDeepLinks } from "../lib/deeplinks";
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);

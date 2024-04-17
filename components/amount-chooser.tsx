@@ -1,5 +1,5 @@
 import { useIsFocused } from "@react-navigation/native";
-import * as Haptics from "expo-haptics";
+// import * as Haptics from "expo-haptics";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   NativeSyntheticEvent,
@@ -76,7 +76,7 @@ function AmountInput({
     if (disabled) return;
 
     // Haptic (tactile) feedback on each keypress
-    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    // Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 
     // Validate. Handle negative numbers, NaN, out of range.
     const looksValid = /^(|0|(0?[.,]\d*)|([1-9]\d*[.,]?\d*))$/.test(text);

@@ -2,10 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>com.apple.developer.associated-domains</key>
-	<array>
-		<string>applinks:fluidpay.xyz</string>
-		<string>webcredentials:fluidpay.xyz</string>
-	</array>
+        <key>EXUpdatesSDKVersion</key>
+        <string>YOUR-APP-SDK-VERSION-HERE</string>
+        <key>EXUpdatesURL</key>
+        <string>YOUR-APP-URL-HERE</string>
 </dict>
 </plist>

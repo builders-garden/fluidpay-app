@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link, Redirect, useNavigation } from "expo-router";
 import { View, Text, Pressable } from "react-native";
 import Avatar from "../../../components/avatar";
@@ -10,7 +11,6 @@ import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
 import { ChevronRight } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect } from "react";
 import { getPayments } from "../../../lib/api";
 import {
   useERC20BalanceOf,

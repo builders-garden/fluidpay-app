@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Redirect, router, useNavigation } from "expo-router";
 import { useGroupsStore, useUserStore } from "../../../store";
 import { LinearGradient } from "expo-linear-gradient";
@@ -7,7 +8,6 @@ import AppButton from "../../../components/app-button";
 import { ScrollView } from "react-native-gesture-handler";
 import Avatar from "../../../components/avatar";
 import { PlusIcon } from "lucide-react-native";
-import { useEffect } from "react";
 import { getGroups } from "../../../lib/api";
 
 export default function Pocket() {
