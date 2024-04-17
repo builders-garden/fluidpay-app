@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Crumina",
-    "slug": "crumina",
+    "name": "Fluidpay",
+    "slug": "fluidpay",
     "scheme": "fluidpay",
     "version": "1.0.1",
     "orientation": "portrait",
@@ -15,7 +15,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "garden.builders.crumina",
+      "bundleIdentifier": "garden.builders.fluidpay",
       "buildNumber": "2",
       "associatedDomains": ["applinks:fluidpay.xyz"]
     },
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "garden.builders.crumina"
+      "package": "garden.builders.fluidpay"
     },
     "web": {
       "favicon": "./assets/favicon.png"
