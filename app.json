@@ -12,12 +12,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "garden.builders.fluidpay",
       "buildNumber": "2",
-      "associatedDomains": ["applinks:fluidpay.xyz"]
+      "associatedDomains": [
+        "applinks:fluidpay.xyz"
+      ]
     },
     "android": {
       "adaptiveIcon": {
@@ -50,7 +54,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "6bdf88dc-90c8-4eeb-b43f-ff89b1f1698f"
+        "projectId": "fc478e61-d3ec-41d0-9131-22d638dc6870"
       }
     },
     "owner": "buildersgarden"
