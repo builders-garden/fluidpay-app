@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Crumina.app"
-               BlueprintName = "Crumina"
-               ReferencedContainer = "container:Crumina.xcodeproj">
+               BuildableName = "Fluidpay.app"
+               BlueprintName = "Fluidpay"
+               ReferencedContainer = "container:Fluidpay.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "CruminaTests.xctest"
-               BlueprintName = "CruminaTests"
-               ReferencedContainer = "container:Crumina.xcodeproj">
+               BuildableName = "FluidpayTests.xctest"
+               BlueprintName = "FluidpayTests"
+               ReferencedContainer = "container:Fluidpay.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Crumina.app"
-            BlueprintName = "Crumina"
-            ReferencedContainer = "container:Crumina.xcodeproj">
+            BuildableName = "Fluidpay.app"
+            BlueprintName = "Fluidpay"
+            ReferencedContainer = "container:Fluidpay.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Crumina.app"
-            BlueprintName = "Crumina"
-            ReferencedContainer = "container:Crumina.xcodeproj">
+            BuildableName = "Fluidpay.app"
+            BlueprintName = "Fluidpay"
+            ReferencedContainer = "container:Fluidpay.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
