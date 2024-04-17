@@ -6,8 +6,7 @@ import SelectSplitTypeModal, {
   SplitType,
 } from "../app/app/select-split-type-modal";
 import { COLORS } from "../constants/colors";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useCallback, useRef, useEffect } from "react";
+import { useEffect } from "react";
 import { useUserStore } from "../store";
 
 export interface SplitAmongType {
