@@ -26,6 +26,9 @@ import { useEmbeddedWallet } from "@privy-io/expo";
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
   const wallet = useEmbeddedWallet();
+
+  console.log("home", wallet.status)
+
   // const [refreshing, setRefreshing] = React.useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
@@ -92,7 +95,13 @@ export default function Home() {
 
   const recentPayees = getUniquePayees();
 
+  
   if (!isReady || !isConnected || !user) {
+    console.log({
+      isReady,
+      isConnected,
+      user,
+    })
     return <Redirect href={"/"} />;
   }
 

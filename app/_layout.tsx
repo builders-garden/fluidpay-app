@@ -1,4 +1,4 @@
-import { Slot, router } from "expo-router";
+import { Slot, router, useGlobalSearchParams, usePathname } from "expo-router";
 import { LogBox, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import * as Linking from "expo-linking";
@@ -64,12 +64,19 @@ const toastConfig: ToastConfig = {
 
 export default function AppLayout() {
   const url = Linking.useURL();
+  const pathname = usePathname();
+  const params = useGlobalSearchParams();
+
+  useEffect(() => {
+    console.log(JSON.stringify({ pathname, params }, null, 2));
+    // trackEvent("screen_view", { pathname, params });
+  }, [pathname, params]);
 
   useEffect(() => {
     if (url) {
       handleDeepLinks(url);
     }
-  }, [url]);
+  }, [url]);  
 
   return (
     <>

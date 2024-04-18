@@ -67,13 +67,16 @@ export default function LoginForm({
 
   useEffect(() => {
     if (state.status === "done") {
+      console.log("state", state);
       try {
         setIsLoading(true);
         handleConnection().then((path: string) => {
           setIsLoading(false);
+          console.log("pushing to path", path)
           router.push(path);
         });
       } catch (e) {
+        console.error("ERROR", e)
         router.replace("/");
       }
     } else if (state.status === "initial") {
@@ -94,13 +97,12 @@ export default function LoginForm({
   };
 
   const handleConnection = async (): Promise<string> => {
+    console.log("handleConnection", address, wallet);
     if (isNotCreated(wallet)) {
       setLoadingMessage("Creating wallet...");
-      console.log("creating wallet");
       await wallet.create!();
     }
     setLoadingMessage("Signing in...");
-    console.log("signing in...");
     const { message, nonce } = await getAuthNonce();
     const provider = await wallet.getProvider!();
     const signedMessage = await signMessageWithPrivy(
@@ -123,7 +125,6 @@ export default function LoginForm({
       return "/onboarding";
     }
     setLoadingMessage("Fetching user data...");
-    console.log("Fetching user data...");
     const userData = await fetchUserData(token);
     setChain(sepolia);
     if (!userData.username) {
