@@ -1,7 +1,7 @@
 import { router } from "expo-router";
-import { View, TextInput, Text } from "react-native";
+import { View, TextInput, Text, Pressable } from "react-native";
 import AppButton from "../app-button";
-import { useEffect, useRef } from "react";
+import { useRef, useState } from "react";
 import { useLoginWithEmail, usePrivy } from "@privy-io/expo";
 import { LoginStatus } from "../../app/index";
 import { parse } from "react-native-svg";
@@ -14,13 +14,15 @@ export default function CodeInput({
   setLoginStatus,
   email,
 }: {
-  code: string[];
-  setCode: (code: string[]) => void;
+  code: `${number | ""}`;
+  setCode: (code: `${number | ""}`) => void;
   setIsLoading: (isLoading: boolean) => void;
   setLoadingMessage: (message: string) => void;
   setLoginStatus: (status: LoginStatus) => void;
   email: string;
 }) {
+  const MAX_CODE_LENGTH = 6;
+  const [inputFocused, setInputFocused] = useState(false);
   const { sendCode, loginWithCode } = useLoginWithEmail({
     onError: (error) => {
       console.error("ERRRORRRR", error);
@@ -30,57 +32,75 @@ export default function CodeInput({
       console.log("Logged in", user);
     },
   });
-  const inputRefs = useRef<TextInput[]>([]);
-  const handleInputChange = (text: string, index: number) => {
-    const newCode = [...code];
-    newCode[index] = text;
-    setCode(newCode);
+  const textInputRef = useRef<TextInput>(null);
+
+  const handleTextChange = (text: string) => {
+    const numericValue = text.replace(/[^0-9]/g, "");
+    setCode(numericValue as `${number | ""}`);
   };
-  const handleKeyPress = (e: any, index: number) => {
-    if (e.nativeEvent.key === "Backspace" && index >= 0) {
-      inputRefs.current[index - 1]?.focus();
-      handleInputChange("", index);
-    } else if (
-      parseInt(e.nativeEvent.key) >= 0 &&
-      parseInt(e.nativeEvent.key) <= 9
-    ) {
-      inputRefs.current[index + 1]?.focus();
-      handleInputChange(e.nativeEvent.key, index);
-    }
+
+  const handleTextFocus = () => {
+    setInputFocused(true);
+    textInputRef.current?.focus();
   };
-  useEffect(() => {
-    inputRefs.current = inputRefs.current.slice(0, code.length);
-  }, [code]);
-  console.log("Code", code.join(""));
+
   return (
     <View className="w-full flex flex-col">
       <Text className="text-white text-xl text-center mb-4">
         We sent a code to {email}
       </Text>
-      <View className="flex flex-row mb-4 space-x-4 justify-around">
-        {code.map((value, index) => (
-          <TextInput
-            key={index}
-            value={value}
-            // onChangeText={(text) => handleInputChange(text, index)}
-            onKeyPress={(e) => handleKeyPress(e, index)}
-            maxLength={1}
-            keyboardType="numeric"
-            ref={(el: TextInput) => (inputRefs.current[index] = el)}
-            className="text-4xl text-center basis-1/6 text-white bg-[#232324] py-4 rounded-lg placeholder-white"
-          />
-        ))}
-      </View>
+
+      <Pressable
+        onPress={handleTextFocus}
+        className="flex flex-row mb-4 space-x-4 justify-around"
+      >
+        {Array(MAX_CODE_LENGTH)
+          .fill(null)
+          .map((_, index) => {
+            const isCurrentDigit = index === code.length;
+            const isLastDigit = index === code.length - 1;
+            const isCodeFull = code.length === MAX_CODE_LENGTH;
+
+            const isDigitFocused =
+              isCurrentDigit || (isCodeFull && isLastDigit);
+            const focused = inputFocused && isDigitFocused;
+            return (
+              <View
+                key={index}
+                className={
+                  "basis-1/6 text-white bg-[#232324] py-4 rounded-lg" +
+                  (focused ? " border-2 border-blue-500" : "")
+                }
+              >
+                <Text className="text-4xl text-center placeholder-white">
+                  {code[index] || " "}
+                </Text>
+              </View>
+            );
+          })}
+      </Pressable>
+
+      <TextInput
+        value={code}
+        onChangeText={handleTextChange}
+        onBlur={() => setInputFocused(false)}
+        maxLength={MAX_CODE_LENGTH}
+        returnKeyType="done"
+        keyboardType="number-pad"
+        textContentType="oneTimeCode"
+        ref={textInputRef}
+        className="w-px h-px absolute opacity-0"
+      />
 
       <AppButton
         // Keeps button disabled until the code has been sent
-        disabled={code.join("").length !== 6}
+        disabled={code.length !== 6}
         onPress={async () => {
-          console.log("Logging in with code", code.join(""));
+          console.log("Logging in with code", code);
           setIsLoading(true);
           setLoadingMessage("Verifying code...");
           await loginWithCode({
-            code: code.join(""),
+            code: code,
             email,
           });
           setIsLoading(false);
@@ -88,7 +108,7 @@ export default function CodeInput({
           setLoginStatus(LoginStatus.SUCCESS_CODE);
         }}
         text="Enter code"
-        variant={code?.join("").length === 6 ? "primary" : "disabled"}
+        variant={code?.length === 6 ? "primary" : "disabled"}
       />
       <Text
         className="mt-8 text-blue-500 text-center font-bold"
