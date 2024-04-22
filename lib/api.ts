@@ -27,12 +27,12 @@ export type AuthSignResponse = {
  */
 export const getAuthNonce = async (): Promise<AuthNonceResponse> =>
   ky
-    .get("https://crumina-api.builders.garden/auth/nonce")
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/auth/nonce`)
     .json<AuthNonceResponse>();
 
 export const signIn = async (body: AuthSignInBody): Promise<AuthSignResponse> =>
   ky
-    .post("https://crumina-api.builders.garden/auth/sign-in", { json: body })
+    .post(`${process.env.EXPO_PUBLIC_BASE_API}/auth/sign-in`, { json: body })
     .json<AuthSignResponse>();
 
 /**
@@ -86,7 +86,7 @@ export const createPayment = async (
   body: CreatePaymentBody
 ): Promise<PaymentByIdResponse> =>
   ky
-    .post("https://crumina-api.builders.garden/payments", {
+    .post(`${process.env.EXPO_PUBLIC_BASE_API}/payments`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -97,7 +97,7 @@ export const getPaymentById = async (
   params: PaymentByIdParams
 ): Promise<PaymentByIdResponse> =>
   ky
-    .get(`https://crumina-api.builders.garden/payments/${params.id}`, {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/payments/${params.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json<PaymentByIdResponse>();
@@ -107,7 +107,7 @@ export const getPayments = async (
   query: PaymentsQuery
 ): Promise<PaymentsQueryResponse[]> =>
   ky
-    .get("https://crumina-api.builders.garden/payments", {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/payments`, {
       searchParams: query,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -152,7 +152,7 @@ export type GetUsersQuery = {
 
 export const getMe = async (token: string): Promise<UsersMeResponse> =>
   ky
-    .get("https://crumina-api.builders.garden/users/me", {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/users/me`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json<UsersMeResponse>();
@@ -162,7 +162,7 @@ export const updateMe = async (
   body: UpdateMeBody
 ): Promise<UsersMeResponse> =>
   ky
-    .put("https://crumina-api.builders.garden/users/me", {
+    .put(`${process.env.EXPO_PUBLIC_BASE_API}/users/me`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -174,7 +174,7 @@ export const getUserByIdUsernameOrAddress = async (
 ): Promise<UsersByIdUsernameOrAddressResponse> =>
   ky
     .get(
-      `https://crumina-api.builders.garden/users/${params.idOrUsernameOrAddress}?withPaymentInfo=true`,
+      `${process.env.EXPO_PUBLIC_BASE_API}/users/${params.idOrUsernameOrAddress}?withPaymentInfo=true`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -186,7 +186,7 @@ export const getUsers = async (
   query: GetUsersQuery
 ): Promise<UsersByIdUsernameOrAddressResponse[]> =>
   ky
-    .get("https://crumina-api.builders.garden/users", {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/users`, {
       searchParams: query,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -283,7 +283,7 @@ export const getGroupById = async (
   params: GetGroupByIdParams
 ): Promise<GetGroupByIdResponse> =>
   ky
-    .get(`https://crumina-api.builders.garden/groups/${params.id}`, {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -292,7 +292,7 @@ export const getGroups = async (
   token: string
 ): Promise<GetGroupsQueryResponse[]> =>
   ky
-    .get("https://crumina-api.builders.garden/groups", {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/groups`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -302,7 +302,7 @@ export const createGroup = async (
   body: CreateGroupBody
 ): Promise<GetGroupByIdResponse> =>
   ky
-    .post("https://crumina-api.builders.garden/groups", {
+    .post(`${process.env.EXPO_PUBLIC_BASE_API}/groups`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -314,7 +314,7 @@ export const addUsersToGroup = async (
   body: AddUsersToGroupBody
 ): Promise<{ message: string }> =>
   ky
-    .post(`https://crumina-api.builders.garden/groups/${params.id}/users`, {
+    .post(`${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}/users`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -326,7 +326,7 @@ export const removeUsersFromGroup = async (
   body: AddUsersToGroupBody
 ): Promise<{ message: string }> =>
   ky
-    .delete(`https://crumina-api.builders.garden/groups/${params.id}/users`, {
+    .delete(`${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}/users`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -338,7 +338,7 @@ export const updateGroup = async (
   body: UpdateGroupBody
 ): Promise<GetGroupByIdResponse> =>
   ky
-    .post(`https://crumina-api.builders.garden/groups/${params.id}`, {
+    .post(`${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
     })
@@ -349,7 +349,7 @@ export const deleteGroup = async (
   params: GetGroupByIdParams
 ): Promise<GetGroupByIdResponse> =>
   ky
-    .delete(`https://crumina-api.builders.garden/groups/${params.id}`, {
+    .delete(`${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -360,7 +360,7 @@ export const deleteGroupExpense = async (
 ): Promise<any> =>
   ky
     .delete(
-      `https://crumina-api.builders.garden/groups/${params.id}/expenses/${params.expenseId}`,
+      `${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}/expenses/${params.expenseId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -372,7 +372,7 @@ export const getGroupExpenses = async (
   params: GetGroupExpensesByIdParams
 ): Promise<any> =>
   ky
-    .get(`https://crumina-api.builders.garden/groups/${params.id}/expenses`, {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}/expenses`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -383,7 +383,7 @@ export const getGroupExpenseById = async (
 ): Promise<any> =>
   ky
     .get(
-      `https://crumina-api.builders.garden/groups/${params.id}/expenses/${params.expenseId}`,
+      `${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}/expenses/${params.expenseId}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }
@@ -395,7 +395,7 @@ export const getGroupBalances = async (
   params: GetUserExpensesInGroupParams
 ): Promise<any> =>
   ky
-    .get(`https://crumina-api.builders.garden/groups/${params.id}/balances`, {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}/balances`, {
       headers: { Authorization: `Bearer ${token}` },
     })
     .json();
@@ -406,7 +406,7 @@ export const createGroupExpense = async (
   body: CreateGroupExpenseBody
 ): Promise<any> =>
   ky
-    .post(`https://crumina-api.builders.garden/groups/${params.id}/expenses`, {
+    .post(`${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}/expenses`, {
       json: body,
       headers: { Authorization: `Bearer ${token}` },
       throwHttpErrors: false,
@@ -420,7 +420,7 @@ export const updateGroupExpense = async (
 ): Promise<any> =>
   ky
     .put(
-      `https://crumina-api.builders.garden/groups/${params.id}/expenses/${params.expenseId}`,
+      `${process.env.EXPO_PUBLIC_BASE_API}/groups/${params.id}/expenses/${params.expenseId}`,
       { json: body, headers: { Authorization: `Bearer ${token}` } }
     )
     .json();
@@ -442,7 +442,7 @@ export const getNotifications = async (
   query: GetNotificationsQuery
 ): Promise<any> =>
   ky
-    .get("https://crumina-api.builders.garden/notifications", {
+    .get(`${process.env.EXPO_PUBLIC_BASE_API}/notifications`, {
       searchParams: query,
     })
     .json();
@@ -452,7 +452,7 @@ export const updateNotification = async (
   body: UpdateNotificationBody
 ): Promise<any> =>
   ky
-    .put(`https://crumina-api.builders.garden/notifications/${id}`, {
+    .put(`${process.env.EXPO_PUBLIC_BASE_API}/notifications/${id}`, {
       json: body,
     })
     .json();

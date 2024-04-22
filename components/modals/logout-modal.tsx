@@ -8,6 +8,7 @@ import { useUserStore } from "../../store";
 import { useDisconnect } from "wagmi";
 import { usePrivy } from "@privy-io/expo";
 import { router } from "expo-router";
+import { useState } from "react";
 
 export default function LogoutModal({
   visible,
@@ -20,6 +21,23 @@ export default function LogoutModal({
   const setUser = useUserStore((state) => state.setUser);
   const { disconnect } = useDisconnect();
   const { logout } = usePrivy();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      setIsLoggingOut(true);
+      await SecureStore.deleteItemAsync(`token-${user?.address}`);
+      await logout();
+      setUser(undefined);
+      await disconnect();
+      setIsLoggingOut(false);
+      router.replace("/");
+    } catch (error) {
+      console.error("Error logging out", error);
+      setIsLoggingOut(false);
+    }
+  };
+
   return (
     <Portal>
       <Modal visible={visible} onDismiss={hideModal}>
@@ -33,13 +51,8 @@ export default function LogoutModal({
           <AppButton
             text="Confirm logout"
             variant="ghost"
-            onPress={async () => {
-              await SecureStore.deleteItemAsync(`token-${user?.address}`);
-              await logout();
-              setUser(undefined);
-              await disconnect();
-              router.replace("/");
-            }}
+            onPress={handleLogout}
+            disabled={isLoggingOut}
           />
           <Spacer h={16} />
           <AppButton
@@ -48,6 +61,7 @@ export default function LogoutModal({
             onPress={() => {
               hideModal();
             }}
+            disabled={isLoggingOut}
           />
         </View>
       </Modal>

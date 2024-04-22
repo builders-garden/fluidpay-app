@@ -46,7 +46,7 @@ export default function LoginForm({
   const { logout, user } = usePrivy();
   const { address } = usePrivyWagmiProvider();
   const [email, setEmail] = useState<string>("");
-  const [code, setCode] = useState(Array(6).fill(""));
+  const [code, setCode] = useState<`${number | ""}`>("");
   const setUser = useUserStore((state) => state.setUser);
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
@@ -164,7 +164,7 @@ export default function LoginForm({
                 onPress={async () => {
                   console.error("Try again");
                   setEmail("");
-                  setCode(Array(6).fill(""));
+                  setCode("");
                   await logout();
                 }}
                 text="Try again"

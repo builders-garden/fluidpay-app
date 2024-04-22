@@ -14,7 +14,7 @@ export default function EmailInput({
 }: {
   email: string;
   setEmail: (email: string) => void;
-  setCode: (code: string[]) => void;
+  setCode: (code: `${number | ""}`) => void;
   setIsLoading: (isLoading: boolean) => void;
   setLoadingMessage: (message: string) => void;
   setLoginStatus: (status: LoginStatus) => void;
@@ -70,7 +70,7 @@ export default function EmailInput({
           await sendCode({ email: email! });
           setLoadingMessage("");
           setIsLoading(false);
-          setCode(Array(6).fill(""));
+          setCode("");
           setLoginStatus(LoginStatus.SUCCESS_EMAIL);
         }}
         variant={email?.length === 0 ? "disabled" : "primary"}
