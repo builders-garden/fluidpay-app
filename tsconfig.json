@@ -5,7 +5,9 @@
     "lib": ["es2015"],
     "types": ["./app.d.ts"],
     "paths": {
-      "react": ["./node_modules/@types/react"]
-    }
+      "react": ["./node_modules/@types/react"],
+      "@/": ["./"]
+    },
+    "jsx": "react-jsx"
   }
 }
