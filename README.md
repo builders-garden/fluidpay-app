@@ -8,4 +8,4 @@ This repo contains the code for the Fluidpay wallet app.
 - [ ] Make input fields blurrable
 - [ ] Make pasteable
 - [ ] Auth users should only see splashscreen
-- [ ] Make Logout clickable once (to avoid recalling action -> breakage)
+- [x] Make Logout clickable once (to avoid recalling action -> breakage)

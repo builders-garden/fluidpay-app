@@ -85,7 +85,6 @@ export default function CodeInput({
         onChangeText={handleTextChange}
         onBlur={() => setInputFocused(false)}
         maxLength={MAX_CODE_LENGTH}
-        returnKeyType="done"
         keyboardType="number-pad"
         textContentType="oneTimeCode"
         ref={textInputRef}
