@@ -12,4 +12,5 @@ This repo contains the code for the Fluidpay wallet app.
 
 ## TODOs -- FLU-10
 
-- [ ] Change `./google-services.json` to correct file
+- [x] Change `./google-services.json` to correct file
+- [ ] Custom firebase events for each files
