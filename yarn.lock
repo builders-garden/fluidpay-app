@@ -1316,13 +1316,13 @@
     "@biconomy/common" "^4.1.1"
     viem "^2.7.12"
 
-"@buildersgarden/privy-wagmi-provider@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@buildersgarden/privy-wagmi-provider/-/privy-wagmi-provider-0.6.0.tgz#5a33c2ec363b53674f3aa7eeb53016886c8f3d17"
-  integrity sha512-FNZfRvE9UbWC3PapZZL7Zg1MMpdMU8ofnf/eto1R5sM1ZajzU4Wkt00Litoru3Z/j3sKbZ99XSFUrrW6CrT3uQ==
+"@buildersgarden/privy-wagmi-provider@^0.7.0":
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/@buildersgarden/privy-wagmi-provider/-/privy-wagmi-provider-0.7.0.tgz#34281fc22753aabb1bcbd13ec4de61d0e5ac190a"
+  integrity sha512-HiMadaZbnkW9rrehvBtWqz48gGCoeKtJ6ClQowWfzQwAbZRhT2zgd5sF4QM8nTPEDc+nwg9t3ZKgNtDWT2z1ag==
   dependencies:
     "@biconomy/account" "^4.1.1"
-    "@privy-io/expo" "^0.11.1"
+    "@privy-io/expo" "^0.14.0"
     "@tanstack/react-query" "^5.28.6"
     viem "^2.9.8"
     wagmi "^2.5.18"
@@ -3652,39 +3652,32 @@
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
   integrity sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==
 
-"@privy-io/api-base@0.4.6":
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/@privy-io/api-base/-/api-base-0.4.6.tgz#b9bc9e82a7cdfc5598e5d4be508788ab7aaf8656"
-  integrity sha512-vYcx8xwPvdZ5rH/Ywx1rRynR9XpYPOihXj79HpkuovZzGt7c8YD0t9CG1HphlQSHBxZcPfLsB5oZ20kSE6TGsw==
+"@privy-io/api-base@1.0.0", "@privy-io/api-base@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@privy-io/api-base/-/api-base-1.0.0.tgz#b65b125b8893351f2b40ed6c06577da508743824"
+  integrity sha512-FHfYzxP/qRBTOizNkGiGMxgazq1yh88fjQdvAsRjpVrEkaTsU6NAWJOyxIjT2Y5RhdE7+9Z3YXRC6Eh5Qh2wJg==
   dependencies:
     zod "^3.21.4"
 
-"@privy-io/api-base@^0.4.6":
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/@privy-io/api-base/-/api-base-0.4.7.tgz#785564f3dc48375ba5ced71feb95e61730afb46a"
-  integrity sha512-uToMPgUgX5iOFsBLeNvgBgWbKP3T6vuon07Dn81QITClwcJobrvW43n6Dy8fV8VJfyFmb8RGwcnyCSr4F8OQSA==
+"@privy-io/expo@^0.14.0", "@privy-io/expo@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@privy-io/expo/-/expo-0.14.1.tgz#00f2d5947f526759e85dbf799ef2d882ac1eece8"
+  integrity sha512-luc1nUxJrMzvFhHFAncbRDDrNy4zriqC83EKBL1H1PTI5ddyXxQSN6fSDxJiRic4gZig1Do1oRf0qag6H6dLiA==
   dependencies:
-    zod "^3.21.4"
-
-"@privy-io/expo@^0.11.0", "@privy-io/expo@^0.11.1":
-  version "0.11.2"
-  resolved "https://registry.yarnpkg.com/@privy-io/expo/-/expo-0.11.2.tgz#d1dd7e335ae2a6ac19449bc67e5b32872cc7d2e4"
-  integrity sha512-fJqJJ4rwWZyqmqkjPA8LtEAeBGD1EA3g+/pdkjRPDvnejrAfCj4VwrKKxEkG2t2bg2OvTwiLZ1tC6rLOJYbRsA==
-  dependencies:
-    "@privy-io/js-sdk-core" "0.15.3"
+    "@privy-io/js-sdk-core" "0.18.1"
     react-fast-compare "^3.2.2"
 
-"@privy-io/js-sdk-core@0.15.3":
-  version "0.15.3"
-  resolved "https://registry.yarnpkg.com/@privy-io/js-sdk-core/-/js-sdk-core-0.15.3.tgz#ac019defbbf1181e8c1f3fdcff6f35abc5eb864e"
-  integrity sha512-mOSa88T2tahCOVYzQ5sKXbDknE9YBPzeOuNTpyFZ+SdZAWA+cdREziyBn1yRV6HJZu+NTBDszoPr9EGTAnXwdw==
+"@privy-io/js-sdk-core@0.18.1":
+  version "0.18.1"
+  resolved "https://registry.yarnpkg.com/@privy-io/js-sdk-core/-/js-sdk-core-0.18.1.tgz#3c592fcaa84f551fd121ec759b3cd5dbfc9569bc"
+  integrity sha512-wkXqYWeuwumuLz1qrCVgIDT7lPYW0ce+PzTY+SX2u4nhnQLOA5QcmSza/kVVWAI+1IiPW323+yIrqvowJNy2vA==
   dependencies:
     "@ethersproject/abstract-signer" "^5.7.0"
     "@ethersproject/bignumber" "^5.7.0"
     "@ethersproject/providers" "^5.7.2"
     "@ethersproject/units" "^5.7.0"
-    "@privy-io/api-base" "^0.4.6"
-    "@privy-io/public-api" "1.11.2"
+    "@privy-io/api-base" "^1.0.0"
+    "@privy-io/public-api" "2.0.0"
     eventemitter3 "^5.0.1"
     fetch-retry "^5.0.6"
     jose "^4.15.5"
@@ -3692,12 +3685,12 @@
     set-cookie-parser "^2.6.0"
     uuid ">=8 <10"
 
-"@privy-io/public-api@1.11.2":
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/@privy-io/public-api/-/public-api-1.11.2.tgz#d532ec5cdbe2318f51913615e284ea3ee425eb67"
-  integrity sha512-dtapnGCIN56Q1p7h7qwTWU2AkYEv+V3/opFe7YGGs9YdcoRLPvQgOpCNpNVa2bAaNGptO9ofUQj3ia0Mmc+PSw==
+"@privy-io/public-api@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@privy-io/public-api/-/public-api-2.0.0.tgz#eb751ee73bd9f8278c93a287cabb0edba5dfabb0"
+  integrity sha512-07JAKXrzSsdeYXAKZRrxllYQKjnTLKXnmwLO935ZZZuDuS0K4JlM+kdlqz7aXtu/sbKkSH0cVfJxetZA4iRs+g==
   dependencies:
-    "@privy-io/api-base" "0.4.6"
+    "@privy-io/api-base" "1.0.0"
     ethers "^5.7.2"
     libphonenumber-js "^1.10.31"
     zod "^3.22.4"
