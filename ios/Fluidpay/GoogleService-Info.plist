@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyA1nKpoSZioxWKkg6V4OuhaOUS90J3KHBQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>347017464990</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>garden.builders.fluidpay</string>
+	<key>PROJECT_ID</key>
+	<string>fluidpay-b5ae9</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fluidpay-b5ae9.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:347017464990:ios:dad6f6e8b4a3b583ec7f8f</string>
+</dict>
+</plist>

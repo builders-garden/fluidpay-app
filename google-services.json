@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "347017464990",
+    "firebase_url": "https://fluidpay-b5ae9-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "fluidpay-b5ae9",
+    "storage_bucket": "fluidpay-b5ae9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:347017464990:android:fd3a9a4f3dd690c2ec7f8f",
+        "android_client_info": {
+          "package_name": "garden.builders.fluidpay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVtyJTZYfH8Nl9sLBGxxOUMTV95itBd30"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
