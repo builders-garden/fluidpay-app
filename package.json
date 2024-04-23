@@ -21,6 +21,7 @@
     "@react-native-community/netinfo": "^9.4.1",
     "@react-native-firebase/analytics": "^19.2.2",
     "@react-native-firebase/app": "^19.2.2",
+    "@react-native-firebase/crashlytics": "^19.2.2",
     "@react-native-picker/picker": "2.4.10",
     "@react-native-segmented-control/segmented-control": "^2.5.0",
     "@react-navigation/native": "^6.1.17",
