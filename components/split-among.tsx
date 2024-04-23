@@ -98,11 +98,11 @@ export default function SplitAmong({
       </View>
       <View className="rounded-lg flex flex-col space-y-4 bg-[#232324] py-4 px-4 mt-2">
         {members?.map((member: any, index: number) => (
-          <View className="flex flex-row justify-between items-center">
-            <View
-              className="flex flex-row items-center space-x-4"
-              key={"mem-" + index}
-            >
+          <View
+            key={"mem-" + index}
+            className="flex flex-row justify-between items-center"
+          >
+            <View className="flex flex-row items-center space-x-4">
               <Checkbox.Android
                 status={selected[index].selected ? "checked" : "unchecked"}
                 color="#0061FF"

@@ -7,27 +7,37 @@ import AppButton from "../../components/app-button";
 import { createGroup, getUsers } from "../../lib/api";
 import { useGroupsStore, useUserStore } from "../../store";
 import SearchGroupMembers from "../../components/search-group-members";
+import { analytics } from "../../lib/analytics";
 
 export default function CreateGroupPage() {
   const [groupName, setGroupName] = useState("");
+  const [creatingGroup, setCreatingGroup] = useState(false);
   const addGroup = useGroupsStore((state) => state.addGroup);
   const user = useUserStore((state) => state.user);
   const [addedMembers, setAddedMembers] = useState<any[]>([]);
 
   const createNewGroup = async () => {
-    if (groupName.length > 3) {
-      const group = await createGroup(user!.token, {
-        name: groupName,
-        memberIds: [
-          user!.id,
-          ...(addedMembers ? [...addedMembers.map((m) => m.id)] : []),
-        ],
-      });
-      addGroup(group);
-      router.push({
-        pathname: "/app/group",
-        params: { group: JSON.stringify(group) },
-      });
+    try {
+      if (groupName.length > 3) {
+        setCreatingGroup(true);
+        const group = await createGroup(user!.token, {
+          name: groupName,
+          memberIds: [
+            user!.id,
+            ...(addedMembers ? [...addedMembers.map((m) => m.id)] : []),
+          ],
+        });
+        addGroup(group);
+        await analytics("create_group");
+        setCreatingGroup(false);
+        router.push({
+          pathname: "/app/group",
+          params: { group: JSON.stringify(group) },
+        });
+      }
+    } catch (error) {
+      console.error("Error creating group", error);
+      setCreatingGroup(false);
     }
   };
 
@@ -81,6 +91,8 @@ export default function CreateGroupPage() {
             variant={groupName.length > 3 ? "primary" : "disabled"}
             onPress={() => createNewGroup()}
             text="Create group"
+            loading={creatingGroup}
+            disabled={creatingGroup}
           />
         </View>
       </SafeAreaView>

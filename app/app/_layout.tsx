@@ -13,7 +13,7 @@ export default function AppLayout() {
           screen_class: pathname,
         });
       } catch (err: any) {
-        console.error(err);
+        console.error("ANALYTICS_FAILED", err);
       }
     };
     logScreenView();

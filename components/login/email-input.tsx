@@ -3,6 +3,7 @@ import AppButton from "../app-button";
 import { useState } from "react";
 import { useLoginWithEmail } from "@privy-io/expo";
 import { LoginStatus } from "../../app/index";
+import analytics from "@react-native-firebase/analytics";
 
 export default function EmailInput({
   email,
@@ -71,6 +72,7 @@ export default function EmailInput({
           setLoadingMessage("");
           setIsLoading(false);
           setCode("");
+          await analytics().logLogin({ method: "email" });
           setLoginStatus(LoginStatus.SUCCESS_EMAIL);
         }}
         variant={email?.length === 0 ? "disabled" : "primary"}
