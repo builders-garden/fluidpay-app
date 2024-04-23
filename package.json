@@ -71,6 +71,7 @@
     "react-native-mmkv": "^2.8.0",
     "react-native-modal-datetime-picker": "^17.1.0",
     "react-native-paper": "^5.12.1",
+    "react-native-passkeys": "^0.2.2",
     "react-native-picker-select": "^9.0.1",
     "react-native-quick-base64": "^2.0.7",
     "react-native-randombytes": "^3.6.1",
