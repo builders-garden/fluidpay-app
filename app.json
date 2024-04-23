@@ -12,29 +12,28 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "garden.builders.fluidpay",
       "buildNumber": "2",
-      "associatedDomains": [
-        "applinks:fluidpay.xyz"
-      ]
+      "associatedDomains": ["applinks:fluidpay.xyz"],
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "garden.builders.fluidpay"
+      "package": "garden.builders.fluidpay",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router",
+      "@react-native-firebase/app",
       [
         "expo-build-properties",
         {
@@ -44,7 +43,8 @@
             "buildToolsVersion": "31.0.0"
           },
           "ios": {
-            "deploymentTarget": "13.4"
+            "deploymentTarget": "13.4",
+            "useFrameworks": "static"
           }
         }
       ]

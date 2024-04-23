@@ -1,6 +1,24 @@
-import { Stack } from "expo-router";
+import analytics from "@react-native-firebase/analytics";
+import { Stack, usePathname } from "expo-router";
+import { useEffect } from "react";
 
 export default function AppLayout() {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const logScreenView = async () => {
+      try {
+        await analytics().logScreenView({
+          screen_name: pathname,
+          screen_class: pathname,
+        });
+      } catch (err: any) {
+        console.error(err);
+      }
+    };
+    logScreenView();
+  }, [pathname]);
+
   return (
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
