@@ -9,8 +9,3 @@ This repo contains the code for the Fluidpay wallet app.
 - [ ] Make pasteable
 - [ ] Auth users should only see splashscreen
 - [x] Make Logout clickable once (to avoid recalling action -> breakage)
-
-## TODOs -- FLU-10
-
-- [x] Change `./google-services.json` to correct file
-- [ ] Custom firebase events for each files
