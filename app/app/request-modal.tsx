@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import { useUserStore } from "../../store";
@@ -47,9 +47,17 @@ export default function RequestModal() {
         <Text className="text-3xl text-white font-bold">Request via link</Text>
         <View className="flex items-center space-y-2 mt-4">
           <Avatar name={user?.username.charAt(0)} size={64} />
-          <Text className="text-white font-semibold text-lg">
-            {user?.username}
-          </Text>
+          <View className="flex flex-row items-center space-x-2">
+            <Text className="text-white font-semibold text-lg">
+              {user?.username}
+            </Text>
+            <Pressable onPress={() => router.push("/app/qrcode")}>
+              <Image
+                className="h-5 w-5 border "
+                source={require("../../images/icons/qrcode-scan.png")}
+              />
+            </Pressable>
+          </View>
           <Text className="text-gray-400 text-lg">
             Share your link so anyone can pay you
           </Text>
@@ -70,7 +78,7 @@ export default function RequestModal() {
         </View>
         <View className="flex flex-grow" />
         <SafeAreaView className="flex flex-col mb-24">
-          <View>
+          <View className="mb-4">
             <AppButton
               text="Share link"
               variant="primary"
@@ -81,11 +89,11 @@ export default function RequestModal() {
               }}
             />
           </View>
-          {/* <AppButton
+          <AppButton
             text="Request a specific amount"
             variant="ghost"
-            onPress={() => {}}
-          /> */}
+            onPress={() => router.replace("/app/specific-request-modal")}
+          />
         </SafeAreaView>
       </View>
     </SafeAreaView>

@@ -143,7 +143,6 @@ export default function Home() {
                 <CircularButton
                   text="Request"
                   icon="Download"
-                  disabled={true}
                   onPress={() => router.push("/app/request-modal")}
                 />
                 <CircularButton
