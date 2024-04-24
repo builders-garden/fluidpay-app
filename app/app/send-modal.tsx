@@ -23,6 +23,7 @@ import {
 import { useChainStore } from "../../store/use-chain-store";
 import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import { DBTransaction } from "../../store/interfaces";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -46,8 +47,8 @@ export default function SendModal() {
     args: [user!.smartAccountAddress],
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
-  const setTransactions = useTransactionsStore(
-    (state) => state.setTransactions
+  const { transactions, setTransactions } = useTransactionsStore(
+    (state) => state
   );
   const wallet = useEmbeddedWallet();
   const canSend =
@@ -81,11 +82,15 @@ export default function SendModal() {
     router.back();
 
     // Refetch transactions
-    const res = await getPayments(user!.token, {
-      limit: 10,
-      chainId: chain.id,
-    });
-    setTransactions(res as any[]);
+    const paymentInTransaction: DBTransaction = {
+      ...payment,
+      payer: user!,
+      payee: sendUser!,
+      createdAt: new Date().toISOString(),
+      id: Math.random(),
+    };
+    const newTransactions = [paymentInTransaction, ...transactions];
+    setTransactions(newTransactions);
 
     // Refetch balance
     await refetchBalance();
