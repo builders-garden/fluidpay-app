@@ -50,6 +50,15 @@
             "useFrameworks": "static"
           }
         }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Fluidpay to use Face ID.",
+          "ios": {
+            "NSFaceIDUsageDescription": "We use Face ID to secure your account."
+          }
+        }
       ]
     ],
     "extra": {

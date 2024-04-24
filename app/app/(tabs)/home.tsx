@@ -10,7 +10,7 @@ import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
 import { ChevronRight } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getPayments } from "../../../lib/api";
 import {
   useERC20BalanceOf,
@@ -22,11 +22,12 @@ import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import SkeletonLoader from "expo-skeleton-loader";
 
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
   const wallet = useEmbeddedWallet();
-  // const [refreshing, setRefreshing] = React.useState(false);
+  const [fetchingPayments, setFetchingPayments] = useState(false); // TODO: animate UI when fetching payments
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
   const setProfileUserTransactions = useProfileStore(
@@ -68,11 +69,13 @@ export default function Home() {
 
   const fetchPayments = async (chainId: number) => {
     if (!user) return;
+    setFetchingPayments(true);
     const res = await getPayments(user!.token, {
       limit: 10,
       chainId: chainId,
     });
     setTransactions(res as any[]);
+    setFetchingPayments(false);
   };
 
   const getUniquePayees = () => {
@@ -124,7 +127,7 @@ export default function Home() {
                   {chain.name} • USDC
                 </Text>
                 <Text className="text-white font-bold text-center text-5xl">
-                  ${formatBigInt(balance!, 2)}
+                  {isLoadingBalance ? "--.--" : `$${formatBigInt(balance!, 2)}`}
                 </Text>
                 <View>
                   <PillButton
