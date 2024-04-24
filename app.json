@@ -17,7 +17,10 @@
       "supportsTablet": false,
       "bundleIdentifier": "garden.builders.fluidpay",
       "buildNumber": "2",
-      "associatedDomains": ["applinks:fluidpay.xyz"],
+      "associatedDomains": [
+        "applinks:fluidpay.xyz",
+        "webcredentials:fluidpay.xyz"
+      ],
       "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
@@ -43,9 +46,24 @@
             "buildToolsVersion": "31.0.0"
           },
           "ios": {
-            "deploymentTarget": "13.4",
+            "deploymentTarget": "15.0",
             "useFrameworks": "static"
           }
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow Fluidpay to use Face ID.",
+          "ios": {
+            "NSFaceIDUsageDescription": "We use Face ID to secure your account."
+          }
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Fluidpay to access your camera"
         }
       ]
     ],

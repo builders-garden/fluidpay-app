@@ -7772,13 +7772,6 @@ expo-asset@~8.10.1:
     path-browserify "^1.0.0"
     url-parse "^1.5.9"
 
-expo-barcode-scanner@^12.7.0:
-  version "12.9.3"
-  resolved "https://registry.yarnpkg.com/expo-barcode-scanner/-/expo-barcode-scanner-12.9.3.tgz#b6be7975c7a347d5906255b2117eb8ea35dde275"
-  integrity sha512-I3zaKSINRMHbTc7sHIq14ug3fHkCsW4rweJF12yk0kHaympI2wxVgIo2DhzeZaYG1Ylkuj5aiKen3NuwDk1FSA==
-  dependencies:
-    expo-image-loader "~4.6.0"
-
 expo-build-properties@~0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/expo-build-properties/-/expo-build-properties-0.8.3.tgz#fbfa156e9619bebda71c66af9a26ebc3490b2365"
@@ -7786,6 +7779,13 @@ expo-build-properties@~0.8.3:
   dependencies:
     ajv "^8.11.0"
     semver "^7.5.3"
+
+expo-camera@~13.4.4:
+  version "13.4.4"
+  resolved "https://registry.yarnpkg.com/expo-camera/-/expo-camera-13.4.4.tgz#e01ead31a3150398d37e94c307f6937480680690"
+  integrity sha512-7k54APbpSulUDR2CrD5SrmKjCdfdg4tqKRpbBOKc2J2MIBHhunExU77435JDYSejHRY5bfRHZsEp3yKwR862uw==
+  dependencies:
+    invariant "^2.2.4"
 
 expo-clipboard@~4.3.1:
   version "4.3.1"
@@ -7881,11 +7881,6 @@ expo-head@0.0.20:
   dependencies:
     react-helmet-async "^1.3.0"
 
-expo-image-loader@~4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-4.6.0.tgz#ca7d4fdf53125bff2091d3a2c34a3155f10df147"
-  integrity sha512-RHQTDak7/KyhWUxikn2yNzXL7i2cs16cMp6gEAgkHOjVhoCJQoOJ0Ljrt4cKQ3IowxgCuOrAgSUzGkqs7omj8Q==
-
 expo-json-utils@~0.7.0:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/expo-json-utils/-/expo-json-utils-0.7.1.tgz#efe315c982113204be46419cbc26d4d9a2af145f"
@@ -7911,6 +7906,13 @@ expo-linking@~5.0.2:
     invariant "^2.2.4"
     qs "^6.11.0"
     url-parse "^1.5.9"
+
+expo-local-authentication@~13.4.1:
+  version "13.4.1"
+  resolved "https://registry.yarnpkg.com/expo-local-authentication/-/expo-local-authentication-13.4.1.tgz#908516d395530f6895d7980009e4c85cdcff5327"
+  integrity sha512-FWTUkMNo9aDT3cg02SWAcSFjTiDu20izhCn5CGwdtFNCBpPQUD0BJ/czhjrIFE70teMzE5wZUdbJuSKYonUaWA==
+  dependencies:
+    invariant "^2.2.4"
 
 expo-manifests@~0.7.0:
   version "0.7.2"
@@ -7981,6 +7983,11 @@ expo-sharing@~11.5.0:
   version "11.5.0"
   resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-11.5.0.tgz#a8cad65874d882b7f75b12856b4ef55ea9b60a2d"
   integrity sha512-uerM5YH1FKDZXfkP9ORebvlMVOPP/AfoYgYBez6a8G9fztNYHnRCA6mgK+3aQmpnb3ltmjnAZC39kH18bTNcVw==
+
+expo-skeleton-loader@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/expo-skeleton-loader/-/expo-skeleton-loader-1.1.3.tgz#6991fb14d9e93f5be30fda08f66ef9f7916e7f54"
+  integrity sha512-kpu50BuM+sC9dEddlv23KpFoIGJS4E0eZ0GIdzjOOnDDH+AHhJSgG0CZuloNrEd9K2FHKu7b7ztmAHUMnxYGrw==
 
 expo-splash-screen@~0.20.2, expo-splash-screen@~0.20.5:
   version "0.20.5"
@@ -12014,6 +12021,11 @@ react-native-paper@^5.12.1:
     "@callstack/react-theme-provider" "^3.0.9"
     color "^3.1.2"
     use-latest-callback "^0.1.5"
+
+react-native-passkeys@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/react-native-passkeys/-/react-native-passkeys-0.2.2.tgz#b11b3852221b3d913b9b4d5747782452ff29b13d"
+  integrity sha512-NBfEZfDlg6ulqxqOM0TLbcUm+9WdbF/yPQz1HdJAaT4GR4Ku/6Mr+9qhGpkduqxKPTmSlU2+owI85FdpgRC5pA==
 
 react-native-picker-select@^9.0.1:
   version "9.1.3"

@@ -3,20 +3,14 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (5.3.1):
     - ExpoModulesCore
-  - EXBarCodeScanner (12.9.3):
-    - EXImageLoader
+  - EXCamera (13.4.4):
     - ExpoModulesCore
-    - ZXingObjC/OneD
-    - ZXingObjC/PDF417
   - EXConstants (14.4.2):
     - ExpoModulesCore
   - EXFileSystem (15.4.5):
     - ExpoModulesCore
   - EXFont (11.4.0):
     - ExpoModulesCore
-  - EXImageLoader (4.6.0):
-    - ExpoModulesCore
-    - React-Core
   - EXJSONUtils (0.7.1)
   - EXManifests (0.7.2):
     - ExpoModulesCore
@@ -92,6 +86,8 @@ PODS:
   - ExpoKeepAwake (12.3.0):
     - ExpoModulesCore
   - ExpoLinearGradient (12.3.0):
+    - ExpoModulesCore
+  - ExpoLocalAuthentication (13.4.1):
     - ExpoModulesCore
   - ExpoModulesCore (1.5.13):
     - RCT-Folly (= 2021.07.22.00)
@@ -649,6 +645,8 @@ PODS:
     - React-jsi (= 0.72.10)
     - React-logger (= 0.72.10)
     - React-perflogger (= 0.72.10)
+  - ReactNativePasskeys (0.2.2):
+    - ExpoModulesCore
   - RNAWSCognito (6.3.12):
     - React-Core
   - RNCAsyncStorage (1.17.11):
@@ -713,21 +711,15 @@ PODS:
   - ZXingObjC (3.6.9):
     - ZXingObjC/All (= 3.6.9)
   - ZXingObjC/All (3.6.9)
-  - ZXingObjC/Core (3.6.9)
-  - ZXingObjC/OneD (3.6.9):
-    - ZXingObjC/Core
-  - ZXingObjC/PDF417 (3.6.9):
-    - ZXingObjC/Core
 
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - EXApplication (from `../node_modules/expo-application/ios`)
-  - EXBarCodeScanner (from `../node_modules/expo-barcode-scanner/ios`)
+  - EXCamera (from `../node_modules/expo-camera/ios`)
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
-  - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
   - EXNotifications (from `../node_modules/expo-notifications/ios`)
@@ -743,6 +735,7 @@ DEPENDENCIES:
   - ExpoHead (from `../node_modules/expo-head/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
+  - ExpoLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSecureStore (from `../node_modules/expo-secure-store/ios`)
   - ExpoSharing (from `../node_modules/expo-sharing/ios`)
@@ -795,6 +788,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativePasskeys (from `../node_modules/react-native-passkeys/ios`)
   - RNAWSCognito (from `../node_modules/amazon-cognito-identity-js`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
@@ -835,16 +829,14 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EXApplication:
     :path: "../node_modules/expo-application/ios"
-  EXBarCodeScanner:
-    :path: "../node_modules/expo-barcode-scanner/ios"
+  EXCamera:
+    :path: "../node_modules/expo-camera/ios"
   EXConstants:
     :path: "../node_modules/expo-constants/ios"
   EXFileSystem:
     :path: "../node_modules/expo-file-system/ios"
   EXFont:
     :path: "../node_modules/expo-font/ios"
-  EXImageLoader:
-    :path: "../node_modules/expo-image-loader/ios"
   EXJSONUtils:
     :path: "../node_modules/expo-json-utils/ios"
   EXManifests:
@@ -875,6 +867,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoLinearGradient:
     :path: "../node_modules/expo-linear-gradient/ios"
+  ExpoLocalAuthentication:
+    :path: "../node_modules/expo-local-authentication/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoSecureStore:
@@ -975,6 +969,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativePasskeys:
+    :path: "../node_modules/react-native-passkeys/ios"
   RNAWSCognito:
     :path: "../node_modules/amazon-cognito-identity-js"
   RNCAsyncStorage:
@@ -1008,11 +1004,10 @@ SPEC CHECKSUMS:
   boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: 042aa2e3f05258a16962ea1a9914bf288db9c9a1
-  EXBarCodeScanner: d59fd943cebee3f913ebf4ffde0d05d344da8b78
+  EXCamera: 6e6e79bf01a2b8190268d93297d8e79a843d5ede
   EXConstants: ce5bbea779da8031ac818c36bea41b10e14d04e1
   EXFileSystem: f8b838a880254de42a5a7da20ed5ce12e2697c1b
   EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
-  EXImageLoader: 55080616b2fe9da19ef8c7f706afd9814e279b6b
   EXJSONUtils: 6802be4282d42b97c51682468ddc1026a06f8276
   EXManifests: cf66451b11b2c2f6464917528d792759f7fd6ce0
   EXNotifications: 09394cbd7165f9a4a00a53328aa09bf874bae717
@@ -1028,6 +1023,7 @@ SPEC CHECKSUMS:
   ExpoHead: ac95331e2a45cb94f6aee8ba6b8cb3d0a2cc6817
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
   ExpoLinearGradient: 5966dd5d49872cc9c104fedc8bbc298b6049b2e8
+  ExpoLocalAuthentication: bd9d9037a96a11ccc456e327ddb404df02da10ca
   ExpoModulesCore: d2208be53c1b694c9a5898e871315cae77cb11bd
   ExpoSecureStore: 57db3b6da8b59046e2057e95bf7738a8027b47c3
   ExpoSharing: 825b2b3fc919a2656f75def0069f584bbd6e359a
@@ -1091,6 +1087,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 68353a05c25b32d442610ef19af377f2b198f3fe
   React-utils: a715392dfaaa383668566e400f40493093c08d7e
   ReactCommon: a655a8b61cc80c7cabd8db83f69e6f498d4d0894
+  ReactNativePasskeys: 1bcef107f12bf20079243f62333be65a5ca449d6
   RNAWSCognito: fe0c870c7cd9970a2efefc075b3f2d75eac913c7
   RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNCPicker: 0bc2f0a29abcca7b7ed44a2d036aac9ab6d25700

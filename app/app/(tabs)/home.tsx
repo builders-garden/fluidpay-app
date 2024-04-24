@@ -1,5 +1,5 @@
 import { Link, Redirect, useNavigation } from "expo-router";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, ViewStyle } from "react-native";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
@@ -10,7 +10,7 @@ import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
 import { ChevronRight } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getPayments } from "../../../lib/api";
 import {
   useERC20BalanceOf,
@@ -22,11 +22,12 @@ import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import SkeletonLoader from "expo-skeleton-loader";
 
 export default function Home() {
   const { address, isConnected, isReady } = usePrivyWagmiProvider();
   const wallet = useEmbeddedWallet();
-  // const [refreshing, setRefreshing] = React.useState(false);
+  const [fetchingPayments, setFetchingPayments] = useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
   const setProfileUserTransactions = useProfileStore(
@@ -68,11 +69,13 @@ export default function Home() {
 
   const fetchPayments = async (chainId: number) => {
     if (!user) return;
+    setFetchingPayments(true);
     const res = await getPayments(user!.token, {
       limit: 10,
       chainId: chainId,
     });
     setTransactions(res as any[]);
+    setFetchingPayments(false);
   };
 
   const getUniquePayees = () => {
@@ -124,7 +127,7 @@ export default function Home() {
                   {chain.name} • USDC
                 </Text>
                 <Text className="text-white font-bold text-center text-5xl">
-                  ${formatBigInt(balance!, 2)}
+                  {isLoadingBalance ? "--.--" : `$${formatBigInt(balance!, 2)}`}
                 </Text>
                 <View>
                   <PillButton
@@ -157,7 +160,17 @@ export default function Home() {
                 />*/}
               </View>
             </View>
-            {transactions.length > 0 && (
+            {fetchingPayments && (
+              <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
+                {Array(3)
+                  .fill(null)
+                  .map((_, i) => (
+                    <TransactionLayout key={i} />
+                  ))}
+              </View>
+            )}
+
+            {!fetchingPayments && transactions.length > 0 && (
               <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
                 {transactions.slice(0, 3).map((payment, index) => (
                   <TransactionItem
@@ -182,7 +195,7 @@ export default function Home() {
               </View>
             )}
 
-            {transactions.length === 0 && (
+            {!fetchingPayments && transactions.length === 0 && (
               <AppButton
                 text="Make your first payment!"
                 variant="secondary"
@@ -230,3 +243,38 @@ export default function Home() {
     </LinearGradient>
   );
 }
+
+const TransactionLayout = ({
+  size = 48,
+  style,
+}: {
+  size?: number;
+  style?: ViewStyle;
+}) => (
+  <SkeletonLoader duration={850}>
+    <SkeletonLoader.Container
+      style={[{ flex: 1, flexDirection: "row", alignItems: "center" }, style]}
+    >
+      <SkeletonLoader.Container
+        style={[{ flex: 1, flexDirection: "row", alignItems: "center" }, style]}
+      >
+        <SkeletonLoader.Item
+          style={{
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            marginRight: 16,
+          }}
+        />
+        <SkeletonLoader.Container style={{ paddingVertical: 10 }}>
+          <SkeletonLoader.Item
+            style={{ width: 100, height: 20, marginBottom: 5 }}
+          />
+          <SkeletonLoader.Item style={{ width: 110, height: 20 }} />
+        </SkeletonLoader.Container>
+      </SkeletonLoader.Container>
+
+      <SkeletonLoader.Item style={{ width: 70, height: 20 }} />
+    </SkeletonLoader.Container>
+  </SkeletonLoader>
+);

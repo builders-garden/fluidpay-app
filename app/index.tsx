@@ -2,14 +2,17 @@ import { Image, SafeAreaView, Text, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
 import { usePrivy } from "@privy-io/expo";
+import * as LocalAuthentication from "expo-local-authentication";
+
 import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { DBUser } from "../store/interfaces";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
-import { getMe, getPayments, getGroups } from "../lib/api";
+import { getMe, UsersMeResponse } from "../lib/api";
 import { useChainStore } from "../store/use-chain-store";
+import AppButton from "../components/app-button";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -22,7 +25,8 @@ export enum LoginStatus {
 const Home = () => {
   const { isReady, user, getAccessToken } = usePrivy();
   const { address } = usePrivyWagmiProvider();
-  const setUser = useUserStore((state) => state.setUser);
+
+  const { user: storedUser, setUser } = useUserStore((state) => state);
   const setTransactions = useTransactionsStore(
     (state) => state.setTransactions
   );
@@ -35,6 +39,17 @@ const Home = () => {
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(
     LoginStatus.INITIAL
   );
+  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+  const [isProfileReady, setIsProfileReady] = useState(false);
+  const [skipBiometrics, setSkipBiometrics] = useState(false);
+
+  // Check if hardware supports biometrics
+  useEffect(() => {
+    (async () => {
+      const compatible = await LocalAuthentication.hasHardwareAsync();
+      setIsBiometricSupported(compatible);
+    })();
+  }, []);
 
   useEffect(() => {
     if (address && user) {
@@ -51,6 +66,9 @@ const Home = () => {
       .then((token) => {
         if (token) {
           fetchUserData(token);
+        } else {
+          setIsProfileReady(true);
+          setSkipBiometrics(true);
         }
       })
       .catch((e) => {
@@ -58,15 +76,37 @@ const Home = () => {
       });
   }, []);
 
+  const authorise = async (
+    userData: UsersMeResponse,
+    skipBiometrics: boolean = false
+  ) => {
+    try {
+      if (!skipBiometrics) {
+        const auth = await LocalAuthentication.authenticateAsync({
+          promptMessage: "Login to FluidPay",
+          fallbackLabel: "Enter Password",
+        });
+
+        if (!auth.success) {
+          throw new Error(auth.error);
+        }
+      }
+
+      if (!userData.username) {
+        router.push("/onboarding");
+      } else {
+        router.push("/app/home");
+      }
+    } catch (error) {
+      console.log("Authentication failed", error);
+    }
+  };
+
   const fetchUserData = async (token: string) => {
-    const [userData, payments, groups] = await Promise.all([
-      getMe(token),
-      getPayments(token, { limit: 10, chainId: chain.id }),
-      getGroups(token),
-    ]);
+    const userData = await getMe(token);
     setUser({ ...userData, token } as DBUser);
-    setTransactions(payments as any[]);
-    setGroups(groups);
+    setIsProfileReady(true);
+
     return userData;
   };
 
@@ -74,13 +114,17 @@ const Home = () => {
     const token = await SecureStore.getItemAsync(`token-${address}`);
     if (token) {
       const userData = await fetchUserData(token);
-      if (!userData.username) {
-        router.push("/onboarding");
-      } else {
-        router.push("/app/home");
-      }
+      await authorise(userData, skipBiometrics);
     }
   };
+
+  if (!isReady || !isProfileReady) {
+    return (
+      <SafeAreaView className="flex flex-1 justify-center items-center">
+        <ActivityIndicator animating={true} color={"#0061FF"} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
@@ -97,7 +141,8 @@ const Home = () => {
           </Text>
         </View>
       </View>
-      {isLoading && (
+
+      {isLoading && skipBiometrics && (
         <View className="flex flex-col space-y-8">
           <ActivityIndicator animating={true} color={"#0061FF"} />
           <Text className="text-blue-600 font-medium text-lg text-center ">
@@ -105,7 +150,17 @@ const Home = () => {
           </Text>
         </View>
       )}
-      {isReady && (
+
+      {isReady && user && !skipBiometrics && (
+        <View className="w-full">
+          <AppButton
+            onPress={() => authorise(storedUser as UsersMeResponse)}
+            text="Unlock"
+          />
+        </View>
+      )}
+
+      {isReady && !user && (
         <LoginForm
           setIsLoading={setIsLoading}
           setLoadingMessage={setLoadingMessage}
