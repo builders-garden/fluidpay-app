@@ -29,7 +29,7 @@ export default function LogoutModal({
       await SecureStore.deleteItemAsync(`token-${user?.address}`);
       await logout();
       setUser(undefined);
-      await disconnect();
+      disconnect();
       setIsLoggingOut(false);
       router.replace("/");
     } catch (error) {

@@ -2,14 +2,18 @@ import { KeyboardAvoidingView, View } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, Appbar } from "react-native-paper";
 import { Text } from "react-native";
-import { useUserStore } from "../../store";
+import { useTransactionsStore, useUserStore } from "../../store";
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
 import Avatar from "../../components/avatar";
 import { ArrowLeft } from "lucide-react-native";
-import { createPayment, getUserByIdUsernameOrAddress } from "../../lib/api";
+import {
+  createPayment,
+  getPayments,
+  getUserByIdUsernameOrAddress,
+} from "../../lib/api";
 import tokens from "../../constants/tokens";
 import { formatBigInt, shortenAddress } from "../../lib/utils";
 import {
@@ -19,6 +23,7 @@ import {
 import { useChainStore } from "../../store/use-chain-store";
 import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
 import { useEmbeddedWallet } from "@privy-io/expo";
+import { DBTransaction } from "../../store/interfaces";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -33,11 +38,18 @@ export default function SendModal() {
   const [amount, setAmount] = useState(Number(paramsAmount) as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
   const { address } = usePrivyWagmiProvider();
-  const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
+  const {
+    balance,
+    isLoading: isLoadingBalance,
+    refetch: refetchBalance,
+  } = useERC20BalanceOf({
     network: chain.id,
     args: [user!.smartAccountAddress],
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
+  const { transactions, setTransactions } = useTransactionsStore(
+    (state) => state
+  );
   const wallet = useEmbeddedWallet();
   const canSend =
     Number(amount) <= Number(balance) && Number(amount) > 0 && sendUserAddress;
@@ -68,6 +80,20 @@ export default function SendModal() {
     setIsLoadingTransfer(false);
 
     router.back();
+
+    // Refetch transactions
+    const paymentInTransaction: DBTransaction = {
+      ...payment,
+      payer: user!,
+      payee: sendUser!,
+      createdAt: new Date().toISOString(),
+      id: Math.random(),
+    };
+    const newTransactions = [paymentInTransaction, ...transactions];
+    setTransactions(newTransactions);
+
+    // Refetch balance
+    await refetchBalance();
   };
 
   useEffect(() => {

@@ -1,12 +1,11 @@
 import { Linking, Text, View } from "react-native";
 import { router } from "expo-router";
 import { Appbar } from "react-native-paper";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useRef, useState } from "react";
 import { SegmentSlider } from "../../components/segment-slider";
 import { Scanner } from "../../components/scanner";
 import QRCode from "../../components/qrcode";
-import { BarCodeScannedCallback } from "expo-barcode-scanner";
+import { CameraProps } from "expo-camera";
 import { useUserStore } from "../../store/use-user-store";
 import Avatar from "../../components/avatar";
 import { ArrowLeft } from "lucide-react-native";
@@ -71,10 +70,12 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
 function QRScan() {
   const [handled, setHandled] = useState(false);
 
-  const handleBarCodeScanned: BarCodeScannedCallback = async ({ data }) => {
+  const handleBarCodeScanned: CameraProps["onBarCodeScanned"] = async ({
+    data: link,
+  }) => {
     if (handled) return;
 
-    Linking.openURL("https://google.com");
+    Linking.openURL(link);
   };
 
   return <Scanner handleBarCodeScanned={handleBarCodeScanned} />;
