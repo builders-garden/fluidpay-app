@@ -8,6 +8,17 @@ const config = getDefaultConfig(__dirname);
 config.resolver.extraNodeModules = extraNodeModules;
 config.resolver.sourceExts.push("cjs");
 
+// Enable package exports
+config.resolver.unstable_enablePackageExports = true;
+
+// Configure package exports
+config.resolver.unstable_conditionNames = ["browser", "require", "import"];
+config.resolver.unstable_conditionsByPlatform = {
+  ios: ["react-native", "browser", "main"],
+  android: ["react-native", "browser", "main"],
+  web: ["browser"],
+};
+
 config.transformer.getTransformOptions = async () => ({
   transform: {
     experimentalImportSupport: false,

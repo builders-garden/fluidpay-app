@@ -2,24 +2,34 @@ import { Redirect, router, useNavigation } from "expo-router";
 import { useGroupsStore, useUserStore } from "../../../store";
 import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, View, Pressable, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  Pressable,
+  TouchableOpacity,
+  ViewStyle,
+} from "react-native";
+import SkeletonLoader from "expo-skeleton-loader";
 import AppButton from "../../../components/app-button";
 import { ScrollView } from "react-native-gesture-handler";
 import Avatar from "../../../components/avatar";
 import { PlusIcon } from "lucide-react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getGroups } from "../../../lib/api";
 
 export default function Pocket() {
   const user = useUserStore((state) => state.user);
   const groups = useGroupsStore((state) => state.groups);
   const setGroups = useGroupsStore((state) => state.setGroups);
+  const [fetchingGroups, setFetchingGroups] = useState(true);
 
   const navigation = useNavigation();
 
   useEffect(() => {
     const refresh = async () => {
+      setFetchingGroups(true);
       await Promise.all([fetchGroups()]);
+      setFetchingGroups(false);
     };
 
     navigation.addListener("focus", refresh);
@@ -38,7 +48,7 @@ export default function Pocket() {
     return <Redirect href={"/"} />;
   }
 
-  if (groups.length === 0) {
+  if (groups.length === 0 && !fetchingGroups) {
     return (
       <LinearGradient
         colors={["#3500B7", "#000000"]}
@@ -78,37 +88,85 @@ export default function Pocket() {
         </TouchableOpacity>
       </View>
       <ScrollView>
-        {groups.map((group, index) => (
-          <Pressable
-            key={`group-${index}`}
-            onPress={() => {
-              router.push({
-                pathname: "/app/group",
-                params: { group: JSON.stringify(group) },
-              });
-            }}
-          >
-            <View className="bg-[#232324] rounded-xl mb-4 flex flex-col space-y-4 p-4">
-              <Text className="text-white font-semibold text-2xl">
-                {group.name}
-              </Text>
-              <View className="flex flex-row">
-                {group.members.map((member: any, index: number) => (
-                  <View
-                    className={index === 0 ? "" : "-ml-6"}
-                    key={`member-${index}-${group.name}`}
-                  >
-                    <Avatar
-                      name={member.user.username.charAt(0).toUpperCase()}
-                      // color="#FFFFFF"
-                    />
-                  </View>
-                ))}
+        {!groups.length &&
+          fetchingGroups &&
+          Array(4)
+            .fill(null)
+            .map((_, index) => (
+              <View
+                key={index}
+                className="bg-[#232324] rounded-xl mb-4 flex flex-col space-y-4 p-4"
+              >
+                <TransactionLayout />
               </View>
-            </View>
-          </Pressable>
-        ))}
+            ))}
+
+        {!!groups &&
+          groups.map((group, index) => (
+            <Pressable
+              key={`group-${index}`}
+              onPress={() => {
+                router.push({
+                  pathname: "/app/group",
+                  params: { group: JSON.stringify(group) },
+                });
+              }}
+            >
+              <View className="bg-[#232324] rounded-xl mb-4 flex flex-col space-y-4 p-4">
+                <Text className="text-white font-semibold text-2xl">
+                  {group.name}
+                </Text>
+                <View className="flex flex-row">
+                  {group.members.map((member: any, index: number) => (
+                    <View
+                      className={index === 0 ? "" : "-ml-6"}
+                      key={`member-${index}-${group.name}`}
+                    >
+                      <Avatar
+                        name={member.user.username.charAt(0).toUpperCase()}
+                        // color="#FFFFFF"
+                      />
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </Pressable>
+          ))}
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const TransactionLayout = ({
+  size = 48,
+  style,
+}: {
+  size?: number;
+  style?: ViewStyle;
+}) => (
+  <SkeletonLoader duration={850}>
+    <SkeletonLoader.Container style={[{ flex: 1 }, style]}>
+      <SkeletonLoader.Item style={{ width: 110, height: 30 }} />
+
+      <SkeletonLoader.Container
+        style={{ paddingVertical: 10, flexDirection: "row" }}
+      >
+        <SkeletonLoader.Item
+          style={{
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+          }}
+        />
+        <SkeletonLoader.Item
+          style={{
+            width: size,
+            height: size,
+            borderRadius: size / 2,
+            marginLeft: -24,
+          }}
+        />
+      </SkeletonLoader.Container>
+    </SkeletonLoader.Container>
+  </SkeletonLoader>
+);
