@@ -18,7 +18,7 @@ export default function AppButton({
     <ActivityIndicator size="small" color="#FFF" />
   ) : (
     <Text
-      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-gray-500" : variant === "disabled" ? "text-gray-300" : "text-black"}`}
+      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-[#0061FF]" : variant === "disabled" ? "text-gray-300" : "text-black"}`}
     >
       {text}
     </Text>
