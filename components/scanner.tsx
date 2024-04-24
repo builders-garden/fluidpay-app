@@ -1,50 +1,50 @@
-import { BarCodeScannedCallback, BarCodeScanner } from "expo-barcode-scanner";
-import { ReactNode, useEffect, useState } from "react";
+import { Camera, CameraProps } from "expo-camera";
 import { Platform, StyleSheet, View, ViewStyle, Text } from "react-native";
+import AppButton from "./app-button";
 
 /** Scans a QR code. */
 export function Scanner({
   handleBarCodeScanned,
 }: {
-  handleBarCodeScanned: BarCodeScannedCallback;
+  handleBarCodeScanned: CameraProps["onBarCodeScanned"];
 }) {
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
 
-  useEffect(() => {
-    BarCodeScanner?.requestPermissionsAsync()
-      .then(({ status }) => setHasPermission(status === "granted"))
-      .catch((e) => console.error(e));
-  }, []);
-
-  let body: ReactNode;
-  if (hasPermission === null) {
-    body = (
+  if (!permission) {
+    // Camera permissions are still loading
+    return (
       <View className="text-center">
         <Text>Requesting camera access</Text>
       </View>
     );
-  } else if (hasPermission === false) {
-    body = (
-      <View className="text-center">
-        <Text>Allow camera access in Settings</Text>
-      </View>
-    );
-  } else {
-    body = (
-      <View style={styles.cameraBox}>
-        <BarCodeScanner
-          onBarCodeScanned={handleBarCodeScanned}
-          style={Platform.select<ViewStyle>({
-            ios: StyleSheet.absoluteFillObject,
-            android: styles.cameraAndroid,
-          })}
-          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
-        />
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet
+    return (
+      <View className="flex-1 justify-center">
+        <Text className="text-center">
+          Please grant permission to use your camera.
+        </Text>
+        <AppButton onPress={requestPermission} text="grant permission" />
       </View>
     );
   }
 
-  return body;
+  return (
+    <View style={styles.cameraBox}>
+      <Camera
+        onBarCodeScanned={handleBarCodeScanned}
+        style={Platform.select<ViewStyle>({
+          ios: StyleSheet.absoluteFillObject,
+          android: styles.cameraAndroid,
+        })}
+        barCodeScannerSettings={{
+          barCodeTypes: ["qr"],
+        }}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

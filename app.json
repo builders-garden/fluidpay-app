@@ -59,6 +59,12 @@
             "NSFaceIDUsageDescription": "We use Face ID to secure your account."
           }
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Fluidpay to access your camera"
+        }
       ]
     ],
     "extra": {
