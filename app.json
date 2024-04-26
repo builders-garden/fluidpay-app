@@ -12,7 +12,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "garden.builders.fluidpay",
@@ -65,7 +67,8 @@
         {
           "cameraPermission": "Allow Fluidpay to access your camera"
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "extra": {
       "router": {
