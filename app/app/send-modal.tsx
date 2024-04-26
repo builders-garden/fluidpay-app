@@ -78,7 +78,7 @@ export default function SendModal() {
       payeeId: sendUser!.id,
       chainId: chain.id,
       amount: amount,
-      description: "",
+      description: note,
       txHash,
     };
     await createPayment(user!.token, payment);
