@@ -47,7 +47,7 @@ export default function AppLayout() {
       />
       <Stack.Screen
         name="send-modal"
-        options={{ presentation: "modal", headerShown: false }}
+        options={{ presentation: "fullScreenModal", headerShown: false }}
       />
       <Stack.Screen
         name="tx-detail-modal"

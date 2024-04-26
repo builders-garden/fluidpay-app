@@ -1,9 +1,9 @@
-import { KeyboardAvoidingView, View } from "react-native";
+import { Image, KeyboardAvoidingView, TextInput, View } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, Appbar } from "react-native-paper";
-import { Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { useTransactionsStore, useUserStore } from "../../store";
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
@@ -15,7 +15,7 @@ import {
   getUserByIdUsernameOrAddress,
 } from "../../lib/api";
 import tokens from "../../constants/tokens";
-import { formatBigInt, shortenAddress } from "../../lib/utils";
+import { formatBigInt } from "../../lib/utils";
 import {
   useERC20BalanceOf,
   usePrivyWagmiProvider,
@@ -24,6 +24,7 @@ import { useChainStore } from "../../store/use-chain-store";
 import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
 import { useEmbeddedWallet } from "@privy-io/expo";
 import { DBTransaction } from "../../store/interfaces";
+import { base } from "viem/chains";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -37,6 +38,7 @@ export default function SendModal() {
   );
   const [amount, setAmount] = useState(Number(paramsAmount) as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
+  const [note, setNote] = useState("");
   const { address } = usePrivyWagmiProvider();
   const {
     balance,
@@ -51,6 +53,9 @@ export default function SendModal() {
     (state) => state
   );
   const wallet = useEmbeddedWallet();
+
+  const noteRef = useRef<TextInput>(null);
+
   const canSend =
     Number(amount) <= Number(balance) && Number(amount) > 0 && sendUserAddress;
   const sendTokens = async () => {
@@ -97,7 +102,6 @@ export default function SendModal() {
   };
 
   useEffect(() => {
-    console.log("sendUserAddress", sendUserAddress);
     if (!sendUserAddress) {
       getUserByIdUsernameOrAddress(user?.token!, {
         idOrUsernameOrAddress: sendUser?.username,
@@ -118,7 +122,7 @@ export default function SendModal() {
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
-        statusBarHeight={0}
+        statusBarHeight={48}
         className="bg-[#161618] text-white"
       >
         <Appbar.Action
@@ -128,41 +132,88 @@ export default function SendModal() {
           }}
           color="#fff"
           size={20}
+          animated={false}
         />
         <Appbar.Content
-          title=""
+          title={
+            (
+              <View className="items-center">
+                <Text className="font-semibold text-xl text-white leading-6">
+                  {sendUser.displayName}
+                </Text>
+                <Text className="text-mutedGrey text-base leading-5">
+                  @{sendUser?.username}
+                </Text>
+              </View>
+            ) as ReactNode & string
+          }
           color="#fff"
           titleStyle={{ fontWeight: "bold" }}
         />
+        <Appbar.Action
+          icon={() => (
+            <Avatar
+              name={sendUser?.username.charAt(0).toUpperCase()}
+              size={37.5}
+            />
+          )}
+          onPress={() => {}}
+          color="#fff"
+          size={37.5}
+          animated={false}
+        />
       </Appbar.Header>
       <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
-        <View className="flex flex-col items-center mt-4 space-y-2">
-          <Avatar name={sendUser?.username.charAt(0).toUpperCase()} size={72} />
-          <Text className="text-white text-3xl text-center font-semibold">
-            @{sendUser?.username}
-          </Text>
-          {sendUserAddress ? (
-            <Text className="text-[#8F8F91] text-lg text-ellipsis">
-              {shortenAddress(sendUserAddress!)}
-            </Text>
-          ) : (
-            <ActivityIndicator animating={true} color={"#8F8F91"} />
-          )}
-
+        <View className="flex flex-col items-center mt-8 space-y-2">
           <AmountChooser
             dollars={amount}
             onSetDollars={setAmount}
             showAmountAvailable
             autoFocus={paramsAmount ? false : true}
             lagAutoFocus={false}
+            mt={false}
           />
-          {isLoadingBalance ? (
-            <ActivityIndicator animating={true} color={"#667DFF"} />
-          ) : (
-            <Text className="text-[#8F8F91] font-semibold">
-              ${formatBigInt(balance!, 2)} available
+          <Text className="mt-4 mb-3.5 text-mutedGrey text-base">No fees</Text>
+
+          <View className="flex-row p-2.5 space-x-2.5 rounded-[20px] bg-white/20 items-center">
+            <Image
+              className="h-6 w-6 rounded-full"
+              source={
+                chain === base
+                  ? require("../../images/base.png")
+                  : require("../../images/sepolia.png")
+              }
+            />
+            {isLoadingBalance ? (
+              <ActivityIndicator animating={true} color={"#667DFF"} />
+            ) : (
+              <Text className="text-white leading-4 font-semibold">
+                {chain === base ? "Base" : "Sepolia"} • $
+                {formatBigInt(balance!, 2)}
+              </Text>
+            )}
+          </View>
+        </View>
+        <View className="mt-auto px-4 relative">
+          <Pressable
+            onPress={() => noteRef.current?.focus()}
+            className={`relative z-[1] left-5 transition-all duration-300 ease-in-out ${note ? "top-[30%]" : "top-[50%]"}`}
+          >
+            <Text
+              className={`text-mutedGrey ${note ? "text-xs" : "text-base"}`}
+            >
+              Add note
             </Text>
-          )}
+          </Pressable>
+          <TextInput
+            className={`flex-grow text-base h-[62px] bg-greyInput rounded-2xl p-2.5 pl-5 text-white tabular-nums ${note ? "leading-[30px]" : "leading-5"}`}
+            selectTextOnFocus={false}
+            placeholderTextColor={"#8F8F91"}
+            numberOfLines={1}
+            ref={noteRef}
+            value={note}
+            onChangeText={setNote}
+          />
         </View>
         <SafeAreaView className="mt-auto">
           {isLoadingBalance || isLoadingTransfer ? (
@@ -184,13 +235,6 @@ export default function SendModal() {
                   variant={canSend ? "primary" : "disabled"}
                 />
               </View>
-              <AppButton
-                text="Cancel"
-                onPress={() => {
-                  router.back();
-                }}
-                variant="ghost"
-              />
             </View>
           )}
         </SafeAreaView>

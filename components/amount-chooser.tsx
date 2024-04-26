@@ -24,6 +24,7 @@ export function AmountChooser({
   disabled,
   innerRef,
   onFocus,
+  mt = true,
 }: {
   dollars: number;
   onSetDollars: (dollars: number) => void;
@@ -33,9 +34,10 @@ export function AmountChooser({
   disabled?: boolean;
   innerRef?: React.RefObject<TextInput>;
   onFocus?: () => void;
+  mt?: boolean;
 }) {
   return (
-    <View className="px-16 mt-16">
+    <View className={`px-16 ${mt ? "mt-16" : ""}`}>
       <AmountInput
         dollars={dollars}
         onChange={onSetDollars}
@@ -147,12 +149,14 @@ function AmountInput({
 
   return (
     <TouchableWithoutFeedback onPress={focus}>
-      <View className="flex flex-row space-x-2 items-center">
-        <Text className="text-5xl font-semibold text-right text-white pb-1">
+      <View className="flex flex-row items-center">
+        <Text
+          className={`text-4xl font-semibold text-right text-white leading-[43px] -mb-1.5`}
+        >
           $
         </Text>
         <TextInput
-          className="flex-grow text-5xl h-16 font-semibold text-white tabular-nums"
+          className="flex-grow text-5xl h-16 font-semibold text-white tabular-nums leading-[58px]"
           keyboardType="numeric"
           placeholder="0"
           placeholderTextColor={"#374151"}
