@@ -2,18 +2,14 @@ import { Image, KeyboardAvoidingView, TextInput, View } from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, Appbar } from "react-native-paper";
 import { Pressable, Text } from "react-native";
-import { useTransactionsStore, useUserStore } from "../../store";
+import { useUserStore } from "../../store";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
 import Avatar from "../../components/avatar";
 import { ArrowLeft, CircleX } from "lucide-react-native";
-import {
-  createPayment,
-  getPayments,
-  getUserByIdUsernameOrAddress,
-} from "../../lib/api";
+import { getUserByIdUsernameOrAddress } from "../../lib/api";
 import tokens from "../../constants/tokens";
 import { formatBigInt } from "../../lib/utils";
 import {
@@ -21,10 +17,9 @@ import {
   usePrivyWagmiProvider,
 } from "@buildersgarden/privy-wagmi-provider";
 import { useChainStore } from "../../store/use-chain-store";
-import { getPimlicoSmartAccountClient, transferUSDC } from "../../lib/pimlico";
-import { useEmbeddedWallet } from "@privy-io/expo";
-import { DBTransaction } from "../../store/interfaces";
 import { base } from "viem/chains";
+import SendConfirmation from "../../components/transaction/send-confirmation";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -39,6 +34,12 @@ export default function SendModal() {
   const [amount, setAmount] = useState(Number(paramsAmount) as number);
   const [isLoadingTransfer, setIsLoadingTransfer] = useState(false);
   const [note, setNote] = useState("");
+  const [showConfirmSheet, setShowConfirmSheet] = useState(false);
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const closeConfirmSheet = () => setShowConfirmSheet(false);
+  const openConfirmSheet = () => setShowConfirmSheet(true);
+
   const { address } = usePrivyWagmiProvider();
   const {
     balance,
@@ -49,57 +50,13 @@ export default function SendModal() {
     args: [user!.smartAccountAddress],
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
-  const { transactions, setTransactions } = useTransactionsStore(
-    (state) => state
-  );
-  const wallet = useEmbeddedWallet();
 
   const noteRef = useRef<TextInput>(null);
 
   const canSend =
-    Number(amount) <= Number(balance) && Number(amount) > 0 && sendUserAddress;
-  const sendTokens = async () => {
-    if (!amount || amount < 0) return;
-    setIsLoadingTransfer(true);
-    const smartAccountClient = await getPimlicoSmartAccountClient(
-      address as `0x${string}`,
-      chain,
-      wallet
-    );
-    const txHash = await transferUSDC(
-      smartAccountClient,
-      amount,
-      chain,
-      sendUser!.smartAccountAddress
-    );
-
-    const payment = {
-      payerId: user!.id,
-      payeeId: sendUser!.id,
-      chainId: chain.id,
-      amount: amount,
-      description: note,
-      txHash,
-    };
-    await createPayment(user!.token, payment);
-    setIsLoadingTransfer(false);
-
-    router.back();
-
-    // Refetch transactions
-    const paymentInTransaction: DBTransaction = {
-      ...payment,
-      payer: user!,
-      payee: sendUser!,
-      createdAt: new Date().toISOString(),
-      id: Math.random(),
-    };
-    const newTransactions = [paymentInTransaction, ...transactions];
-    setTransactions(newTransactions);
-
-    // Refetch balance
-    await refetchBalance();
-  };
+    Number(amount) <= Number(formatBigInt(balance ?? BigInt(0))) &&
+    Number(amount) > 0 &&
+    sendUserAddress;
 
   useEffect(() => {
     if (!sendUserAddress) {
@@ -233,17 +190,33 @@ export default function SendModal() {
             </View>
           ) : (
             <View className="flex flex-col px-4">
-              <View className="mb-4">
-                <AppButton
-                  disabled={!canSend}
-                  text={"Send"}
-                  onPress={() => sendTokens()}
-                  variant={canSend ? "primary" : "disabled"}
-                />
-              </View>
+              <AppButton
+                disabled={!canSend}
+                text={"Send"}
+                onPress={() => openConfirmSheet()}
+                variant={canSend ? "primary" : "disabled"}
+              />
             </View>
           )}
         </SafeAreaView>
+
+        {showConfirmSheet && (
+          <SendConfirmation
+            sendUser={sendUser}
+            amount={amount}
+            address={address}
+            chain={chain}
+            note={note}
+            user={user}
+            isLoadingBalance={isLoadingBalance}
+            isLoadingTransfer={isLoadingTransfer}
+            setIsLoadingTransfer={setIsLoadingTransfer}
+            refetchBalance={refetchBalance}
+            cancelTransaction={() => closeConfirmSheet()}
+            bottomSheetRef={bottomSheetRef}
+            balance={balance}
+          />
+        )}
       </KeyboardAvoidingView>
     </View>
   );
