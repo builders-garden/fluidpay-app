@@ -8,7 +8,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
 import Avatar from "../../components/avatar";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, CircleX } from "lucide-react-native";
 import {
   createPayment,
   getPayments,
@@ -214,6 +214,12 @@ export default function SendModal() {
             value={note}
             onChangeText={setNote}
           />
+          <Pressable
+            onPress={() => setNote("")}
+            className="absolute right-7 top-[50%]"
+          >
+            <CircleX color="#8F8F91" />
+          </Pressable>
         </View>
         <SafeAreaView className="mt-auto">
           {isLoadingBalance || isLoadingTransfer ? (
