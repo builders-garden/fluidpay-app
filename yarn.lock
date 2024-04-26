@@ -4747,10 +4747,10 @@
     "@types/prop-types" "*"
     csstype "^3.0.2"
 
-"@types/react@~18.0.14":
-  version "18.0.38"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.38.tgz#02a23bef8848b360a0d1dceef4432c15c21c600c"
-  integrity sha512-ExsidLLSzYj4cvaQjGnQCk4HFfVT9+EZ9XZsQ8Hsrcn8QNgXtpZ3m9vSIC2MWtx7jHictK6wYhQgGh6ic58oOw==
+"@types/react@18.2.0":
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.2.0.tgz#15cda145354accfc09a18d2f2305f9fc099ada21"
+  integrity sha512-0FLj93y5USLHdnhIhABk83rm8XEGA7kH3cr+YUlvxoUGp1xNt/DINUMvqPxLyOQMzLmZe8i4RTHbvb8MC7NmrA==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -10009,10 +10009,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-lucide-react-native@^0.330.0:
-  version "0.330.0"
-  resolved "https://registry.yarnpkg.com/lucide-react-native/-/lucide-react-native-0.330.0.tgz#d76d46ab452e6926d71ff6d7655ff8f43a88728e"
-  integrity sha512-XHeCNGLIHNbk4oRTPZht8NxzUB+f9TLt2d4jWgawLmcwVae4nJiqOn3GJNpYvo5x5Z8rtxP1frVk8PnN/ICSnQ==
+lucide-react-native@^0.373.0:
+  version "0.373.0"
+  resolved "https://registry.yarnpkg.com/lucide-react-native/-/lucide-react-native-0.373.0.tgz#c2f57d291653b3da89e69cac391c9d4b46b3b55b"
+  integrity sha512-1ojvk5xT7+Mjz7U/DR/xhSivTrV4wmBeWdat2noVSuX6MyGV0m0oCg+aqr1Bxc+DVHFAwZSQ1hchHawIPxUTBg==
 
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
@@ -12021,11 +12021,6 @@ react-native-paper@^5.12.1:
     "@callstack/react-theme-provider" "^3.0.9"
     color "^3.1.2"
     use-latest-callback "^0.1.5"
-
-react-native-passkeys@^0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-passkeys/-/react-native-passkeys-0.2.2.tgz#b11b3852221b3d913b9b4d5747782452ff29b13d"
-  integrity sha512-NBfEZfDlg6ulqxqOM0TLbcUm+9WdbF/yPQz1HdJAaT4GR4Ku/6Mr+9qhGpkduqxKPTmSlU2+owI85FdpgRC5pA==
 
 react-native-picker-select@^9.0.1:
   version "9.1.3"
