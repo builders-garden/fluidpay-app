@@ -7,7 +7,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>Fluidpay</string>
+    <string>Plink</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -27,14 +27,14 @@
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>fluidpay</string>
-          <string>garden.builders.fluidpay</string>
+          <string>plink</string>
+          <string>garden.builders.plink</string>
         </array>
       </dict>
       <dict>
         <key>CFBundleURLSchemes</key>
         <array>
-          <string>exp+fluidpay</string>
+          <string>exp+plink</string>
         </array>
       </dict>
     </array>
@@ -50,13 +50,14 @@
       <true/>
     </dict>
     <key>NSCameraUsageDescription</key>
-    <string>Allow Fluidpay to access your camera</string>
+    <string>Allow Plink to access your camera</string>
     <key>NSFaceIDUsageDescription</key>
-    <string>Allow Fluidpay to use Face ID.</string>
+    <string>Allow Plink to use Face ID.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSUserActivityTypes</key>
     <array>
+      <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>
       <string>$(PRODUCT_BUNDLE_IDENTIFIER).expo.index_route</string>

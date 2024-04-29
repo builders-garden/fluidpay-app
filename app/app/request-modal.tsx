@@ -64,14 +64,14 @@ export default function RequestModal() {
           <TouchableOpacity
             onPress={async () => {
               await Clipboard.setStringAsync(
-                `https://fluidpay.xyz/u/${user?.username}`
+                `https://plink.finance/u/${user?.username}`
               );
             }}
           >
             <View className="flex flex-row items-center space-x-2">
               <Copy size={20} color="#0061FF" />
               <Text className="text-[#0061FF] font-bold text-lg">
-                fluidpay.xyz/u/{user?.username}
+                plink.finance/u/{user?.username}
               </Text>
             </View>
           </TouchableOpacity>
@@ -84,7 +84,7 @@ export default function RequestModal() {
               variant="primary"
               onPress={async () => {
                 await Share.share({
-                  message: `gm! join me on fluidpay using this link: https://fluidpay.xyz/u/${user?.username}`,
+                  message: `gm! join me on Plink using this link: https://plink.finance/u/${user?.username}`,
                 });
               }}
             />

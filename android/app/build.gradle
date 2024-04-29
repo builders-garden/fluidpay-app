@@ -83,9 +83,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'garden.builders.fluidpay'
+    namespace 'garden.builders.plink'
     defaultConfig {
-        applicationId 'garden.builders.fluidpay'
+        applicationId 'garden.builders.plink'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

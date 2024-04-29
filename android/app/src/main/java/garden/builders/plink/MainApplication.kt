@@ -1,4 +1,4 @@
-package garden.builders.fluidpay
+package garden.builders.plink
 
 import android.app.Application
 import android.content.res.Configuration

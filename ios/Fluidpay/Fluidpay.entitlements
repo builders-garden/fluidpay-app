@@ -6,8 +6,8 @@
     <string>development</string>
     <key>com.apple.developer.associated-domains</key>
     <array>
-      <string>applinks:fluidpay.xyz</string>
-      <string>webcredentials:fluidpay.xyz</string>
+      <string>applinks:plink.finance</string>
+      <string>webcredentials:plink.finance</string>
     </array>
   </dict>
 </plist>

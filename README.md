@@ -1,11 +1,3 @@
-# Fluidpay
+# Plink
 
-This repo contains the code for the Fluidpay wallet app.
-
-## TODOs -- FLU-12
-
-- [x] Fix OTP code input
-- [ ] Make input fields blurrable
-- [ ] Make pasteable
-- [ ] Auth users should only see splashscreen
-- [x] Make Logout clickable once (to avoid recalling action -> breakage)
+This repo contains the code for the Plink wallet app.

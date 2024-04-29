@@ -1,4 +1,4 @@
-rootProject.name = 'Fluidpay'
+rootProject.name = 'Plink'
 
 dependencyResolutionManagement {
   versionCatalogs {

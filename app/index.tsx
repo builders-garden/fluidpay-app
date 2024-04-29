@@ -81,7 +81,7 @@ const Home = () => {
     try {
       if (!skipBiometrics) {
         const auth = await LocalAuthentication.authenticateAsync({
-          promptMessage: "Login to FluidPay",
+          promptMessage: "Login to Plink",
           fallbackLabel: "Enter Password",
         });
 
