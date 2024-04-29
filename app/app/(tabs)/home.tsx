@@ -101,7 +101,8 @@ export default function Home() {
 
   return (
     <LinearGradient
-      colors={["#3500B7", "#1B005E", "#000000"]}
+      start={{ x: 0.5, y: 0.2 }}
+      colors={["#FF238C", "#000000", "#000000"]}
       className="h-full"
       style={{}}
     >
@@ -188,7 +189,7 @@ export default function Home() {
                       },
                     })
                   }
-                  className="text-[#0061FF] font-semibold text-center"
+                  className="text-[#FF238C] font-semibold text-center"
                 >
                   See all
                 </Text>

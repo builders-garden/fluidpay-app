@@ -69,8 +69,8 @@ export default function RequestModal() {
             }}
           >
             <View className="flex flex-row items-center space-x-2">
-              <Copy size={20} color="#0061FF" />
-              <Text className="text-[#0061FF] font-bold text-lg">
+              <Copy size={20} color="#FF238C" />
+              <Text className="text-[#FF238C] font-bold text-lg">
                 plink.finance/u/{user?.username}
               </Text>
             </View>

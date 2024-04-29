@@ -44,7 +44,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
           <Text className="text-3xl text-white font-bold">
             {shortenAddress(user?.smartAccountAddress!)}
           </Text>
-          <Text className="font-bold text-[#0061FF]">@{user?.username}</Text>
+          <Text className="font-bold text-[#FF238C]">@{user?.username}</Text>
         </View>
         <Avatar name={user!.username.charAt(0).toUpperCase()} />
       </View>
@@ -56,7 +56,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
       {tab === "Scan" && <QRScan />}
       <Text className="text-gray-400 text-center pt-4">
         Get paid with{" "}
-        <Text className="font-bold text-[#0061FF]">
+        <Text className="font-bold text-[#FF238C]">
           plink.finance/u/{user?.username}
         </Text>
       </Text>

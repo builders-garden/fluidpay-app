@@ -18,7 +18,7 @@ export default function AppButton({
     <ActivityIndicator size="small" color="#FFF" />
   ) : (
     <Text
-      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-[#0061FF]" : variant === "disabled" ? "text-gray-300" : "text-black"}`}
+      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-[#FF238C]" : variant === "disabled" ? "text-gray-300" : "text-black"}`}
     >
       {text}
     </Text>
@@ -29,7 +29,7 @@ export default function AppButton({
       <TouchableOpacity
         onPress={onPress}
         disabled={disabled || loading}
-        className="bg-[#0061FF]/20 rounded-full flex items-center justify-center py-3"
+        className="bg-[#FF238C]/20 rounded-full flex items-center justify-center py-3"
       >
         {content}
       </TouchableOpacity>
@@ -38,7 +38,7 @@ export default function AppButton({
 
   if (variant === "disabled") {
     return (
-      <View className="bg-[#0061FF] border-2 opacity-50 border-[#0061FF] rounded-full flex items-center justify-center py-3">
+      <View className="bg-[#FF238C] border-2 opacity-50 border-[#FF238C] rounded-full flex items-center justify-center py-3">
         {content}
       </View>
     );
@@ -60,7 +60,7 @@ export default function AppButton({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      className="bg-[#0061FF] border-2 border-[#0061FF] rounded-full flex items-center justify-center py-3"
+      className="bg-[#FF238C] border-2 border-[#FF238C] rounded-full flex items-center justify-center py-3"
     >
       {content}
     </TouchableOpacity>

@@ -96,7 +96,7 @@ export default function SearchGroupMembers({
                           ? "checked"
                           : "unchecked"
                       }
-                      color="#0061FF"
+                      color="#FF238C"
                       uncheckedColor="#8F8F91"
                     />
                     <Avatar name={user.username.charAt(0).toUpperCase()} />

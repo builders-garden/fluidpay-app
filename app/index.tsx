@@ -119,7 +119,7 @@ const Home = () => {
   if (!isReady || !isProfileReady) {
     return (
       <SafeAreaView className="flex flex-1 justify-center items-center">
-        <ActivityIndicator animating={true} color={"#0061FF"} />
+        <ActivityIndicator animating={true} color={"#FF238C"} />
       </SafeAreaView>
     );
   }
@@ -129,20 +129,20 @@ const Home = () => {
       <View className="text-center flex flex-col space-y-4 justify-center items-center">
         <Image
           className="mt-24 h-14 w-56"
-          source={require("../images/fluidpay.png")}
+          source={require("../images/plink.png")}
         />
         <View className="px-16">
           <Text
             className={`text-white text-xl text-center leading-tight font-semibold`}
           >
-            To anyone, from everywhere.
+            Your USDC shortcut.
           </Text>
         </View>
       </View>
 
       {isLoading && skipBiometrics && (
         <View className="flex flex-col space-y-8">
-          <ActivityIndicator animating={true} color={"#0061FF"} />
+          <ActivityIndicator animating={true} color={"#FF238C"} />
           <Text className="text-blue-600 font-medium text-lg text-center ">
             {loadingMessage}
           </Text>
