@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Plink",
-    "slug": "plink",
+    "slug": "plink-payments",
     "scheme": "plink",
     "version": "1.0.1",
     "orientation": "portrait",
