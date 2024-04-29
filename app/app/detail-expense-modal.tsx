@@ -203,7 +203,7 @@ export default function DetailExpenseModal() {
               <View className="flex flex-row items-center" key={index}>
                 <Checkbox.Android
                   status={selected[index] ? "checked" : "unchecked"}
-                  color="#0061FF"
+                  color="#FF238C"
                   uncheckedColor="#8F8F91"
                   onPress={() => {
                     const newSelected = selected.slice();

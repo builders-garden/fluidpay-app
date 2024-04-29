@@ -105,7 +105,7 @@ export default function SplitAmong({
             <View className="flex flex-row items-center space-x-4">
               <Checkbox.Android
                 status={selected[index].selected ? "checked" : "unchecked"}
-                color="#0061FF"
+                color="#FF238C"
                 uncheckedColor="#8F8F91"
                 onPress={() => {
                   const newSelected = selected.slice();

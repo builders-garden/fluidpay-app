@@ -32,6 +32,9 @@
         <data android:scheme="fluidpay"/>
         <data android:scheme="garden.builders.fluidpay"/>
         <data android:scheme="exp+fluidpay"/>
+        <data android:scheme="plink"/>
+        <data android:scheme="garden.builders.plink"/>
+        <data android:scheme="exp+plink"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

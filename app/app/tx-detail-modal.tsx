@@ -56,7 +56,7 @@ export default function TransactionDetailModal() {
             <Avatar name={data.payee.username.charAt(0).toUpperCase()} />
           </View>
           <View className="flex">
-            <Text className="text-[#0061FF] text-lg font-semibold">
+            <Text className="text-[#FF238C] text-lg font-semibold">
               {data.payee.displayName} - @{data.payee.username}
             </Text>
             <Text className="text-[#8F8F91]">

@@ -78,18 +78,18 @@ export default function DetailsModal() {
               <TouchableOpacity
                 onPress={() => Clipboard.setStringAsync(user!.username)}
               >
-                <Text className="text-[#0061FF] text-lg font-medium">
+                <Text className="text-[#FF238C] text-lg font-medium">
                   {user?.username}
                 </Text>
               </TouchableOpacity>
             </View>
 
-            <Copy size={20} color="#0061FF" />
+            <Copy size={20} color="#FF238C" />
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex space-y-2">
               <Text className="text-gray-400 text-lg font-medium">Address</Text>
-              <Text className="text-[#0061FF] text-lg font-medium">
+              <Text className="text-[#FF238C] text-lg font-medium">
                 {shortenAddress(user?.smartAccountAddress!)}
               </Text>
             </View>
@@ -99,7 +99,7 @@ export default function DetailsModal() {
                 Clipboard.setStringAsync(user!.smartAccountAddress)
               }
             >
-              <Copy size={20} color="#0061FF" />
+              <Copy size={20} color="#FF238C" />
             </TouchableOpacity>
           </View>
         </View>

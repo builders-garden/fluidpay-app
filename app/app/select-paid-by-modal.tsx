@@ -49,7 +49,7 @@ export default function SelectPaidByModal({
                       status={
                         paidById === member.userId ? "checked" : "unchecked"
                       }
-                      color="#0061FF"
+                      color="#FF238C"
                       uncheckedColor="#8F8F91"
                       onPress={() => {
                         setPaidById(member.userId);

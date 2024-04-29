@@ -51,7 +51,7 @@ export default function DetailExpenseModal() {
             <Avatar name="F" />
           </View>
           <View className="flex">
-            <Text className="text-[#0061FF] text-lg font-semibold">
+            <Text className="text-[#FF238C] text-lg font-semibold">
               frankc - @frankcc
             </Text>
             <Text className="text-[#8F8F91]">
@@ -70,7 +70,7 @@ export default function DetailExpenseModal() {
               Block explorer
             </Text>
 
-            <Text className="text-[#0061FF] text-lg font-medium">View</Text>
+            <Text className="text-[#FF238C] text-lg font-medium">View</Text>
           </View>
         </View>
       </View>

@@ -10,7 +10,7 @@ export default function QRCode() {
   useEffect(() => {
     if (user) {
       RNQRGenerator.generate({
-        value: `https://fluidpay.xyz/u/${user?.username}`,
+        value: `https://plink.finance/u/${user?.username}`,
         height: 400,
         width: 400,
         correctionLevel: "H",

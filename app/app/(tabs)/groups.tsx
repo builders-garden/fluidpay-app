@@ -81,7 +81,7 @@ export default function Pocket() {
 
         <TouchableOpacity
           onPress={() => router.push("/app/create-group")}
-          className="bg-[#0061FF] border-2 border-[#0061FF] flex flex-row space-x-2 rounded-full items-center justify-center py-2 px-4"
+          className="bg-[#FF238C] border-2 border-[#FF238C] flex flex-row space-x-2 rounded-full items-center justify-center py-2 px-4"
         >
           <Text className="text-lg text-white font-semibold">New</Text>
           <PlusIcon size={24} color="#FFFFFF" />

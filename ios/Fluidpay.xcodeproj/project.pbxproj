@@ -391,8 +391,8 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = garden.builders.fluidpay;
-				PRODUCT_NAME = "Fluidpay";
+				PRODUCT_BUNDLE_IDENTIFIER = "garden.builders.plink";
+				PRODUCT_NAME = "Plink";
 				SWIFT_OBJC_BRIDGING_HEADER = "Fluidpay/Fluidpay-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -422,8 +422,8 @@
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = garden.builders.fluidpay;
-				PRODUCT_NAME = "Fluidpay";
+				PRODUCT_BUNDLE_IDENTIFIER = "garden.builders.plink";
+				PRODUCT_NAME = "Plink";
 				SWIFT_OBJC_BRIDGING_HEADER = "Fluidpay/Fluidpay-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1";
