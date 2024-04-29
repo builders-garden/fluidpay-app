@@ -64,9 +64,7 @@ const Home = () => {
   useEffect(() => {
     getAccessToken()
       .then((token) => {
-        if (token) {
-          fetchUserData(token);
-        } else {
+        if (!token) {
           setIsProfileReady(true);
           setSkipBiometrics(true);
         }
@@ -160,7 +158,7 @@ const Home = () => {
         </View>
       )}
 
-      {isReady && !user && (
+      {isReady && skipBiometrics && (
         <LoginForm
           setIsLoading={setIsLoading}
           setLoadingMessage={setLoadingMessage}
