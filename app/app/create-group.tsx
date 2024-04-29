@@ -7,7 +7,6 @@ import AppButton from "../../components/app-button";
 import { createGroup, getUsers } from "../../lib/api";
 import { useGroupsStore, useUserStore } from "../../store";
 import SearchGroupMembers from "../../components/search-group-members";
-import { analytics } from "../../lib/analytics";
 
 export default function CreateGroupPage() {
   const [groupName, setGroupName] = useState("");
@@ -28,7 +27,7 @@ export default function CreateGroupPage() {
           ],
         });
         addGroup(group);
-        await analytics("create_group");
+
         setCreatingGroup(false);
         router.push({
           pathname: "/app/group",
