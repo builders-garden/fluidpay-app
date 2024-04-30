@@ -9,6 +9,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ViewStyle,
+  ImageBackground,
 } from "react-native";
 import SkeletonLoader from "expo-skeleton-loader";
 import AppButton from "../../../components/app-button";
@@ -50,10 +51,9 @@ export default function Pocket() {
 
   if (groups.length === 0 && !fetchingGroups) {
     return (
-      <LinearGradient
-        colors={["#3500B7", "#000000"]}
-        className="h-full"
-        style={{}}
+      <ImageBackground
+        source={require("../../../images/blur-bg.png")}
+        className="flex-1"
       >
         <SafeAreaView className="bg-transparent flex-1 items-center py-24 px-16 space-y-4">
           <Text className="text-white text-4xl font-semibold text-center">
@@ -70,7 +70,7 @@ export default function Pocket() {
             />
           </View>
         </SafeAreaView>
-      </LinearGradient>
+      </ImageBackground>
     );
   }
 

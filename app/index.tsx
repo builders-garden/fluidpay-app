@@ -23,7 +23,7 @@ export enum LoginStatus {
 }
 
 const Home = () => {
-  const { isReady, user, getAccessToken } = usePrivy();
+  const { isReady, user, getAccessToken, logout } = usePrivy();
   const { address } = usePrivyWagmiProvider();
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
@@ -101,17 +101,27 @@ const Home = () => {
   };
 
   const fetchUserData = async (token: string) => {
-    const userData = await getMe(token);
-    setUser({ ...userData, token } as DBUser);
-    setIsProfileReady(true);
+    try {
+      const userData = await getMe(token);
+      setUser({ ...userData, token } as DBUser);
+      setIsProfileReady(true);
 
-    return userData;
+      return userData;
+    } catch (error) {
+      console.log("An error occured", error);
+      await SecureStore.deleteItemAsync(`token-${address}`);
+      await logout();
+      setIsLoading(false);
+      setIsProfileReady(true);
+      setSkipBiometrics(true);
+    }
   };
 
   const getToken = async (address: string) => {
     const token = await SecureStore.getItemAsync(`token-${address}`);
     if (token) {
       const userData = await fetchUserData(token);
+      if (!userData) return;
       await authorise(userData, skipBiometrics);
     }
   };
