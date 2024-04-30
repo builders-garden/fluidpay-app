@@ -69,7 +69,7 @@ export default function CodeInput({
                 key={index}
                 className={
                   "basis-1/6 text-white bg-[#232324] py-4 rounded-lg" +
-                  (focused ? " border-2 border-blue-500" : "")
+                  (focused ? " border-2 border-primary" : "")
                 }
               >
                 <Text className="text-4xl text-center placeholder-white">
