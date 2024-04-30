@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <LinearGradient
       start={{ x: 0.5, y: 0.2 }}
-      colors={["#FF238C", "#000000", "#000000"]}
+      colors={["#71103E", "#000000", "#000000"]}
       className="h-full"
       style={{}}
     >
