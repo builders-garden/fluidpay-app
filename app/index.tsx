@@ -24,7 +24,7 @@ export enum LoginStatus {
 
 const Home = () => {
   const { isReady, user, getAccessToken, logout } = usePrivy();
-  const { address, isConnected } = usePrivyWagmiProvider();
+  const { address } = usePrivyWagmiProvider();
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
 
@@ -120,7 +120,7 @@ const Home = () => {
     }
   };
 
-  if (!isReady || !isConnected || !isProfileReady) {
+  if (!isReady || !isProfileReady) {
     return (
       <SafeAreaView className="flex flex-1 justify-center items-center">
         <ActivityIndicator animating={true} color={"#FF238C"} />
