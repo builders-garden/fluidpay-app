@@ -27,12 +27,6 @@ const Home = () => {
   const { address } = usePrivyWagmiProvider();
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
-  const setTransactions = useTransactionsStore(
-    (state) => state.setTransactions
-  );
-  const setGroups = useGroupsStore((state) => state.setGroups);
-  const setChain = useChainStore((state) => state.setChain);
-  const chain = useChainStore((state) => state.chain);
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
