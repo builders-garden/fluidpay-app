@@ -20,12 +20,10 @@ import tokens from "../../../constants/tokens";
 import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
-import { useEmbeddedWallet } from "@privy-io/expo";
 import SkeletonLoader from "expo-skeleton-loader";
 
 export default function Home() {
-  const { address, isConnected, isReady } = usePrivyWagmiProvider();
-  const wallet = useEmbeddedWallet();
+  const { isReady, connect, isConnected } = usePrivyWagmiProvider();
   const [fetchingPayments, setFetchingPayments] = useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
@@ -94,7 +92,7 @@ export default function Home() {
 
   const recentPayees = getUniquePayees();
 
-  if (!isReady || !isConnected || !user) {
+  if (!isReady || !user) {
     return <Redirect href={"/"} />;
   }
 

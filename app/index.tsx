@@ -24,15 +24,9 @@ export enum LoginStatus {
 
 const Home = () => {
   const { isReady, user, getAccessToken, logout } = usePrivy();
-  const { address } = usePrivyWagmiProvider();
+  const { address, isConnected } = usePrivyWagmiProvider();
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
-  const setTransactions = useTransactionsStore(
-    (state) => state.setTransactions
-  );
-  const setGroups = useGroupsStore((state) => state.setGroups);
-  const setChain = useChainStore((state) => state.setChain);
-  const chain = useChainStore((state) => state.chain);
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -126,7 +120,7 @@ const Home = () => {
     }
   };
 
-  if (!isReady || !isProfileReady) {
+  if (!isReady || !isConnected || !isProfileReady) {
     return (
       <SafeAreaView className="flex flex-1 justify-center items-center">
         <ActivityIndicator animating={true} color={"#FF238C"} />
