@@ -93,9 +93,7 @@
     "tailwindcss": "3.3.2",
     "typescript": "^5.3.0"
   },
-  "resolutions": {
-    "react-refresh": "~0.14.0"
-  },
+  "resolutions": {},
   "private": true,
   "engines": {
     "node": ">=16"

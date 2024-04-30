@@ -6,12 +6,12 @@ import {
   Text,
   View,
   Pressable,
+  ScrollView,
   TouchableOpacity,
   ViewStyle,
 } from "react-native";
 import SkeletonLoader from "expo-skeleton-loader";
 import AppButton from "../../../components/app-button";
-import { ScrollView } from "react-native-gesture-handler";
 import Avatar from "../../../components/avatar";
 import { PlusIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";

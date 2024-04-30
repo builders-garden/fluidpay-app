@@ -12,7 +12,6 @@ import { ChevronRight, Search } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionItem from "../../../components/transaction-item";
 import { getUsers } from "../../../lib/api";
-import { ScrollView } from "react-native-gesture-handler";
 import { shortenAddress } from "../../../lib/utils";
 import UserSearchResult from "../../../components/user-search-result";
 import { DBTransaction, DBUser } from "../../../store/interfaces";

@@ -12,7 +12,7 @@ config.resolver.sourceExts.push("cjs");
 config.resolver.unstable_enablePackageExports = true;
 
 // Configure package exports
-config.resolver.unstable_conditionNames = ["browser", "require", "import"];
+config.resolver.unstable_conditionNames = ["browser", "require"];
 config.resolver.unstable_conditionsByPlatform = {
   ios: ["react-native", "browser", "main"],
   android: ["react-native", "browser", "main"],

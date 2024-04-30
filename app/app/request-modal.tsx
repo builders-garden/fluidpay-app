@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import { useUserStore } from "../../store";
@@ -8,7 +8,6 @@ import { ArrowLeft, Copy } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Share } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function RequestModal() {
   const isPresented = router.canGoBack();

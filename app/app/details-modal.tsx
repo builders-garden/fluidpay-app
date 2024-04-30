@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Image, Text, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
@@ -7,7 +7,6 @@ import { ArrowLeft, Copy } from "lucide-react-native";
 import { BigNumber } from "ethers";
 
 import * as Clipboard from "expo-clipboard";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import tokens from "../../constants/tokens";
 
 import {
