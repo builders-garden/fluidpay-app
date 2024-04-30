@@ -153,7 +153,7 @@ const Home = () => {
       {isLoading && skipBiometrics && (
         <View className="flex flex-col space-y-8">
           <ActivityIndicator animating={true} color={"#FF238C"} />
-          <Text className="text-blue-600 font-medium text-lg text-center ">
+          <Text className="text-primary font-medium text-lg text-center ">
             {loadingMessage}
           </Text>
         </View>
