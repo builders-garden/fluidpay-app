@@ -1,10 +1,9 @@
 import { Link, Redirect, useNavigation } from "expo-router";
-import { View, Text, Pressable, ViewStyle } from "react-native";
+import { View, Text, Pressable, ScrollView, ViewStyle } from "react-native";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
 import { useTransactionsStore, useUserStore } from "../../../store";
-import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
 import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";

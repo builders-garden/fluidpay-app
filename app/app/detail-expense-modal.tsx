@@ -1,5 +1,5 @@
 import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { Appbar, Checkbox } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
@@ -15,7 +15,6 @@ import {
   getGroupExpenseById,
   updateGroupExpense,
 } from "../../lib/api";
-import { ScrollView } from "react-native-gesture-handler";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import SelectPaidByModal from "./select-paid-by-modal";

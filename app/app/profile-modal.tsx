@@ -1,9 +1,8 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, ScrollView, Text, TouchableOpacity } from "react-native";
 import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import CircularButton from "../../components/circular-button";
-import { ScrollView } from "react-native-gesture-handler";
 import { ArrowLeft, Copy, CopyIcon } from "lucide-react-native";
 import { useUserStore } from "../../store";
 import { useEffect, useState } from "react";
@@ -44,7 +43,6 @@ export default function ProfileModal() {
   if (!profileUser) {
     return <View className="flex-1 flex-col px-4 bg-black"></View>;
   }
-
 
   return (
     <View className="flex-1 flex-col bg-black">
@@ -87,7 +85,9 @@ export default function ProfileModal() {
                   {shortenAddress(profileUser.smartAccountAddress)}
                 </Text>
                 <TouchableOpacity
-                  onPress={() => Clipboard.setStringAsync(profileUser!.smartAccountAddress)}
+                  onPress={() =>
+                    Clipboard.setStringAsync(profileUser!.smartAccountAddress)
+                  }
                 >
                   <Copy size={12} color="white" />
                 </TouchableOpacity>
