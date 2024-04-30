@@ -110,7 +110,7 @@ export default function CodeInput({
         variant={code?.length === 6 ? "primary" : "disabled"}
       />
       <Text
-        className="mt-8 text-blue-500 text-center font-bold"
+        className="mt-8 text-primary text-center font-bold"
         onPress={() => sendCode({ email: email! })}
       >
         Didn&apos;t receive anything? Send again
