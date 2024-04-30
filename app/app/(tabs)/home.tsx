@@ -23,7 +23,7 @@ import PillButton from "../../../components/pill-button";
 import SkeletonLoader from "expo-skeleton-loader";
 
 export default function Home() {
-  const { isReady, connect, isConnected } = usePrivyWagmiProvider();
+  const { isReady } = usePrivyWagmiProvider();
   const [fetchingPayments, setFetchingPayments] = useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
