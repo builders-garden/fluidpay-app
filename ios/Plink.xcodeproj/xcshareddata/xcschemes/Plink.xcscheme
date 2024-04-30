@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "Fluidpay.app"
-               BlueprintName = "Fluidpay"
-               ReferencedContainer = "container:Fluidpay.xcodeproj">
+               BuildableName = "Plink.app"
+               BlueprintName = "Plink"
+               ReferencedContainer = "container:Plink.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "FluidpayTests.xctest"
-               BlueprintName = "FluidpayTests"
-               ReferencedContainer = "container:Fluidpay.xcodeproj">
+               BuildableName = "PlinkTests.xctest"
+               BlueprintName = "PlinkTests"
+               ReferencedContainer = "container:Plink.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Fluidpay.app"
-            BlueprintName = "Fluidpay"
-            ReferencedContainer = "container:Fluidpay.xcodeproj">
+            BuildableName = "Plink.app"
+            BlueprintName = "Plink"
+            ReferencedContainer = "container:Plink.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "Fluidpay.app"
-            BlueprintName = "Fluidpay"
-            ReferencedContainer = "container:Fluidpay.xcodeproj">
+            BuildableName = "Plink.app"
+            BlueprintName = "Plink"
+            ReferencedContainer = "container:Plink.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
