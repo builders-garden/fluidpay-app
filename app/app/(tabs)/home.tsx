@@ -24,6 +24,7 @@ import SkeletonLoader from "expo-skeleton-loader";
 
 export default function Home() {
   const { isReady } = usePrivyWagmiProvider();
+  // const wallet = useEmbeddedWallet();
   const [fetchingPayments, setFetchingPayments] = useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);

@@ -49,9 +49,16 @@ const Home = () => {
     if (address && user) {
       setIsLoading(true);
       setLoadingMessage("Logging in...");
-      getToken(address).then(() => {
-        setIsLoading(false);
-      });
+      getToken(address)
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch(() => {
+          SecureStore.deleteItemAsync(`token-${address}`).then(() => logout());
+          setIsLoading(false);
+          setIsProfileReady(true);
+          setSkipBiometrics(true);
+        });
     }
   }, [address, user]);
 
@@ -112,21 +119,25 @@ const Home = () => {
   };
 
   const getToken = async (address: string) => {
-    const token = await SecureStore.getItemAsync(`token-${address}`);
-    if (token) {
-      const userData = await fetchUserData(token);
-      if (!userData) return;
-      await authorise(userData, skipBiometrics);
+    try {
+      const token = await SecureStore.getItemAsync(`token-${address}`);
+      if (token) {
+        const userData = await fetchUserData(token);
+        if (!userData) return;
+        await authorise(userData, skipBiometrics);
+      }
+    } catch (error) {
+      throw new Error();
     }
   };
 
-  if (!isReady || !isProfileReady) {
-    return (
-      <SafeAreaView className="flex flex-1 justify-center items-center">
-        <ActivityIndicator animating={true} color={"#FF238C"} />
-      </SafeAreaView>
-    );
-  }
+  // if (!isReady || !isProfileReady) {
+  //   return (
+  //     <SafeAreaView className="flex flex-1 justify-center items-center">
+  //       <ActivityIndicator animating={true} color={"#FF238C"} />
+  //     </SafeAreaView>
+  //   );
+  // }
 
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
