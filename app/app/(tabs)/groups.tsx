@@ -123,7 +123,7 @@ export default function Pocket() {
                       key={`member-${index}-${group.name}`}
                     >
                       <Avatar
-                        name={member.user.username.charAt(0).toUpperCase()}
+                        name={member.user.displayName.charAt(0).toUpperCase()}
                         // color="#FFFFFF"
                       />
                     </View>

@@ -57,7 +57,7 @@ export default function SelectPaidByModal({
                       }}
                     />
                     <Avatar
-                      name={member.user.username.charAt(0).toUpperCase()}
+                      name={member.user.displayName.charAt(0).toUpperCase()}
                     />
                     <Text className="text-white font-semibold text-lg ml-2">
                       {member.user.username === user?.username

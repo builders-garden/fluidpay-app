@@ -110,7 +110,7 @@ export default function SendModal() {
         <Appbar.Action
           icon={() => (
             <Avatar
-              name={sendUser?.username.charAt(0).toUpperCase()}
+              name={sendUser?.displayName.charAt(0).toUpperCase()}
               size={37.5}
             />
           )}

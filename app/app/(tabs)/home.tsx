@@ -108,7 +108,7 @@ export default function Home() {
           <View className="flex flex-row items-center justify-between px-4 mt-2">
             <View className="flex flex-row items-center space-x-4 pl-2">
               <Link href={"/app/settings"}>
-                <Avatar name={user.username.charAt(0).toUpperCase()} />
+                <Avatar name={user.displayName.charAt(0).toUpperCase()} />
               </Link>
             </View>
             {/* <View className="flex flex-row items-center space-x-0">
@@ -224,7 +224,9 @@ export default function Home() {
                     >
                       <View className="flex space-y-2 items-center">
                         <Avatar
-                          name={payment.payee.username.charAt(0).toUpperCase()}
+                          name={payment.payee.displayName
+                            .charAt(0)
+                            .toUpperCase()}
                         />
                         <Text className="text-white font-semibold">
                           {payment.payee.username}

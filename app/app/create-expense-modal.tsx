@@ -1,26 +1,18 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
-import { Appbar, Checkbox } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
 import { ArrowLeft, ChevronDown } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import Avatar from "../../components/avatar";
+import { useCallback, useRef, useState } from "react";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
 import { createGroupExpense } from "../../lib/api";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import SelectPaidByModal from "./select-paid-by-modal";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DatePicker from "../../components/date-picker";
 import SelectSplitTypeModal, { SplitType } from "./select-split-type-modal";
 import SplitAmong, { SplitAmongType } from "../../components/split-among";

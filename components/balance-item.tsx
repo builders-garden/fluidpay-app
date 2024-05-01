@@ -30,8 +30,8 @@ export default function BalanceItem(balanceData: any, index: number) {
           <Avatar
             name={
               isCurrentUserDebtor
-                ? balance.creditor.username.charAt(0).toUpperCase()
-                : balance.debtor.username.charAt(0).toUpperCase()
+                ? balance.creditor.displayName.charAt(0).toUpperCase()
+                : balance.debtor.displayName.charAt(0).toUpperCase()
             }
           />
           <View className="flex flex-col items-start justify-center">
