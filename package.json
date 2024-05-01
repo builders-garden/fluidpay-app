@@ -25,6 +25,7 @@
     "@requestnetwork/payment-processor": "^0.44.0",
     "@requestnetwork/request-client.js": "^0.45.0",
     "@requestnetwork/web3-signature": "^0.4.40",
+    "@sentry/react-native": "~5.20.0",
     "@thirdweb-dev/react-native-compat": "^0.4",
     "@toruslabs/eccrypto": "^4.0.0",
     "amazon-cognito-identity-js": "^6.3.6",

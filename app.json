@@ -62,6 +62,15 @@
         {
           "cameraPermission": "Allow Plink to access your camera"
         }
+      ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "builders-garden",
+          "project": "plink",
+          "url": "https://sentry.io/",
+          "note": "Use SENTRY_AUTH_TOKEN env to authenticate with Sentry."
+        }
       ]
     ],
     "extra": {
