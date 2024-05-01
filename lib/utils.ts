@@ -122,3 +122,22 @@ export function isTodayOrYesterday(
   // If not today or yesterday, return false
   return false;
 }
+
+export function getFormattedTime(dateTimeString: string) {
+  // Parse the string into a Date object
+  const dateTime = new Date(dateTimeString);
+
+  // Extract the time components
+  const hours = dateTime.getHours();
+  const minutes = dateTime.getMinutes();
+
+  // Format hours to 12-hour format and determine AM/PM
+  let formattedHours = hours % 12;
+  formattedHours = formattedHours === 0 ? 12 : formattedHours; // Handle midnight (0 hours)
+  const period = hours < 12 ? "AM" : "PM";
+
+  // Construct the formatted time string
+  const formattedTime = `${formattedHours}:${minutes < 10 ? "0" : ""}${minutes} ${period}`;
+
+  return formattedTime;
+}

@@ -9,9 +9,11 @@ import Avatar from "./avatar";
 export default function TransactionItem({
   transaction,
   index,
+  time,
 }: {
   transaction: DBTransaction;
   index: number;
+  time?: string;
 }) {
   const user = useUserStore((state) => state.user);
   const setProfileUser = useProfileStore((state) => state.setProfileUser);
@@ -62,7 +64,7 @@ export default function TransactionItem({
               }}
             > */}
               <Text className="text-[#8F8F91]">
-                <TimeAgo dateTo={new Date(createdAt)} />
+                {time ?? <TimeAgo dateTo={new Date(createdAt)} />}
               </Text>
               {/* </Pressable> */}
             </View>

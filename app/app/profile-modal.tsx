@@ -16,7 +16,7 @@ import {
 } from "../../components/skeleton-layout/profile-name";
 import { DBTransaction } from "../../store/interfaces";
 import TimeAgo from "@andordavoti/react-native-timeago";
-import { isTodayOrYesterday } from "../../lib/utils";
+import { getFormattedTime, isTodayOrYesterday } from "../../lib/utils";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
@@ -191,6 +191,7 @@ export default function ProfileModal() {
                         key={transaction.id}
                         transaction={transaction}
                         index={index}
+                        time={getFormattedTime(transaction.createdAt)}
                       />
                     ))}
                   </View>
