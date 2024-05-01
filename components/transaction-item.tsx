@@ -35,7 +35,7 @@ export default function TransactionItem({
             }}
           >
             <Avatar
-              name={(isFrom ? payee.username : payer.username)
+              name={(isFrom ? payee.displayName : payer.displayName)
                 .charAt(0)
                 .toUpperCase()}
             />

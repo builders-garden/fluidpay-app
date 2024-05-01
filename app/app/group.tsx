@@ -104,7 +104,9 @@ export default function GroupPage() {
                 className={index === 0 ? "" : "-ml-6"}
                 key={`member-${index}-${data.name}`}
               >
-                <Avatar name={member.user.username.charAt(0).toUpperCase()} />
+                <Avatar
+                  name={member.user.displayName.charAt(0).toUpperCase()}
+                />
               </View>
             ))}
         </View>

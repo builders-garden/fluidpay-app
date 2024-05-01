@@ -46,7 +46,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
           </Text>
           <Text className="font-bold text-[#FF238C]">@{user?.username}</Text>
         </View>
-        <Avatar name={user!.username.charAt(0).toUpperCase()} />
+        <Avatar name={user!.displayName.charAt(0).toUpperCase()} />
       </View>
       {tab === "Pay me" && (
         <View className="bg-[#161618] mx-auto rounded-lg p-8">
