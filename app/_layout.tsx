@@ -10,6 +10,7 @@ import Toast, {
 } from "react-native-toast-message";
 //@ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
+import { PostHogProvider } from "posthog-react-native";
 // Import the PrivyProvider
 import { PrivyProvider } from "@privy-io/expo";
 import { PrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
@@ -98,23 +99,30 @@ function AppLayout() {
 
   return (
     <>
-      <PaperProvider
-        settings={{
-          icon: (props) => <Icon {...props} />,
+      <PostHogProvider
+        apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY!}
+        options={{
+          host: process.env.EXPO_PUBLIC_POSTHOG_HOST,
         }}
       >
-        <PrivyProvider
-          appId={process.env.EXPO_PUBLIC_PRIVY_APP_ID!}
-          storage={MyPermissiveSecureStorageAdapter}
-          supportedChains={[sepolia, base]}
+        <PaperProvider
+          settings={{
+            icon: (props) => <Icon {...props} />,
+          }}
         >
-          <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
-            <View className="bg-black flex-1">
-              <Slot />
-            </View>
-          </PrivyWagmiProvider>
-        </PrivyProvider>
-      </PaperProvider>
+          <PrivyProvider
+            appId={process.env.EXPO_PUBLIC_PRIVY_APP_ID!}
+            storage={MyPermissiveSecureStorageAdapter}
+            supportedChains={[sepolia, base]}
+          >
+            <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
+              <View className="bg-black flex-1">
+                <Slot />
+              </View>
+            </PrivyWagmiProvider>
+          </PrivyProvider>
+        </PaperProvider>
+      </PostHogProvider>
       <Toast
         config={toastConfig}
         position="top"
