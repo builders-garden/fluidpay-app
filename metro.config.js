@@ -1,9 +1,9 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
-const { getDefaultConfig } = require("expo/metro-config");
+const { getSentryExpoConfig } = require("@sentry/react-native/metro");
 
 const extraNodeModules = require("node-libs-browser");
 
-const config = getDefaultConfig(__dirname);
+const config = getSentryExpoConfig(__dirname);
 
 config.resolver.extraNodeModules = extraNodeModules;
 config.resolver.sourceExts.push("cjs");
@@ -12,7 +12,7 @@ config.resolver.sourceExts.push("cjs");
 config.resolver.unstable_enablePackageExports = true;
 
 // Configure package exports
-config.resolver.unstable_conditionNames = ["browser", "require", "import"];
+config.resolver.unstable_conditionNames = ["browser", "require"];
 config.resolver.unstable_conditionsByPlatform = {
   ios: ["react-native", "browser", "main"],
   android: ["react-native", "browser", "main"],

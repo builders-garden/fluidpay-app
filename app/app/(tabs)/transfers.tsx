@@ -1,19 +1,12 @@
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import { useState } from "react";
-import { View, Text, Pressable } from "react-native";
+import { View, Text } from "react-native";
 import { Searchbar } from "react-native-paper";
 import Avatar from "../../../components/avatar";
-import {
-  useSendStore,
-  useTransactionsStore,
-  useUserStore,
-} from "../../../store";
-import { ChevronRight, Search } from "lucide-react-native";
+import { useTransactionsStore, useUserStore } from "../../../store";
+import { Search } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import TransactionItem from "../../../components/transaction-item";
 import { getUsers } from "../../../lib/api";
-import { ScrollView } from "react-native-gesture-handler";
-import { shortenAddress } from "../../../lib/utils";
 import UserSearchResult from "../../../components/user-search-result";
 import { DBTransaction, DBUser } from "../../../store/interfaces";
 import InteractedUser from "../../../components/interacted-user";
@@ -22,7 +15,6 @@ export default function Send() {
   const [searchQuery, setSearchQuery] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const user = useUserStore((state) => state.user);
-  const setSendUser = useSendStore((state) => state.setSendUser);
   const transactions = useTransactionsStore((state) => state.transactions);
 
   const onChangeText = async (text: string) => {

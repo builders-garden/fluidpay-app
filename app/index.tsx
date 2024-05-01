@@ -23,16 +23,10 @@ export enum LoginStatus {
 }
 
 const Home = () => {
-  const { isReady, user, getAccessToken } = usePrivy();
+  const { isReady, user, getAccessToken, logout } = usePrivy();
   const { address } = usePrivyWagmiProvider();
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
-  const setTransactions = useTransactionsStore(
-    (state) => state.setTransactions
-  );
-  const setGroups = useGroupsStore((state) => state.setGroups);
-  const setChain = useChainStore((state) => state.setChain);
-  const chain = useChainStore((state) => state.chain);
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
@@ -55,18 +49,23 @@ const Home = () => {
     if (address && user) {
       setIsLoading(true);
       setLoadingMessage("Logging in...");
-      getToken(address).then(() => {
-        setIsLoading(false);
-      });
+      getToken(address)
+        .then(() => {
+          setIsLoading(false);
+        })
+        .catch(() => {
+          SecureStore.deleteItemAsync(`token-${address}`).then(() => logout());
+          setIsLoading(false);
+          setIsProfileReady(true);
+          setSkipBiometrics(true);
+        });
     }
   }, [address, user]);
 
   useEffect(() => {
     getAccessToken()
       .then((token) => {
-        if (token) {
-          fetchUserData(token);
-        } else {
+        if (!token) {
           setIsProfileReady(true);
           setSkipBiometrics(true);
         }
@@ -83,7 +82,7 @@ const Home = () => {
     try {
       if (!skipBiometrics) {
         const auth = await LocalAuthentication.authenticateAsync({
-          promptMessage: "Login to FluidPay",
+          promptMessage: "Login to Plink",
           fallbackLabel: "Enter Password",
         });
 
@@ -103,49 +102,63 @@ const Home = () => {
   };
 
   const fetchUserData = async (token: string) => {
-    const userData = await getMe(token);
-    setUser({ ...userData, token } as DBUser);
-    setIsProfileReady(true);
+    try {
+      const userData = await getMe(token);
+      setUser({ ...userData, token } as DBUser);
+      setIsProfileReady(true);
 
-    return userData;
-  };
-
-  const getToken = async (address: string) => {
-    const token = await SecureStore.getItemAsync(`token-${address}`);
-    if (token) {
-      const userData = await fetchUserData(token);
-      await authorise(userData, skipBiometrics);
+      return userData;
+    } catch (error) {
+      console.log("An error occured", error);
+      await SecureStore.deleteItemAsync(`token-${address}`);
+      await logout();
+      setIsLoading(false);
+      setIsProfileReady(true);
+      setSkipBiometrics(true);
     }
   };
 
-  if (!isReady || !isProfileReady) {
-    return (
-      <SafeAreaView className="flex flex-1 justify-center items-center">
-        <ActivityIndicator animating={true} color={"#0061FF"} />
-      </SafeAreaView>
-    );
-  }
+  const getToken = async (address: string) => {
+    try {
+      const token = await SecureStore.getItemAsync(`token-${address}`);
+      if (token) {
+        const userData = await fetchUserData(token);
+        if (!userData) return;
+        await authorise(userData, skipBiometrics);
+      }
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  // if (!isReady || !isProfileReady) {
+  //   return (
+  //     <SafeAreaView className="flex flex-1 justify-center items-center">
+  //       <ActivityIndicator animating={true} color={"#FF238C"} />
+  //     </SafeAreaView>
+  //   );
+  // }
 
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
       <View className="text-center flex flex-col space-y-4 justify-center items-center">
         <Image
           className="mt-24 h-14 w-56"
-          source={require("../images/fluidpay.png")}
+          source={require("../images/plink.png")}
         />
         <View className="px-16">
           <Text
             className={`text-white text-xl text-center leading-tight font-semibold`}
           >
-            To anyone, from everywhere.
+            Your USDC shortcut.
           </Text>
         </View>
       </View>
 
       {isLoading && skipBiometrics && (
         <View className="flex flex-col space-y-8">
-          <ActivityIndicator animating={true} color={"#0061FF"} />
-          <Text className="text-blue-600 font-medium text-lg text-center ">
+          <ActivityIndicator animating={true} color={"#FF238C"} />
+          <Text className="text-primary font-medium text-lg text-center ">
             {loadingMessage}
           </Text>
         </View>
@@ -160,7 +173,7 @@ const Home = () => {
         </View>
       )}
 
-      {isReady && !user && (
+      {isReady && skipBiometrics && (
         <LoginForm
           setIsLoading={setIsLoading}
           setLoadingMessage={setLoadingMessage}

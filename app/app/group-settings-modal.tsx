@@ -13,7 +13,6 @@ import { ArrowLeft, Search, Trash2 } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { useState } from "react";
 import { deleteGroup, getUsers, updateGroup } from "../../lib/api";
-import Avatar from "../../components/avatar";
 import SearchGroupMembers from "../../components/search-group-members";
 
 export default function GroupSettingsModal() {
@@ -33,9 +32,7 @@ export default function GroupSettingsModal() {
     setIsUpdateLoading(true);
     const updateGroupData = {
       name: groupName,
-      memberIds: [
-        ...addedMembers.map((m: any) => m.id),
-      ],
+      memberIds: [...addedMembers.map((m: any) => m.id)],
     };
     await updateGroup(user!.token, { id: parsedGroup!.id }, updateGroupData);
     setIsUpdateLoading(false);

@@ -6,12 +6,13 @@ import {
   Text,
   View,
   Pressable,
+  ScrollView,
   TouchableOpacity,
   ViewStyle,
+  ImageBackground,
 } from "react-native";
 import SkeletonLoader from "expo-skeleton-loader";
 import AppButton from "../../../components/app-button";
-import { ScrollView } from "react-native-gesture-handler";
 import Avatar from "../../../components/avatar";
 import { PlusIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -20,7 +21,7 @@ import { getGroups } from "../../../lib/api";
 export default function Pocket() {
   const user = useUserStore((state) => state.user);
   const groups = useGroupsStore((state) => state.groups);
-  const setGroups = useGroupsStore((state) => state.setGroups);
+  const { setGroups, fetched, setFetched } = useGroupsStore((state) => state);
   const [fetchingGroups, setFetchingGroups] = useState(true);
 
   const navigation = useNavigation();
@@ -29,6 +30,7 @@ export default function Pocket() {
     const refresh = async () => {
       setFetchingGroups(true);
       await Promise.all([fetchGroups()]);
+      setFetched(true);
       setFetchingGroups(false);
     };
 
@@ -48,12 +50,11 @@ export default function Pocket() {
     return <Redirect href={"/"} />;
   }
 
-  if (groups.length === 0 && !fetchingGroups) {
+  if (groups.length === 0 && fetched) {
     return (
-      <LinearGradient
-        colors={["#3500B7", "#000000"]}
-        className="h-full"
-        style={{}}
+      <ImageBackground
+        source={require("../../../images/blur-bg.png")}
+        className="flex-1"
       >
         <SafeAreaView className="bg-transparent flex-1 items-center py-24 px-16 space-y-4">
           <Text className="text-white text-4xl font-semibold text-center">
@@ -70,7 +71,7 @@ export default function Pocket() {
             />
           </View>
         </SafeAreaView>
-      </LinearGradient>
+      </ImageBackground>
     );
   }
 
@@ -81,7 +82,7 @@ export default function Pocket() {
 
         <TouchableOpacity
           onPress={() => router.push("/app/create-group")}
-          className="bg-[#0061FF] border-2 border-[#0061FF] flex flex-row space-x-2 rounded-full items-center justify-center py-2 px-4"
+          className="bg-[#FF238C] border-2 border-[#FF238C] flex flex-row space-x-2 rounded-full items-center justify-center py-2 px-4"
         >
           <Text className="text-lg text-white font-semibold">New</Text>
           <PlusIcon size={24} color="#FFFFFF" />
@@ -89,6 +90,7 @@ export default function Pocket() {
       </View>
       <ScrollView>
         {!groups.length &&
+          !fetched &&
           fetchingGroups &&
           Array(4)
             .fill(null)
@@ -123,7 +125,7 @@ export default function Pocket() {
                       key={`member-${index}-${group.name}`}
                     >
                       <Avatar
-                        name={member.user.username.charAt(0).toUpperCase()}
+                        name={member.user.displayName.charAt(0).toUpperCase()}
                         // color="#FFFFFF"
                       />
                     </View>

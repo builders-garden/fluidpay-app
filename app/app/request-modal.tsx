@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import Avatar from "../../components/avatar";
 import { useUserStore } from "../../store";
@@ -8,7 +8,6 @@ import { ArrowLeft, Copy } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Share } from "react-native";
 import * as Clipboard from "expo-clipboard";
-import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function RequestModal() {
   const isPresented = router.canGoBack();
@@ -46,7 +45,7 @@ export default function RequestModal() {
       <View className="flex px-4 space-y-4 h-full">
         <Text className="text-3xl text-white font-bold">Request via link</Text>
         <View className="flex items-center space-y-2 mt-4">
-          <Avatar name={user?.username.charAt(0)} size={64} />
+          <Avatar name={user?.displayName.charAt(0)} size={64} />
           <View className="flex flex-row items-center space-x-2">
             <Text className="text-white font-semibold text-lg">
               {user?.username}
@@ -64,14 +63,14 @@ export default function RequestModal() {
           <TouchableOpacity
             onPress={async () => {
               await Clipboard.setStringAsync(
-                `https://fluidpay.xyz/u/${user?.username}`
+                `https://plink.finance/u/${user?.username}`
               );
             }}
           >
             <View className="flex flex-row items-center space-x-2">
-              <Copy size={20} color="#0061FF" />
-              <Text className="text-[#0061FF] font-bold text-lg">
-                fluidpay.xyz/u/{user?.username}
+              <Copy size={20} color="#FF238C" />
+              <Text className="text-[#FF238C] font-bold text-lg">
+                plink.finance/u/{user?.username}
               </Text>
             </View>
           </TouchableOpacity>
@@ -84,7 +83,7 @@ export default function RequestModal() {
               variant="primary"
               onPress={async () => {
                 await Share.share({
-                  message: `gm! join me on fluidpay using this link: https://fluidpay.xyz/u/${user?.username}`,
+                  message: `gm! join me on Plink using this link: https://plink.finance/u/${user?.username}`,
                 });
               }}
             />

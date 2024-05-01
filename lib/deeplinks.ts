@@ -1,6 +1,6 @@
 import { router } from "expo-router";
 
-const DEEP_LINK_PREFIX = "https://fluidpay.xyz";
+const DEEP_LINK_PREFIX = "https://plink.finance";
 
 export const handleDeepLinks = (url: string) => {
   if (!url) return;

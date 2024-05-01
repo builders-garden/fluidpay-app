@@ -18,12 +18,12 @@ export default function AppTabsLayout() {
         name="home"
         options={{
           tabBarIcon: ({ focused }) => (
-            <Home color={focused ? "#0061FF" : "#8F8F91"} size={24} />
+            <Home color={focused ? "#FF238C" : "#8F8F91"} size={24} />
           ),
           headerShown: false,
           title: "Home",
           tabBarInactiveTintColor: "#8F8F91",
-          tabBarActiveTintColor: "#0061FF",
+          tabBarActiveTintColor: "#FF238C",
           tabBarBackground: () => <View className="bg-[#252526] flex-1" />,
         }}
       />
@@ -31,12 +31,12 @@ export default function AppTabsLayout() {
         name="transfers"
         options={{
           tabBarIcon: ({ focused }) => (
-            <ArrowLeftRight color={focused ? "#0061FF" : "#8F8F91"} size={24} />
+            <ArrowLeftRight color={focused ? "#FF238C" : "#8F8F91"} size={24} />
           ),
           headerShown: false,
           title: "Transfers",
           tabBarInactiveTintColor: "#8F8F91",
-          tabBarActiveTintColor: "#0061FF",
+          tabBarActiveTintColor: "#FF238C",
           tabBarBackground: () => <View className="bg-[#252526] flex-1" />,
         }}
       />
@@ -44,12 +44,12 @@ export default function AppTabsLayout() {
         name="groups"
         options={{
           tabBarIcon: ({ focused }) => (
-            <LayoutGrid color={focused ? "#0061FF" : "#8F8F91"} size={24} />
+            <LayoutGrid color={focused ? "#FF238C" : "#8F8F91"} size={24} />
           ),
           headerShown: false,
           title: "Groups",
           tabBarInactiveTintColor: "#8F8F91",
-          tabBarActiveTintColor: "#0061FF",
+          tabBarActiveTintColor: "#FF238C",
           tabBarBackground: () => <View className="bg-[#252526] flex-1" />,
         }}
       />

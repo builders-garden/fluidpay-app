@@ -69,7 +69,7 @@ export default function CodeInput({
                 key={index}
                 className={
                   "basis-1/6 text-white bg-[#232324] py-4 rounded-lg" +
-                  (focused ? " border-2 border-blue-500" : "")
+                  (focused ? " border-2 border-primary" : "")
                 }
               >
                 <Text className="text-4xl text-center placeholder-white">
@@ -110,7 +110,7 @@ export default function CodeInput({
         variant={code?.length === 6 ? "primary" : "disabled"}
       />
       <Text
-        className="mt-8 text-blue-500 text-center font-bold"
+        className="mt-8 text-primary text-center font-bold"
         onPress={() => sendCode({ email: email! })}
       >
         Didn&apos;t receive anything? Send again

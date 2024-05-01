@@ -49,7 +49,7 @@ export default function SelectPaidByModal({
                       status={
                         paidById === member.userId ? "checked" : "unchecked"
                       }
-                      color="#0061FF"
+                      color="#FF238C"
                       uncheckedColor="#8F8F91"
                       onPress={() => {
                         setPaidById(member.userId);
@@ -57,7 +57,7 @@ export default function SelectPaidByModal({
                       }}
                     />
                     <Avatar
-                      name={member.user.username.charAt(0).toUpperCase()}
+                      name={member.user.displayName.charAt(0).toUpperCase()}
                     />
                     <Text className="text-white font-semibold text-lg ml-2">
                       {member.user.username === user?.username

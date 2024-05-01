@@ -62,7 +62,7 @@ export default function SpecificRequestModal() {
               variant="primary"
               onPress={async () => {
                 await Share.share({
-                  message: `gm! join me on fluidpay using this link: https://fluidpay.xyz/u/${user?.username}/request/${amount}`,
+                  message: `gm! join me on fluidpay using this link: https://plink.finance/u/${user?.username}/request/${amount}`,
                 });
               }}
             />

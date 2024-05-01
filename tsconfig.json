@@ -4,12 +4,10 @@
     "strict": true,
     "lib": ["es2015"],
     "types": ["./app.d.ts"],
-    // Allows us to use conditional/deep imports on published packages
-    "moduleResolution": "Bundler",
     "paths": {
-      "react": ["./node_modules/@types/react"],
       "@/": ["./"]
     },
     "jsx": "react-jsx"
-  }
+  },
+  "include": ["**/*.ts", "**/*.tsx"]
 }

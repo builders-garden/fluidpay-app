@@ -1,12 +1,12 @@
 import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { Appbar, Checkbox } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
-import { ArrowLeft, ChevronDown, Edit, Trash2 } from "lucide-react-native";
+import { ArrowLeft, ChevronDown, Trash2 } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { AmountChooser } from "../../components/amount-chooser";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Avatar from "../../components/avatar";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
@@ -15,11 +15,9 @@ import {
   getGroupExpenseById,
   updateGroupExpense,
 } from "../../lib/api";
-import { ScrollView } from "react-native-gesture-handler";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import SelectPaidByModal from "./select-paid-by-modal";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 import DatePicker from "../../components/date-picker";
 
 export default function DetailExpenseModal() {
@@ -203,7 +201,7 @@ export default function DetailExpenseModal() {
               <View className="flex flex-row items-center" key={index}>
                 <Checkbox.Android
                   status={selected[index] ? "checked" : "unchecked"}
-                  color="#0061FF"
+                  color="#FF238C"
                   uncheckedColor="#8F8F91"
                   onPress={() => {
                     const newSelected = selected.slice();
@@ -211,7 +209,9 @@ export default function DetailExpenseModal() {
                     setSelected(newSelected);
                   }}
                 />
-                <Avatar name={member.user.username.charAt(0).toUpperCase()} />
+                <Avatar
+                  name={member.user.displayName.charAt(0).toUpperCase()}
+                />
                 <Text className="text-white font-semibold text-lg ml-2">
                   {member.user.username === user?.username
                     ? "You"

@@ -1,4 +1,4 @@
-import { View, Text, Image, Pressable } from "react-native";
+import { View, Text, Image, ImageBackground, Pressable } from "react-native";
 import { Appbar } from "react-native-paper";
 import {
   useERC20BalanceOf,
@@ -7,7 +7,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react-native";
 
-import { LinearGradient } from "expo-linear-gradient";
 import { useChainStore } from "../../store/use-chain-store";
 import { Chain, base, sepolia } from "viem/chains";
 import tokens from "../../constants/tokens";
@@ -50,12 +49,11 @@ export default function AccountsModal() {
 
   return (
     <View className="flex-1 bg-black h-full">
-      <LinearGradient
-        colors={["#3500B7", "#1B005E", "#000000"]}
-        className="h-full"
-        style={{}}
+      <ImageBackground
+        source={require("../../images/blur-bg.png")}
+        className="flex-1"
       >
-        <View className="flex-1 bg-white/20 h-full">
+        <View className="flex-1 h-full">
           <Appbar.Header
             elevated={false}
             statusBarHeight={48}
@@ -122,7 +120,7 @@ export default function AccountsModal() {
             </View>
           </View>
         </View>
-      </LinearGradient>
+      </ImageBackground>
     </View>
   );
 }

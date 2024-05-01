@@ -1,10 +1,9 @@
 import { Link, Redirect, useNavigation } from "expo-router";
-import { View, Text, Pressable, ViewStyle } from "react-native";
+import { View, Text, Pressable, ScrollView, ViewStyle } from "react-native";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
 import { useTransactionsStore, useUserStore } from "../../../store";
-import { ScrollView } from "react-native-gesture-handler";
 import TransactionItem from "../../../components/transaction-item";
 import { useProfileStore } from "../../../store/use-profile-store";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,12 +20,10 @@ import tokens from "../../../constants/tokens";
 import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
-import { useEmbeddedWallet } from "@privy-io/expo";
-import SkeletonLoader from "expo-skeleton-loader";
+import TransactionSkeletonLayout from "../../../components/skeleton-layout/transactions";
 
 export default function Home() {
-  const { address, isConnected, isReady } = usePrivyWagmiProvider();
-  const wallet = useEmbeddedWallet();
+  const { isReady } = usePrivyWagmiProvider();
   const [fetchingPayments, setFetchingPayments] = useState(false);
   const chain = useChainStore((state) => state.chain);
   const user = useUserStore((state) => state.user);
@@ -95,13 +92,14 @@ export default function Home() {
 
   const recentPayees = getUniquePayees();
 
-  if (!isReady || !isConnected || !user) {
+  if (!isReady || !user) {
     return <Redirect href={"/"} />;
   }
 
   return (
     <LinearGradient
-      colors={["#3500B7", "#1B005E", "#000000"]}
+      start={{ x: 0.5, y: 0.2 }}
+      colors={["#71103E", "#000000", "#000000"]}
       className="h-full"
       style={{}}
     >
@@ -110,7 +108,7 @@ export default function Home() {
           <View className="flex flex-row items-center justify-between px-4 mt-2">
             <View className="flex flex-row items-center space-x-4 pl-2">
               <Link href={"/app/settings"}>
-                <Avatar name={user.username.charAt(0).toUpperCase()} />
+                <Avatar name={user.displayName.charAt(0).toUpperCase()} />
               </Link>
             </View>
             {/* <View className="flex flex-row items-center space-x-0">
@@ -165,7 +163,7 @@ export default function Home() {
                 {Array(3)
                   .fill(null)
                   .map((_, i) => (
-                    <TransactionLayout key={i} />
+                    <TransactionSkeletonLayout key={i} />
                   ))}
               </View>
             )}
@@ -188,7 +186,7 @@ export default function Home() {
                       },
                     })
                   }
-                  className="text-[#0061FF] font-semibold text-center"
+                  className="text-[#FF238C] font-semibold text-center"
                 >
                   See all
                 </Text>
@@ -226,7 +224,9 @@ export default function Home() {
                     >
                       <View className="flex space-y-2 items-center">
                         <Avatar
-                          name={payment.payee.username.charAt(0).toUpperCase()}
+                          name={payment.payee.displayName
+                            .charAt(0)
+                            .toUpperCase()}
                         />
                         <Text className="text-white font-semibold">
                           {payment.payee.username}
@@ -243,38 +243,3 @@ export default function Home() {
     </LinearGradient>
   );
 }
-
-const TransactionLayout = ({
-  size = 48,
-  style,
-}: {
-  size?: number;
-  style?: ViewStyle;
-}) => (
-  <SkeletonLoader duration={850}>
-    <SkeletonLoader.Container
-      style={[{ flex: 1, flexDirection: "row", alignItems: "center" }, style]}
-    >
-      <SkeletonLoader.Container
-        style={[{ flex: 1, flexDirection: "row", alignItems: "center" }, style]}
-      >
-        <SkeletonLoader.Item
-          style={{
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-            marginRight: 16,
-          }}
-        />
-        <SkeletonLoader.Container style={{ paddingVertical: 10 }}>
-          <SkeletonLoader.Item
-            style={{ width: 100, height: 20, marginBottom: 5 }}
-          />
-          <SkeletonLoader.Item style={{ width: 110, height: 20 }} />
-        </SkeletonLoader.Container>
-      </SkeletonLoader.Container>
-
-      <SkeletonLoader.Item style={{ width: 70, height: 20 }} />
-    </SkeletonLoader.Container>
-  </SkeletonLoader>
-);

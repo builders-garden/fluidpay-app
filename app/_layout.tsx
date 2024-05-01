@@ -1,4 +1,4 @@
-import { Slot, router } from "expo-router";
+import { Slot, useNavigationContainerRef } from "expo-router";
 import { LogBox, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import * as Linking from "expo-linking";
@@ -21,6 +21,22 @@ import { base, sepolia } from "viem/chains";
 import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
 import { useEffect } from "react";
 import { handleDeepLinks } from "../lib/deeplinks";
+import "react-native-gesture-handler";
+import { isRunningInExpoGo } from "expo";
+import * as Sentry from "@sentry/react-native";
+
+const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  debug: true,
+  integrations: [
+    new Sentry.ReactNativeTracing({
+      routingInstrumentation,
+      enableNativeFramesTracking: !isRunningInExpoGo(),
+    }),
+  ],
+});
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
@@ -63,7 +79,7 @@ const toastConfig: ToastConfig = {
   ),
 };
 
-export default function AppLayout() {
+function AppLayout() {
   const url = Linking.useURL();
 
   useEffect(() => {
@@ -71,6 +87,15 @@ export default function AppLayout() {
       handleDeepLinks(url);
     }
   }, [url]);
+
+  // Capture the NavigationContainer ref and register it with the instrumentation.
+  const ref = useNavigationContainerRef();
+
+  useEffect(() => {
+    if (ref) {
+      routingInstrumentation.registerNavigationContainer(ref);
+    }
+  }, [ref]);
 
   return (
     <>
@@ -107,3 +132,5 @@ export default function AppLayout() {
     </>
   );
 }
+
+export default Sentry.wrap(AppLayout);
