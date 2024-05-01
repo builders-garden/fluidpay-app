@@ -5,6 +5,7 @@ import { router } from "expo-router";
 import { useProfileStore } from "../store/use-profile-store";
 import { useUserStore } from "../store/use-user-store";
 import Avatar from "./avatar";
+import { PressableProps } from "react-native-paper/lib/typescript/components/TouchableRipple/Pressable";
 
 export default function TransactionItem({
   transaction,
@@ -23,7 +24,15 @@ export default function TransactionItem({
   const { createdAt, payee, payer, payeeId, payerId, amount } = transaction;
   const isFrom = payerId === user?.id;
   return (
-    <View key={`transaction-${index}`}>
+    <Pressable
+      onPress={() =>
+        router.push({
+          pathname: "/app/tx-detail-modal",
+          params: { transaction: JSON.stringify(transaction) },
+        })
+      }
+      key={`transaction-${index}`}
+    >
       <View className="flex flex-row items-center justify-between py-3">
         <View className="flex flex-row items-center space-x-4">
           <Pressable
@@ -43,19 +52,11 @@ export default function TransactionItem({
             />
           </Pressable>
 
-          <Pressable
-            onPress={() =>
-              router.push({
-                pathname: "/app/tx-detail-modal",
-                params: { transaction: JSON.stringify(transaction) },
-              })
-            }
-          >
-            <View className="flex flex-col">
-              <Text className="text-white font-semibold text-lg">
-                {isFrom ? payee.username : payer.username}
-              </Text>
-              {/* <Pressable
+          <View className="flex flex-col">
+            <Text className="text-white font-semibold text-lg">
+              {isFrom ? payee.username : payer.username}
+            </Text>
+            {/* <Pressable
               key={`event-${index}`}
               onPress={async () => {
                 await WebBrowser.openBrowserAsync(
@@ -63,12 +64,11 @@ export default function TransactionItem({
                 );
               }}
             > */}
-              <Text className="text-[#8F8F91]">
-                {time ?? <TimeAgo dateTo={new Date(createdAt)} />}
-              </Text>
-              {/* </Pressable> */}
-            </View>
-          </Pressable>
+            <Text className="text-[#8F8F91]">
+              {time ?? <TimeAgo dateTo={new Date(createdAt)} />}
+            </Text>
+            {/* </Pressable> */}
+          </View>
         </View>
         <View className="flex flex-col items-end justify-center">
           <Text
@@ -80,6 +80,6 @@ export default function TransactionItem({
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }

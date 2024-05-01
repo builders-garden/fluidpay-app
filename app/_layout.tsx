@@ -1,4 +1,4 @@
-import { Slot, router } from "expo-router";
+import { Slot } from "expo-router";
 import { LogBox, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import * as Linking from "expo-linking";

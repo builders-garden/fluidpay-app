@@ -141,3 +141,27 @@ export function getFormattedTime(dateTimeString: string) {
 
   return formattedTime;
 }
+
+export function formatDateToMonthDay(dateStr: string) {
+  const dateObj = new Date(dateStr);
+  const month = dateObj.toLocaleString("en-US", { month: "long" }); // Long month name (e.g., "May")
+  const day = dateObj.getDate().toString().padStart(2, "0"); // Day with leading zero
+  return `${month} ${day}`;
+}
+
+type DebouncedFunction<T extends (...args: any[]) => any> = (
+  ...args: Parameters<T>
+) => void;
+
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): DebouncedFunction<T> {
+  let timeoutId: NodeJS.Timeout | null = null;
+
+  return function (...args: Parameters<T>) {
+    clearTimeout(timeoutId!);
+
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+}

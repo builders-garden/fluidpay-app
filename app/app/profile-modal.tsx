@@ -179,7 +179,7 @@ export default function ProfileModal() {
             {dates.map((date) => {
               const transactionList = transactionsByDay[date].transactions;
               return (
-                <View id={date} className="w-full rounded-lg">
+                <View key={date} className="w-full rounded-lg">
                   <Text className="text-xl text-white font-medium mb-2.5">
                     {isTodayOrYesterday(date) || (
                       <TimeAgo dateTo={new Date(date)} />
