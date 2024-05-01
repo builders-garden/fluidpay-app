@@ -1,4 +1,4 @@
-import { Slot, router } from "expo-router";
+import { Slot, useNavigationContainerRef } from "expo-router";
 import { LogBox, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
 import * as Linking from "expo-linking";
@@ -10,6 +10,7 @@ import Toast, {
 } from "react-native-toast-message";
 //@ts-ignore
 import Icon from "react-native-vector-icons/FontAwesome";
+import { PostHogProvider } from "posthog-react-native";
 // Import the PrivyProvider
 import { PrivyProvider } from "@privy-io/expo";
 import { PrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
@@ -20,6 +21,22 @@ import { base, sepolia } from "viem/chains";
 import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
 import { useEffect } from "react";
 import { handleDeepLinks } from "../lib/deeplinks";
+import "react-native-gesture-handler";
+import { isRunningInExpoGo } from "expo";
+import * as Sentry from "@sentry/react-native";
+
+const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
+
+Sentry.init({
+  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+  debug: true,
+  integrations: [
+    new Sentry.ReactNativeTracing({
+      routingInstrumentation,
+      enableNativeFramesTracking: !isRunningInExpoGo(),
+    }),
+  ],
+});
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
@@ -62,7 +79,7 @@ const toastConfig: ToastConfig = {
   ),
 };
 
-export default function AppLayout() {
+function AppLayout() {
   const url = Linking.useURL();
 
   useEffect(() => {
@@ -71,25 +88,41 @@ export default function AppLayout() {
     }
   }, [url]);
 
+  // Capture the NavigationContainer ref and register it with the instrumentation.
+  const ref = useNavigationContainerRef();
+
+  useEffect(() => {
+    if (ref) {
+      routingInstrumentation.registerNavigationContainer(ref);
+    }
+  }, [ref]);
+
   return (
     <>
-      <PaperProvider
-        settings={{
-          icon: (props) => <Icon {...props} />,
+      <PostHogProvider
+        apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY!}
+        options={{
+          host: process.env.EXPO_PUBLIC_POSTHOG_HOST,
         }}
       >
-        <PrivyProvider
-          appId={process.env.EXPO_PUBLIC_PRIVY_APP_ID!}
-          storage={MyPermissiveSecureStorageAdapter}
-          supportedChains={[sepolia, base]}
+        <PaperProvider
+          settings={{
+            icon: (props) => <Icon {...props} />,
+          }}
         >
-          <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
-            <View className="bg-black flex-1">
-              <Slot />
-            </View>
-          </PrivyWagmiProvider>
-        </PrivyProvider>
-      </PaperProvider>
+          <PrivyProvider
+            appId={process.env.EXPO_PUBLIC_PRIVY_APP_ID!}
+            storage={MyPermissiveSecureStorageAdapter}
+            supportedChains={[sepolia, base]}
+          >
+            <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
+              <View className="bg-black flex-1">
+                <Slot />
+              </View>
+            </PrivyWagmiProvider>
+          </PrivyProvider>
+        </PaperProvider>
+      </PostHogProvider>
       <Toast
         config={toastConfig}
         position="top"
@@ -99,3 +132,5 @@ export default function AppLayout() {
     </>
   );
 }
+
+export default Sentry.wrap(AppLayout);

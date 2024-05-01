@@ -24,7 +24,7 @@ export default function InteractedUser({
       key={user.id}
     >
       <View className="flex flex-row space-x-4">
-        <Avatar name={user.username?.charAt(0).toUpperCase()} />
+        <Avatar name={user.displayName?.charAt(0).toUpperCase()} />
         <View className="flex flex-col">
           <Text className="text-white font-semibold text-lg">
             {user.displayName}

@@ -20,6 +20,7 @@ import { useChainStore } from "../../store/use-chain-store";
 import { base } from "viem/chains";
 import SendConfirmation from "../../components/transaction/send-confirmation";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -110,7 +111,7 @@ export default function SendModal() {
         <Appbar.Action
           icon={() => (
             <Avatar
-              name={sendUser?.username.charAt(0).toUpperCase()}
+              name={sendUser?.displayName.charAt(0).toUpperCase()}
               size={37.5}
             />
           )}
@@ -201,21 +202,23 @@ export default function SendModal() {
         </SafeAreaView>
 
         {showConfirmSheet && (
-          <SendConfirmation
-            sendUser={sendUser}
-            amount={amount}
-            address={address}
-            chain={chain}
-            note={note}
-            user={user}
-            isLoadingBalance={isLoadingBalance}
-            isLoadingTransfer={isLoadingTransfer}
-            setIsLoadingTransfer={setIsLoadingTransfer}
-            refetchBalance={refetchBalance}
-            cancelTransaction={() => closeConfirmSheet()}
-            bottomSheetRef={bottomSheetRef}
-            balance={balance}
-          />
+          <GestureHandlerRootView>
+            <SendConfirmation
+              sendUser={sendUser}
+              amount={amount}
+              address={address}
+              chain={chain}
+              note={note}
+              user={user}
+              isLoadingBalance={isLoadingBalance}
+              isLoadingTransfer={isLoadingTransfer}
+              setIsLoadingTransfer={setIsLoadingTransfer}
+              refetchBalance={refetchBalance}
+              cancelTransaction={() => closeConfirmSheet()}
+              bottomSheetRef={bottomSheetRef}
+              balance={balance}
+            />
+          </GestureHandlerRootView>
         )}
       </KeyboardAvoidingView>
     </View>

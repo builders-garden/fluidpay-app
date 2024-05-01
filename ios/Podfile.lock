@@ -103,6 +103,8 @@ PODS:
     - ExpoModulesCore
   - ExpoLocalAuthentication (13.8.0):
     - ExpoModulesCore
+  - ExpoLocalization (14.8.4):
+    - ExpoModulesCore
   - ExpoModulesCore (1.11.13):
     - glog
     - RCT-Folly (= 2022.05.16.00)
@@ -1208,7 +1210,7 @@ PODS:
     - React-Core
   - RNCPicker (2.6.1):
     - React-Core
-  - RNDateTimePicker (7.6.3):
+  - RNDateTimePicker (7.6.1):
     - React-Core
   - RNGestureHandler (2.14.1):
     - glog
@@ -1228,12 +1230,20 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+  - RNSentry (5.20.0):
+    - hermes-engine
+    - React-Core
+    - React-hermes
+    - Sentry/HybridSDK (= 8.21.0)
   - RNSVG (14.1.0):
     - React-Core
-  - RNVectorIcons (10.0.3):
+  - RNVectorIcons (10.1.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
+  - Sentry/HybridSDK (8.21.0):
+    - SentryPrivate (= 8.21.0)
+  - SentryPrivate (8.21.0)
   - SocketRocket (0.6.1)
   - Yoga (1.14.0)
   - ZXingObjC (3.6.9):
@@ -1269,6 +1279,7 @@ DEPENDENCIES:
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
+  - ExpoLocalization (from `../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoSecureStore (from `../node_modules/expo-secure-store/ios`)
   - ExpoSharing (from `../node_modules/expo-sharing/ios`)
@@ -1341,6 +1352,7 @@ DEPENDENCIES:
   - RNQrGenerator (from `../node_modules/rn-qr-generator`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1351,6 +1363,8 @@ SPEC REPOS:
     - libevent
     - MMKV
     - MMKVCore
+    - Sentry
+    - SentryPrivate
     - SocketRocket
     - ZXingObjC
 
@@ -1401,6 +1415,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-linear-gradient/ios"
   ExpoLocalAuthentication:
     :path: "../node_modules/expo-local-authentication/ios"
+  ExpoLocalization:
+    :path: "../node_modules/expo-localization/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoSecureStore:
@@ -1540,6 +1556,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -1571,6 +1589,7 @@ SPEC CHECKSUMS:
   ExpoKeepAwake: 0f5cad99603a3268e50af9a6eb8b76d0d9ac956c
   ExpoLinearGradient: 4ad1449a2408e0435ac959076562b3921f2e32a1
   ExpoLocalAuthentication: c55ffb179683efed04cb144fc80ccf26891f0cb4
+  ExpoLocalization: f94759e55802e4a4f8b7d7cecb450de11b888721
   ExpoModulesCore: 370096473359f5f6aade0871400d063333747719
   ExpoSecureStore: c84ae37d1c36f38524d289c67c3a2e3fc56f1108
   ExpoSharing: 752ad6ae2b693de9cd4e7fddb78297bdc658b815
@@ -1638,14 +1657,17 @@ SPEC CHECKSUMS:
   RNAWSCognito: fe0c870c7cd9970a2efefc075b3f2d75eac913c7
   RNCAsyncStorage: 618d03a5f52fbccb3d7010076bc54712844c18ef
   RNCPicker: b18aaf30df596e9b1738e7c1f9ee55402a229dca
-  RNDateTimePicker: 7b38b71bcd7c4cfa1cb95f2dff9a4f1faed2dced
+  RNDateTimePicker: 8fb39263b721223e095248acaf6f406d5b7f6713
   RNGestureHandler: 12833709769dde5fdb36ec9d4cdf4d3a1a024122
   RNInAppBrowser: e36d6935517101ccba0e875bac8ad7b0cb655364
   RNQrGenerator: 1676221c08bfabec978242989c733810dad20959
   RNReanimated: 41963a348e738c496a9b129bba9a9217017cd530
   RNScreens: a4d9ce8f68f833f4e42410140eafd88e38bba163
+  RNSentry: 5381e9284aec59a546e4a7d40e33ad0839b99c1e
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
-  RNVectorIcons: 81e919c3a9e56e4916f9e74cfe9cd2e489146f08
+  RNVectorIcons: b307b181c8e98d633d416d36421d515cf2fe9e31
+  Sentry: ebc12276bd17613a114ab359074096b6b3725203
+  SentryPrivate: d651efb234cf385ec9a1cdd3eff94b5e78a0e0fe
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5

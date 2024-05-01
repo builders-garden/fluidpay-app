@@ -22,7 +22,7 @@ export default function Settings() {
   const [showModal, setShowModal] = React.useState(false);
   const user = useUserStore((state) => state.user);
 
-  if (!isConnected || !isReady || !user) {
+  if (!isReady || !user) {
     return <Redirect href={"/"} />;
   }
 
@@ -54,7 +54,10 @@ export default function Settings() {
           </Appbar.Header>
           <View className="flex-1 flex-col px-4 bg-transparent space-y-8">
             <View className="flex flex-col items-center mt-4 space-y-3">
-              <Avatar name={user?.username.charAt(0).toUpperCase()} size={64} />
+              <Avatar
+                name={user?.displayName?.charAt(0)?.toUpperCase() || ""}
+                size={64}
+              />
               <Text className="text-white text-4xl text-center font-semibold">
                 @{user?.username}
               </Text>

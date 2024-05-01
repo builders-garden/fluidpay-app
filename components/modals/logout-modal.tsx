@@ -4,7 +4,7 @@ import AppButton from "../app-button";
 import Spacer from "../spacer";
 
 import * as SecureStore from "expo-secure-store";
-import { useUserStore } from "../../store";
+import { useGroupsStore, useUserStore } from "../../store";
 import { useDisconnect } from "wagmi";
 import { usePrivy } from "@privy-io/expo";
 import { router } from "expo-router";
@@ -18,6 +18,7 @@ export default function LogoutModal({
   hideModal: () => void;
 }) {
   const user = useUserStore((state) => state.user);
+  const setFetched = useGroupsStore((state) => state.setFetched);
   const setUser = useUserStore((state) => state.setUser);
   const { disconnect } = useDisconnect();
   const { logout } = usePrivy();
@@ -28,9 +29,10 @@ export default function LogoutModal({
       setIsLoggingOut(true);
       await SecureStore.deleteItemAsync(`token-${user?.address}`);
       await logout();
-      setUser(undefined);
       disconnect();
       setIsLoggingOut(false);
+      setUser(undefined);
+      setFetched(false);
       router.replace("/");
     } catch (error) {
       console.error("Error logging out", error);

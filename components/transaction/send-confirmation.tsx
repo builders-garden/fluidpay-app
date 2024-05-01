@@ -137,7 +137,7 @@ const SendConfirmation = ({
           <View className="w-full flex-1 pb-10">
             <View className="flex flex-col items-center mt-5">
               <Avatar
-                name={sendUser?.username.charAt(0).toUpperCase()}
+                name={sendUser?.displayName.charAt(0).toUpperCase()}
                 size={50}
               />
               <Text className="text-white text-xl mt-2.5 mb-1 text-center font-medium">

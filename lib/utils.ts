@@ -89,3 +89,79 @@ export const formatBigInt = (value: bigint, decimalPlaces = 2) => {
   const remainderStr = remainderBigInt.toString().padStart(decimalPlaces, "0"); // Pad with leading zeros
   return `${quotientBigInt}.${remainderStr.slice(0, decimalPlaces)}`;
 };
+
+export function isTodayOrYesterday(
+  date: string
+): "Today" | "Yesterday" | false {
+  const today = new Date();
+
+  // Create a new Date object from the list date
+  const listDate = new Date(date);
+
+  // Set time to midnight (00:00:00) for both dates
+  // This ensures we only compare the date portion
+  today.setHours(0, 0, 0, 0);
+  listDate.setHours(0, 0, 0, 0);
+
+  // Get the difference in milliseconds
+  const diffInMs = today.getTime() - listDate.getTime();
+
+  // One day in milliseconds
+  const oneDayInMs = 1000 * 60 * 60 * 24;
+
+  // Check if the listDate is today
+  if (diffInMs === 0) {
+    return "Today";
+  }
+
+  // Check if the listDate is yesterday (difference of one day)
+  if (diffInMs === oneDayInMs) {
+    return "Yesterday";
+  }
+
+  // If not today or yesterday, return false
+  return false;
+}
+
+export function getFormattedTime(dateTimeString: string) {
+  // Parse the string into a Date object
+  const dateTime = new Date(dateTimeString);
+
+  // Extract the time components
+  const hours = dateTime.getHours();
+  const minutes = dateTime.getMinutes();
+
+  // Format hours to 12-hour format and determine AM/PM
+  let formattedHours = hours % 12;
+  formattedHours = formattedHours === 0 ? 12 : formattedHours; // Handle midnight (0 hours)
+  const period = hours < 12 ? "AM" : "PM";
+
+  // Construct the formatted time string
+  const formattedTime = `${formattedHours}:${minutes < 10 ? "0" : ""}${minutes} ${period}`;
+
+  return formattedTime;
+}
+
+export function formatDateToMonthDay(dateStr: string) {
+  const dateObj = new Date(dateStr);
+  const month = dateObj.toLocaleString("en-US", { month: "long" }); // Long month name (e.g., "May")
+  const day = dateObj.getDate().toString().padStart(2, "0"); // Day with leading zero
+  return `${month} ${day}`;
+}
+
+type DebouncedFunction<T extends (...args: any[]) => any> = (
+  ...args: Parameters<T>
+) => void;
+
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): DebouncedFunction<T> {
+  let timeoutId: NodeJS.Timeout | null = null;
+
+  return function (...args: Parameters<T>) {
+    clearTimeout(timeoutId!);
+
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+}
