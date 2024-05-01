@@ -28,9 +28,9 @@ export default function LogoutModal({
       setIsLoggingOut(true);
       await SecureStore.deleteItemAsync(`token-${user?.address}`);
       await logout();
-      setUser(undefined);
       disconnect();
       setIsLoggingOut(false);
+      setUser(undefined);
       router.replace("/");
     } catch (error) {
       console.error("Error logging out", error);
