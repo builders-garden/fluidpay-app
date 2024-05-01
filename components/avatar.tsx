@@ -2,7 +2,7 @@ import { Avatar } from "react-native-paper";
 import { colorHash } from "../lib/utils";
 
 export default function CruminaAvatar({
-  name,
+  name = " ",
   size = 48,
   color = "#B4B7B9",
 }: {
