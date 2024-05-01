@@ -89,3 +89,36 @@ export const formatBigInt = (value: bigint, decimalPlaces = 2) => {
   const remainderStr = remainderBigInt.toString().padStart(decimalPlaces, "0"); // Pad with leading zeros
   return `${quotientBigInt}.${remainderStr.slice(0, decimalPlaces)}`;
 };
+
+export function isTodayOrYesterday(
+  date: string
+): "Today" | "Yesterday" | false {
+  const today = new Date();
+
+  // Create a new Date object from the list date
+  const listDate = new Date(date);
+
+  // Set time to midnight (00:00:00) for both dates
+  // This ensures we only compare the date portion
+  today.setHours(0, 0, 0, 0);
+  listDate.setHours(0, 0, 0, 0);
+
+  // Get the difference in milliseconds
+  const diffInMs = today.getTime() - listDate.getTime();
+
+  // One day in milliseconds
+  const oneDayInMs = 1000 * 60 * 60 * 24;
+
+  // Check if the listDate is today
+  if (diffInMs === 0) {
+    return "Today";
+  }
+
+  // Check if the listDate is yesterday (difference of one day)
+  if (diffInMs === oneDayInMs) {
+    return "Yesterday";
+  }
+
+  // If not today or yesterday, return false
+  return false;
+}
