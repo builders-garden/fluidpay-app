@@ -20,6 +20,7 @@ import { base, sepolia } from "viem/chains";
 import { MyPermissiveSecureStorageAdapter } from "../lib/storage-adapter";
 import { useEffect } from "react";
 import { handleDeepLinks } from "../lib/deeplinks";
+import "react-native-gesture-handler";
 
 LogBox.ignoreLogs([new RegExp("TypeError:.*")]);
 
