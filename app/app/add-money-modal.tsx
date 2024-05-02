@@ -147,7 +147,7 @@ const getDepositOptions = (address: Address) => [
   // {
   //   imagePath: require("../../images/usdc.png"),
   //   title: "Buy USDC",
-  //   externalLink: `https://app.ramp.network/?hostApiKey=kkkkdu9jsw3dbc3qnf8o2bvmzoxkp63mrz27hrma&hostAppName=Fluidpay&hostLogoUrl=https://fluidpay.xyz/assets/icon-ramp.png&swapAsset=BASE_USDC&userAddress=${address}&finalUrl=fluidpay://`,
+  //   externalLink: `https://app.ramp.network/?hostApiKey=<plinkApiKey>&hostAppName=Fluidpay&hostLogoUrl=https://fluidpay.xyz/assets/icon-ramp.png&swapAsset=BASE_USDC&userAddress=${address}&finalUrl=fluidpay://`,
   //   variant: "default",
   // },
   {
