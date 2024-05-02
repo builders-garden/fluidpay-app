@@ -124,6 +124,7 @@ const SendConfirmation = ({
         snapPoints={snapPoints}
         index={0}
         enablePanDownToClose={true}
+        onClose={cancelTransaction}
         onChange={handleSheetChanges}
         handleIndicatorStyle={{
           backgroundColor: "#232324",
@@ -131,9 +132,16 @@ const SendConfirmation = ({
           height: 6,
           top: 5,
         }}
-        backgroundStyle={{ backgroundColor: "#161618" }}
+        backgroundStyle={{
+          backgroundColor: "#161618",
+        }}
       >
-        <BottomSheetView style={{ flex: 1, alignItems: "center" }}>
+        <BottomSheetView
+          style={{
+            flex: 1,
+            alignItems: "center",
+          }}
+        >
           <View className="w-full flex-1 pb-10">
             <View className="flex flex-col items-center mt-5">
               <Avatar

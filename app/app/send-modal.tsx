@@ -1,4 +1,10 @@
-import { Image, KeyboardAvoidingView, TextInput, View } from "react-native";
+import {
+  Image,
+  KeyboardAvoidingView,
+  Keyboard,
+  TextInput,
+  View,
+} from "react-native";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import { ActivityIndicator, Appbar } from "react-native-paper";
 import { Pressable, Text } from "react-native";
@@ -18,7 +24,7 @@ import {
 } from "@buildersgarden/privy-wagmi-provider";
 import { useChainStore } from "../../store/use-chain-store";
 import { base } from "viem/chains";
-import SendConfirmation from "../../components/transaction/send-confirmation";
+import SendConfirmation from "../../components/bottom-sheets/send-confirmation";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -194,7 +200,10 @@ export default function SendModal() {
               <AppButton
                 disabled={!canSend}
                 text={"Send"}
-                onPress={() => openConfirmSheet()}
+                onPress={() => {
+                  openConfirmSheet();
+                  Keyboard.dismiss();
+                }}
                 variant={canSend ? "primary" : "disabled"}
               />
             </View>
