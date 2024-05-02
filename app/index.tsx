@@ -63,7 +63,7 @@ const Home = () => {
   }, [address, user]);
 
   useEffect(() => {
-    getAccessToken()
+    getToken(address!)
       .then((token) => {
         if (!token) {
           setIsProfileReady(true);
@@ -73,7 +73,7 @@ const Home = () => {
       .catch((e) => {
         console.error(e);
       });
-  }, []);
+  }, [address]);
 
   const authorise = async (
     userData: UsersMeResponse,
@@ -91,13 +91,14 @@ const Home = () => {
         }
       }
 
-      if (!userData.username) {
+      if (!userData?.username) {
         router.push("/onboarding");
       } else {
         router.push("/app/home");
       }
     } catch (error) {
       console.log("Authentication failed", error);
+      throw new Error(JSON.stringify(error));
     }
   };
 
@@ -115,6 +116,7 @@ const Home = () => {
       setIsLoading(false);
       setIsProfileReady(true);
       setSkipBiometrics(true);
+      throw new Error(JSON.stringify(error));
     }
   };
 
@@ -123,11 +125,12 @@ const Home = () => {
       const token = await SecureStore.getItemAsync(`token-${address}`);
       if (token) {
         const userData = await fetchUserData(token);
-        if (!userData) return;
-        await authorise(userData, skipBiometrics);
+
+        await authorise(userData!, skipBiometrics);
+        return token;
       }
     } catch (error) {
-      throw new Error();
+      throw new Error(JSON.stringify(error));
     }
   };
 
@@ -173,7 +176,7 @@ const Home = () => {
         </View>
       )}
 
-      {isReady && skipBiometrics && (
+      {isReady && (
         <LoginForm
           setIsLoading={setIsLoading}
           setLoadingMessage={setLoadingMessage}
