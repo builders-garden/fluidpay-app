@@ -138,22 +138,22 @@ const DepositOption = ({
 };
 
 const getDepositOptions = (address: Address) => [
-  {
-    imagePath: require("../../images/coinbase.png"),
-    title: "Deposit from Coinbase",
-    externalLink: `https://pay.coinbase.com/buy/select-asset?appId=2be3ccd9-6ee4-4dba-aba8-d4b458fe476d&defaultExperience=send&destinationWallets=%5B%7B%22address%22%3A%22${address}%22%2C%22assets%22%3A%5B%22USDC%22%5D%2C%22supportedNetworks%22%3A%5B%22base%22%5D%7D%5D`,
-    variant: "default",
-  },
-  {
-    imagePath: require("../../images/usdc.png"),
-    title: "Buy USDC",
-    externalLink: `https://app.ramp.network/?hostApiKey=kkkkdu9jsw3dbc3qnf8o2bvmzoxkp63mrz27hrma&hostAppName=Fluidpay&hostLogoUrl=https://fluidpay.xyz/assets/icon-ramp.png&swapAsset=BASE_USDC&userAddress=${address}&finalUrl=fluidpay://`,
-    variant: "default",
-  },
+  // {
+  //   imagePath: require("../../images/coinbase.png"),
+  //   title: "Deposit from Coinbase",
+  //   externalLink: `https://pay.coinbase.com/buy/select-asset?appId=2be3ccd9-6ee4-4dba-aba8-d4b458fe476d&defaultExperience=send&destinationWallets=%5B%7B%22address%22%3A%22${address}%22%2C%22assets%22%3A%5B%22USDC%22%5D%2C%22supportedNetworks%22%3A%5B%22base%22%5D%7D%5D`,
+  //   variant: "default",
+  // },
+  // {
+  //   imagePath: require("../../images/usdc.png"),
+  //   title: "Buy USDC",
+  //   externalLink: `https://app.ramp.network/?hostApiKey=kkkkdu9jsw3dbc3qnf8o2bvmzoxkp63mrz27hrma&hostAppName=Fluidpay&hostLogoUrl=https://fluidpay.xyz/assets/icon-ramp.png&swapAsset=BASE_USDC&userAddress=${address}&finalUrl=fluidpay://`,
+  //   variant: "default",
+  // },
   {
     imagePath: require("../../images/base.png"),
     title: "Bridge USDC to Base",
-    externalLink: `https://www.relay.link/bridge/base/?currency=usdc&toAddress=${address}&lockToChain=true&lockCurrency=true&header=fluidpay`,
+    externalLink: `https://www.relay.link/bridge/base/?currency=usdc&toAddress=${address}&lockToChain=true&lockCurrency=true&header=plink`,
     variant: "default",
   },
   {
