@@ -1,7 +1,7 @@
 import { Image, SafeAreaView, Text, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
-import { usePrivy } from "@privy-io/expo";
+import { useEmbeddedWallet, usePrivy } from "@privy-io/expo";
 import * as LocalAuthentication from "expo-local-authentication";
 
 import { useEffect, useState } from "react";
@@ -13,6 +13,11 @@ import LoginForm from "../components/login/login-form";
 import { getMe, UsersMeResponse } from "../lib/api";
 import { useChainStore } from "../store/use-chain-store";
 import AppButton from "../components/app-button";
+import { FEATURE_FLAGS } from "../constants/featureFlags";
+import { StretchHorizontal } from "lucide-react-native";
+import { createAndPayRequest } from "../lib/request-network/create-and-pay-request";
+import { createRequestParameters } from "../lib/request-network/create-request";
+import { sepolia } from "viem/chains";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -37,155 +42,178 @@ const Home = () => {
   const [isProfileReady, setIsProfileReady] = useState(false);
   const [skipBiometrics, setSkipBiometrics] = useState(false);
 
-  // Check if hardware supports biometrics
-  useEffect(() => {
-    (async () => {
-      const compatible = await LocalAuthentication.hasHardwareAsync();
-      setIsBiometricSupported(compatible);
-    })();
-  }, []);
+  const wallet = useEmbeddedWallet();
 
-  useEffect(() => {
-    if (address && user) {
-      setIsLoading(true);
-      setLoadingMessage("Logging in...");
-      getToken(address)
-        .then(() => {
-          setIsLoading(false);
+  const sendTokens = async () => {
+    const provider = await wallet.getProvider!();
+    const txReceipt = createAndPayRequest(
+      {
+        payeeIdentity: address!,
+        payerIdentity: address!,
+        signerIdentity: address!,
+        expectedAmount: "100",
+        paymentAddress: address!,
+        reason: "plink test",
+        currencyAddress: "0x370DE27fdb7D1Ff1e1BaA7D11c5820a324Cf623C",
+        chain: sepolia,
+      },
+      provider
+    );
+  };
+
+  if (FEATURE_FLAGS.REQUEST_NETWORK) {
+    sendTokens();
+  } else {
+    // Check if hardware supports biometrics
+    useEffect(() => {
+      (async () => {
+        const compatible = await LocalAuthentication.hasHardwareAsync();
+        setIsBiometricSupported(compatible);
+      })();
+    }, []);
+
+    useEffect(() => {
+      if (address && user) {
+        setIsLoading(true);
+        setLoadingMessage("Logging in...");
+        getToken(address)
+          .then(() => {
+            setIsLoading(false);
+          })
+          .catch(() => {
+            SecureStore.deleteItemAsync(`token-${address}`).then(() => logout());
+            setIsLoading(false);
+            setIsProfileReady(true);
+            setSkipBiometrics(true);
+          });
+      }
+    }, [address, user]);
+
+    useEffect(() => {
+      getToken(address!)
+        .then((token) => {
+          if (!token) {
+            setIsProfileReady(true);
+            setSkipBiometrics(true);
+          }
         })
-        .catch(() => {
-          SecureStore.deleteItemAsync(`token-${address}`).then(() => logout());
-          setIsLoading(false);
-          setIsProfileReady(true);
-          setSkipBiometrics(true);
+        .catch((e) => {
+          console.error(e);
         });
-    }
-  }, [address, user]);
+    }, [address]);
 
-  useEffect(() => {
-    getToken(address!)
-      .then((token) => {
-        if (!token) {
-          setIsProfileReady(true);
-          setSkipBiometrics(true);
+    const authorise = async (
+      userData: UsersMeResponse,
+      skipBiometrics: boolean = false
+    ) => {
+      try {
+        if (!skipBiometrics) {
+          const auth = await LocalAuthentication.authenticateAsync({
+            promptMessage: "Login to Plink",
+            fallbackLabel: "Enter Password",
+          });
+
+          if (!auth.success) {
+            throw new Error(auth.error);
+          }
         }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }, [address]);
 
-  const authorise = async (
-    userData: UsersMeResponse,
-    skipBiometrics: boolean = false
-  ) => {
-    try {
-      if (!skipBiometrics) {
-        const auth = await LocalAuthentication.authenticateAsync({
-          promptMessage: "Login to Plink",
-          fallbackLabel: "Enter Password",
-        });
-
-        if (!auth.success) {
-          throw new Error(auth.error);
+        if (!userData?.username) {
+          router.push("/onboarding");
+        } else {
+          router.push("/app/home");
         }
+      } catch (error) {
+        console.log("Authentication failed", error);
+        throw new Error(JSON.stringify(error));
       }
+    };
 
-      if (!userData?.username) {
-        router.push("/onboarding");
-      } else {
-        router.push("/app/home");
+    const fetchUserData = async (token: string) => {
+      try {
+        const userData = await getMe(token);
+        setUser({ ...userData, token } as DBUser);
+        setIsProfileReady(true);
+
+        return userData;
+      } catch (error) {
+        console.log("An error occured", error);
+        await SecureStore.deleteItemAsync(`token-${address}`);
+        await logout();
+        setIsLoading(false);
+        setIsProfileReady(true);
+        setSkipBiometrics(true);
+        throw new Error(JSON.stringify(error));
       }
-    } catch (error) {
-      console.log("Authentication failed", error);
-      throw new Error(JSON.stringify(error));
-    }
-  };
+    };
 
-  const fetchUserData = async (token: string) => {
-    try {
-      const userData = await getMe(token);
-      setUser({ ...userData, token } as DBUser);
-      setIsProfileReady(true);
+    const getToken = async (address: string) => {
+      try {
+        const token = await SecureStore.getItemAsync(`token-${address}`);
+        if (token) {
+          const userData = await fetchUserData(token);
 
-      return userData;
-    } catch (error) {
-      console.log("An error occured", error);
-      await SecureStore.deleteItemAsync(`token-${address}`);
-      await logout();
-      setIsLoading(false);
-      setIsProfileReady(true);
-      setSkipBiometrics(true);
-      throw new Error(JSON.stringify(error));
-    }
-  };
-
-  const getToken = async (address: string) => {
-    try {
-      const token = await SecureStore.getItemAsync(`token-${address}`);
-      if (token) {
-        const userData = await fetchUserData(token);
-
-        await authorise(userData!, skipBiometrics);
-        return token;
+          await authorise(userData!, skipBiometrics);
+          return token;
+        }
+      } catch (error) {
+        throw new Error(JSON.stringify(error));
       }
-    } catch (error) {
-      throw new Error(JSON.stringify(error));
-    }
-  };
+    };
 
-  // if (!isReady || !isProfileReady) {
-  //   return (
-  //     <SafeAreaView className="flex flex-1 justify-center items-center">
-  //       <ActivityIndicator animating={true} color={"#FF238C"} />
-  //     </SafeAreaView>
-  //   );
-  // }
+    // if (!isReady || !isProfileReady) {
+    //   return (
+    //     <SafeAreaView className="flex flex-1 justify-center items-center">
+    //       <ActivityIndicator animating={true} color={"#FF238C"} />
+    //     </SafeAreaView>
+    //   );
+    // }
 
-  return (
-    <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
-      <View className="text-center flex flex-col space-y-4 justify-center items-center">
-        <Image
-          className="mt-24 h-14 w-56"
-          source={require("../images/plink.png")}
-        />
-        <View className="px-16">
-          <Text
-            className={`text-white text-xl text-center leading-tight font-semibold`}
-          >
-            Your USDC shortcut.
-          </Text>
-        </View>
-      </View>
-
-      {isLoading && skipBiometrics && (
-        <View className="flex flex-col space-y-8">
-          <ActivityIndicator animating={true} color={"#FF238C"} />
-          <Text className="text-primary font-medium text-lg text-center ">
-            {loadingMessage}
-          </Text>
-        </View>
-      )}
-
-      {isReady && user && !skipBiometrics && (
-        <View className="w-full">
-          <AppButton
-            onPress={() => authorise(storedUser as UsersMeResponse)}
-            text="Unlock"
+    return (
+      <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
+        <View className="text-center flex flex-col space-y-4 justify-center items-center">
+          <Image
+            className="mt-24 h-14 w-56"
+            source={require("../images/plink.png")}
           />
+          <View className="px-16">
+            <Text
+              className={`text-white text-xl text-center leading-tight font-semibold`}
+            >
+              Your USDC shortcut.
+            </Text>
+          </View>
         </View>
-      )}
 
-      {isReady && (
-        <LoginForm
-          setIsLoading={setIsLoading}
-          setLoadingMessage={setLoadingMessage}
-          loginStatus={loginStatus}
-          setLoginStatus={setLoginStatus}
-        />
-      )}
-    </SafeAreaView>
-  );
+        {isLoading && skipBiometrics && (
+          <View className="flex flex-col space-y-8">
+            <ActivityIndicator animating={true} color={"#FF238C"} />
+            <Text className="text-primary font-medium text-lg text-center ">
+              {loadingMessage}
+            </Text>
+          </View>
+        )}
+
+        {isReady && user && !skipBiometrics && (
+          <View className="w-full">
+            <AppButton
+              onPress={() => authorise(storedUser as UsersMeResponse)}
+              text="Unlock"
+            />
+          </View>
+        )}
+
+        {isReady && (
+          <LoginForm
+            setIsLoading={setIsLoading}
+            setLoadingMessage={setLoadingMessage}
+            loginStatus={loginStatus}
+            setLoginStatus={setLoginStatus}
+          />
+        )}
+      </SafeAreaView>
+    );
+  }
 };
 
 export default Home;
