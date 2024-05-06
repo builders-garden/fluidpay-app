@@ -44,7 +44,8 @@ export default function LoginForm({
   setLoadingMessage: (message: string) => void;
 }) {
   const { logout, user } = usePrivy();
-  const { address } = usePrivyWagmiProvider();
+  type PrivyUser = typeof user;
+  // const { address } = usePrivyWagmiProvider();
   const [email, setEmail] = useState<string>("");
   const [code, setCode] = useState<`${number | ""}`>("");
   const setUser = useUserStore((state) => state.setUser);
@@ -70,23 +71,29 @@ export default function LoginForm({
     },
   });
 
+  console.log("user_here", wallet);
+
   useEffect(() => {
-    if (state.status === "done") {
+    if (state.status === "done" && user) {
       try {
         setIsLoading(true);
-        handleConnection().then((path: string) => {
-          setIsLoading(false);
-          router.push(path);
-        });
+        handleConnection(user)
+          .then((path: string) => {
+            setIsLoading(false);
+            router.push(path);
+          })
+          .catch((e) => {
+            throw new Error(e);
+          });
       } catch (e) {
-        console.log("Error Connecting Stuffs", JSON.stringify(e));
+        console.log("Error Connecting Stuffs", e);
         router.replace("/");
-        throw new Error(JSON.stringify(e));
+        throw new Error(e as any);
       }
     } else if (state.status === "initial") {
       setLoginStatus(LoginStatus.INITIAL);
     }
-  }, [state]);
+  }, [state, user]);
 
   const fetchUserData = async (token: string) => {
     const [userData, payments, groups] = await Promise.all([
@@ -100,48 +107,62 @@ export default function LoginForm({
     return userData;
   };
 
-  const handleConnection = useCallback(async (): Promise<string> => {
-    if (isNotCreated(wallet)) {
-      setLoadingMessage("Creating wallet...");
-      await wallet.create!();
-    }
+  const handleConnection = useCallback(
+    async (user: PrivyUser): Promise<string> => {
+      console.log("this shit is here");
+      setIsLoading(true);
+      if (isNotCreated(wallet)) {
+        console.log("this shit doesn't have wallet");
+        setLoadingMessage("Creating wallet...");
+        await wallet.create!();
+        console.log("this shit now has wallet");
+      }
 
-    console.log("this is it here");
-    setLoadingMessage("Signing in...");
-    const { message, nonce } = await getAuthNonce();
-    const provider = await wallet.getProvider!();
-    const signedMessage = await signMessageWithPrivy(
-      provider,
-      message as `0x${string}`
-    );
-    const smartAccount = await getPimlicoSmartAccountClient(
-      address as `0x${string}`,
-      chain,
-      wallet
-    );
+      const address = getUserEmbeddedWallet(user)?.address;
 
-    const { isNewUser, token } = await signIn({
-      address: address || getUserEmbeddedWallet(user)?.address!,
-      smartAccountAddress: smartAccount?.account?.address,
-      signature: signedMessage!,
-      nonce,
-    });
+      console.log("this is it here", { address });
+      setLoadingMessage("Signing in...");
+      const { message, nonce } = await getAuthNonce();
+      console.log("this shit now has gotten auth nonce");
+      const provider = await wallet.getProvider!();
+      console.log("this shit now has gotten provider");
+      const signedMessage = await signMessageWithPrivy(
+        provider,
+        message as `0x${string}`
+      );
+      console.log("this shit now has signed message");
+      const smartAccount = await getPimlicoSmartAccountClient(
+        address as `0x${string}`,
+        chain,
+        wallet
+      );
+      console.log("this shit now has smart account");
 
-    await SecureStore.setItemAsync(`token-${address}`, token);
-    if (isNewUser) {
-      return "/onboarding";
-    }
-    setLoadingMessage("Fetching user data...");
+      const { isNewUser, token } = await signIn({
+        address: address || getUserEmbeddedWallet(user)?.address!,
+        smartAccountAddress: smartAccount?.account?.address,
+        signature: signedMessage!,
+        nonce,
+      });
 
-    const userData = await fetchUserData(token);
+      console.log("this shit now has signed in");
+      await SecureStore.setItemAsync(`token-${address}`, token);
+      if (isNewUser) {
+        return "/onboarding";
+      }
+      setLoadingMessage("Fetching user data...");
 
-    setChain(sepolia);
-    if (!userData.username) {
-      return "/onboarding";
-    } else {
-      return "/app/home";
-    }
-  }, []);
+      const userData = await fetchUserData(token);
+
+      setChain(sepolia);
+      if (!userData.username) {
+        return "/onboarding";
+      } else {
+        return "/app/home";
+      }
+    },
+    [user]
+  );
 
   return (
     <>
@@ -172,7 +193,7 @@ export default function LoginForm({
           )}
 
           {state.status === "error" && (
-            <View className="w-full">
+            <View className="w-full ">
               <AppButton
                 onPress={async () => {
                   console.error("Try again");

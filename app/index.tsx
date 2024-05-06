@@ -1,7 +1,7 @@
-import { Image, SafeAreaView, Text, View } from "react-native";
+import { Image, Pressable, SafeAreaView, Text, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
-import { usePrivy } from "@privy-io/expo";
+import { useUserStore } from "../store";
+import { getUserEmbeddedWallet, usePrivy } from "@privy-io/expo";
 import * as LocalAuthentication from "expo-local-authentication";
 
 import { useEffect, useState } from "react";
@@ -11,8 +11,7 @@ import { DBUser } from "../store/interfaces";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
 import { getMe, UsersMeResponse } from "../lib/api";
-import { useChainStore } from "../store/use-chain-store";
-import AppButton from "../components/app-button";
+import { ScanFace } from "lucide-react-native";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -24,7 +23,8 @@ export enum LoginStatus {
 
 const Home = () => {
   const { isReady, user, logout } = usePrivy();
-  const { address } = usePrivyWagmiProvider();
+  // const { address } = usePrivyWagmiProvider();
+  const address = getUserEmbeddedWallet(user)?.address;
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
 
@@ -34,45 +34,28 @@ const Home = () => {
     LoginStatus.INITIAL
   );
 
-  const [isProfileReady, setIsProfileReady] = useState(false);
-  const [skipBiometrics, setSkipBiometrics] = useState(false);
+  const token = SecureStore.getItem(`token-${address}`);
+  const useBiometrics = !!SecureStore.getItem(`user-faceid-${address}`);
+  const passcode = SecureStore.getItem("user-passcode");
 
   useEffect(() => {
-    if (address && user) {
+    if (address && isReady) {
       setIsLoading(true);
       setLoadingMessage("Logging in...");
-      getToken(address)
+      getToken()
         .then(() => {
           setIsLoading(false);
         })
         .catch(() => {
           SecureStore.deleteItemAsync(`token-${address}`).then(() => logout());
           setIsLoading(false);
-          setIsProfileReady(true);
-          setSkipBiometrics(true);
         });
     }
-  }, [address, user]);
+  }, [address, isReady]);
 
-  useEffect(() => {
-    getToken(address!)
-      .then((token) => {
-        if (!token) {
-          setIsProfileReady(true);
-          setSkipBiometrics(true);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }, [address]);
-
-  const authorise = async (
-    userData: UsersMeResponse,
-    skipBiometrics: boolean = false
-  ) => {
+  const authorise = async (userData: UsersMeResponse | DBUser) => {
     try {
-      if (!skipBiometrics) {
+      if (useBiometrics) {
         const auth = await LocalAuthentication.authenticateAsync({
           promptMessage: "Login to Plink",
         });
@@ -80,9 +63,8 @@ const Home = () => {
         if (!auth.success) {
           throw new Error(auth.error);
         }
+      } else if (passcode) {
       }
-
-      const passcode = await SecureStore.getItemAsync("user-passcode");
 
       if (!userData?.username) {
         router.push("/onboarding");
@@ -93,7 +75,7 @@ const Home = () => {
       }
     } catch (error) {
       console.log("Authentication failed", error);
-      throw new Error(JSON.stringify(error));
+      throw new Error(error as any);
     }
   };
 
@@ -101,31 +83,27 @@ const Home = () => {
     try {
       const userData = await getMe(token);
       setUser({ ...userData, token } as DBUser);
-      setIsProfileReady(true);
 
       return userData;
     } catch (error) {
-      console.log("An error occured", error);
-      await SecureStore.deleteItemAsync(`token-${address}`);
-      await logout();
+      console.log("Error fetching user data", { error });
       setIsLoading(false);
-      setIsProfileReady(true);
-      setSkipBiometrics(true);
-      throw new Error(JSON.stringify(error));
+
+      throw new Error(error as any);
     }
   };
 
-  const getToken = async (address: string) => {
+  const getToken = async () => {
     try {
-      const token = await SecureStore.getItemAsync(`token-${address}`);
       if (token) {
         const userData = await fetchUserData(token);
 
-        await authorise(userData!, skipBiometrics);
+        await authorise(userData!);
         return token;
       }
     } catch (error) {
-      throw new Error(JSON.stringify(error));
+      console.error(error as any);
+      throw new Error(error as any);
     }
   };
 
@@ -144,12 +122,21 @@ const Home = () => {
           className="mt-24 h-14 w-56"
           source={require("../images/plink.png")}
         />
-        <View className="px-16">
+        <View className="px-16 space-y-5 items-center">
           <Text
             className={`text-white text-xl text-center leading-tight font-semibold`}
           >
             Your USDC shortcut.
           </Text>
+
+          {!!token && useBiometrics && (
+            <Pressable
+              onPress={() => authorise(storedUser!)}
+              className="rounded-full h-12 w-12 flex items-center justify-center bg-primary"
+            >
+              <ScanFace size={24} color="#FFF" />
+            </Pressable>
+          )}
         </View>
       </View>
 

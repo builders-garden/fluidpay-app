@@ -6,16 +6,20 @@ import AppButton from "../../components/app-button";
 import { ArrowLeft, ScanFace, Search, Users2 } from "lucide-react-native";
 import * as SecureStore from "expo-secure-store";
 import { disableFaceID, enableFaceID } from "../../lib/auth";
+import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 
 export default function SecurityPrivacy() {
-  const [faceId, setFaceID] = useState(!!SecureStore.getItem("user-faceid"));
+  const { address } = usePrivyWagmiProvider();
+  const [faceId, setFaceID] = useState(
+    !!SecureStore.getItem(`user-faceid-${address}`)
+  );
 
   const handleChangeFaceID = async () => {
     if (faceId) {
-      await disableFaceID();
+      await disableFaceID(address!);
       setFaceID(false);
     } else {
-      await enableFaceID();
+      await enableFaceID(address!);
       setFaceID(true);
     }
   };
