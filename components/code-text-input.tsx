@@ -6,10 +6,12 @@ type CodeTextInputProps = {
   setCode: (arg: `${number}` | "") => void;
   maxCodeLength: number;
   codeBoxHeight?: number;
+  error?: boolean;
 };
 const CodeTextInput = ({
   code,
   setCode,
+  error,
   maxCodeLength,
   codeBoxHeight = 62,
 }: CodeTextInputProps) => {
@@ -48,7 +50,11 @@ const CodeTextInput = ({
                 key={index}
                 className={
                   "flex-1 text-white bg-[#232324] flex items-center justify-center rounded-lg" +
-                  (focused ? " border-2 border-primary" : "")
+                  (error
+                    ? " border-2 border-red-500"
+                    : focused
+                      ? " border-2 border-primary"
+                      : "")
                 }
                 style={{
                   height: codeBoxHeight,

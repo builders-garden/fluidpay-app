@@ -1,4 +1,12 @@
-import { Image, Pressable, SafeAreaView, Text, View } from "react-native";
+import {
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { useUserStore } from "../store";
 import { getUserEmbeddedWallet, usePrivy } from "@privy-io/expo";
@@ -10,8 +18,11 @@ import * as SecureStore from "expo-secure-store";
 import { DBUser } from "../store/interfaces";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
-import { getMe, UsersMeResponse } from "../lib/api";
+import { getMe } from "../lib/api";
 import { ScanFace } from "lucide-react-native";
+import AppButton from "../components/app-button";
+import CodeTextInput from "../components/code-text-input";
+import { useDisconnect } from "wagmi";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -27,9 +38,12 @@ const Home = () => {
   const address = getUserEmbeddedWallet(user)?.address;
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
+  const { disconnect } = useDisconnect();
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+  const [code, setCode] = useState<`${number}` | "">("");
+  const [codeError, setCodeError] = useState("");
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(
     LoginStatus.INITIAL
   );
@@ -53,29 +67,34 @@ const Home = () => {
     }
   }, [address, isReady]);
 
-  const authorise = async (userData: UsersMeResponse | DBUser) => {
+  const authenticatePin = () => {
+    if (code === passcode) {
+      router.push("/app/home");
+    } else {
+      setCodeError("Incorrect passcode. Please try again");
+    }
+  };
+
+  const authenticateBiometrics = async () => {
+    const auth = await LocalAuthentication.authenticateAsync({
+      promptMessage: "Login to Plink",
+    });
+    if (auth.success) {
+      router.push("/app/home");
+    }
+  };
+
+  const universalLogout = async () => {
     try {
-      if (useBiometrics) {
-        const auth = await LocalAuthentication.authenticateAsync({
-          promptMessage: "Login to Plink",
-        });
+      await SecureStore.deleteItemAsync(`token-${address}`);
+      await logout();
+      disconnect();
 
-        if (!auth.success) {
-          throw new Error(auth.error);
-        }
-      } else if (passcode) {
-      }
+      setUser(undefined);
 
-      if (!userData?.username) {
-        router.push("/onboarding");
-      } else if (userData?.username && !passcode) {
-        router.push("/set-pin");
-      } else {
-        router.push("/app/home");
-      }
+      router.replace("/");
     } catch (error) {
-      console.log("Authentication failed", error);
-      throw new Error(error as any);
+      console.error("Error logging out", error);
     }
   };
 
@@ -98,7 +117,12 @@ const Home = () => {
       if (token) {
         const userData = await fetchUserData(token);
 
-        await authorise(userData!);
+        if (!userData?.username) {
+          router.push("/onboarding");
+        } else if (userData?.username && !passcode) {
+          router.push("/set-pin");
+        }
+
         return token;
       }
     } catch (error) {
@@ -115,6 +139,70 @@ const Home = () => {
     );
   }
 
+  if (!!token && storedUser && !!passcode) {
+    return (
+      <SafeAreaView className="flex-1">
+        <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
+          <Pressable onPress={Keyboard.dismiss} className="px-4 flex-1">
+            <Text className="text-4xl text-white font-semibold mb-1">
+              Welcome back 👋
+            </Text>
+
+            <Text className="text-xl text-mutedGrey font-normal mb-5">
+              @{storedUser.username}
+            </Text>
+
+            <View className="flex-row justify-center py-6">
+              {useBiometrics && (
+                <Pressable
+                  onPress={authenticateBiometrics}
+                  className="rounded-xl h-12 w-12 flex items-center justify-center bg-primary"
+                >
+                  <ScanFace size={24} color="#FFF" />
+                </Pressable>
+              )}
+            </View>
+
+            <Text className="text-mutedGrey text-sm text-center font-semibold mb-2">
+              Enter your passcode
+            </Text>
+            <CodeTextInput
+              code={code}
+              error={!!codeError}
+              setCode={setCode}
+              maxCodeLength={4}
+              codeBoxHeight={99}
+            />
+
+            {!!codeError && (
+              <Text className="text-center text-red-500 text-base mt-5">
+                {codeError}
+              </Text>
+            )}
+
+            <View className="flex-row justify-center items-center gap-2 mt-5">
+              <Text className="text-white">Not you?</Text>
+              <Pressable
+                onPress={universalLogout}
+                className="bg-revolut/30 px-2 py-1 rounded-full"
+              >
+                <Text className="text-primary/60">Log out</Text>
+              </Pressable>
+            </View>
+
+            <SafeAreaView className="mt-auto">
+              <AppButton
+                text="Confirm"
+                variant={code.length < 4 ? "disabled" : "primary"}
+                onPress={authenticatePin}
+              />
+            </SafeAreaView>
+          </Pressable>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
       <View className="text-center flex flex-col space-y-4 justify-center items-center">
@@ -122,21 +210,12 @@ const Home = () => {
           className="mt-24 h-14 w-56"
           source={require("../images/plink.png")}
         />
-        <View className="px-16 space-y-5 items-center">
+        <View className="px-16">
           <Text
             className={`text-white text-xl text-center leading-tight font-semibold`}
           >
             Your USDC shortcut.
           </Text>
-
-          {!!token && useBiometrics && (
-            <Pressable
-              onPress={() => authorise(storedUser!)}
-              className="rounded-full h-12 w-12 flex items-center justify-center bg-primary"
-            >
-              <ScanFace size={24} color="#FFF" />
-            </Pressable>
-          )}
         </View>
       </View>
 
