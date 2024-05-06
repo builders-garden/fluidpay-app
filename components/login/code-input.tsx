@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 import { useLoginWithEmail, usePrivy } from "@privy-io/expo";
 import { LoginStatus } from "../../app/index";
 import { parse } from "react-native-svg";
+import CodeTextInput from "../code-text-input";
 
 export default function CodeInput({
   code,
@@ -22,7 +23,6 @@ export default function CodeInput({
   email: string;
 }) {
   const MAX_CODE_LENGTH = 6;
-  const [inputFocused, setInputFocused] = useState(false);
   const { sendCode, loginWithCode } = useLoginWithEmail({
     onError: (error) => {
       console.error("ERRRORRRR", error);
@@ -32,17 +32,6 @@ export default function CodeInput({
       console.log("Logged in", user);
     },
   });
-  const textInputRef = useRef<TextInput>(null);
-
-  const handleTextChange = (text: string) => {
-    const numericValue = text.replace(/[^0-9]/g, "");
-    setCode(numericValue as `${number | ""}`);
-  };
-
-  const handleTextFocus = () => {
-    setInputFocused(true);
-    textInputRef.current?.focus();
-  };
 
   return (
     <View className="w-full flex flex-col">
@@ -50,45 +39,10 @@ export default function CodeInput({
         We sent a code to {email}
       </Text>
 
-      <Pressable
-        onPress={handleTextFocus}
-        className="flex flex-row mb-4 space-x-4 justify-around"
-      >
-        {Array(MAX_CODE_LENGTH)
-          .fill(null)
-          .map((_, index) => {
-            const isCurrentDigit = index === code.length;
-            const isLastDigit = index === code.length - 1;
-            const isCodeFull = code.length === MAX_CODE_LENGTH;
-
-            const isDigitFocused =
-              isCurrentDigit || (isCodeFull && isLastDigit);
-            const focused = inputFocused && isDigitFocused;
-            return (
-              <View
-                key={index}
-                className={
-                  "basis-1/6 text-white bg-[#232324] py-4 rounded-lg" +
-                  (focused ? " border-2 border-primary" : "")
-                }
-              >
-                <Text className="text-4xl text-center placeholder-white">
-                  {code[index] || " "}
-                </Text>
-              </View>
-            );
-          })}
-      </Pressable>
-
-      <TextInput
-        value={code}
-        onChangeText={handleTextChange}
-        onBlur={() => setInputFocused(false)}
-        maxLength={MAX_CODE_LENGTH}
-        keyboardType="number-pad"
-        textContentType="oneTimeCode"
-        ref={textInputRef}
-        className="w-px h-px absolute opacity-0"
+      <CodeTextInput
+        code={code}
+        setCode={setCode}
+        maxCodeLength={MAX_CODE_LENGTH}
       />
 
       <AppButton
@@ -108,6 +62,7 @@ export default function CodeInput({
         }}
         text="Enter code"
         variant={code?.length === 6 ? "primary" : "disabled"}
+        mt="mt-4"
       />
       <Text
         className="mt-8 text-primary text-center font-bold"
