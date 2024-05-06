@@ -172,6 +172,7 @@ const Home = () => {
               setCode={setCode}
               maxCodeLength={4}
               codeBoxHeight={99}
+              hidden
             />
 
             {!!codeError && (

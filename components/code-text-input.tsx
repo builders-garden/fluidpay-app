@@ -7,11 +7,13 @@ type CodeTextInputProps = {
   maxCodeLength: number;
   codeBoxHeight?: number;
   error?: boolean;
+  hidden?: boolean;
 };
 const CodeTextInput = ({
   code,
   setCode,
   error,
+  hidden,
   maxCodeLength,
   codeBoxHeight = 62,
 }: CodeTextInputProps) => {
@@ -45,6 +47,7 @@ const CodeTextInput = ({
             const isDigitFocused =
               isCurrentDigit || (isCodeFull && isLastDigit);
             const focused = inputFocused && isDigitFocused;
+            const hiddenClass = hidden && "font-extrabold";
             return (
               <View
                 key={index}
@@ -60,8 +63,10 @@ const CodeTextInput = ({
                   height: codeBoxHeight,
                 }}
               >
-                <Text className="text-4xl text-center placeholder-white">
-                  {code[index] || " "}
+                <Text
+                  className={`text-4xl text-center placeholder-white ${hiddenClass}`}
+                >
+                  {hidden ? (code[index] ? "*" : "") : code[index] || " "}
                 </Text>
               </View>
             );
