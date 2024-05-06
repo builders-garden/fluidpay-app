@@ -59,10 +59,13 @@ const Home = () => {
       },
       provider
     );
+    console.log(JSON.stringify((await txReceipt), null, 2);
   };
 
   if (FEATURE_FLAGS.REQUEST_NETWORK) {
-    sendTokens();
+    useEffect(() => {
+        sendTokens();
+    }, []);
   } else {
     // Check if hardware supports biometrics
     useEffect(() => {
