@@ -182,11 +182,8 @@ const Home = () => {
 
             <View className="flex-row justify-center items-center gap-2 mt-5">
               <Text className="text-white">Not you?</Text>
-              <Pressable
-                onPress={universalLogout}
-                className="bg-revolut/30 px-2 py-1 rounded-full"
-              >
-                <Text className="text-primary/60">Log out</Text>
+              <Pressable onPress={universalLogout}>
+                <Text className="text-primary font-semibold">Log out</Text>
               </Pressable>
             </View>
 
