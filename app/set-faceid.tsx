@@ -1,10 +1,11 @@
 import { router } from "expo-router";
 import { SafeAreaView, Text, View } from "react-native";
-import AppButton from "../components/app-button";
 import { ScanFace } from "lucide-react-native";
 
+import AppButton from "../components/app-button";
+import { enableFaceID } from "../lib/auth";
+
 const SetFaceID = () => {
-  const setFaceID = () => {};
   return (
     <SafeAreaView className="flex-1">
       <View className="flex-1 px-4 justify-end items-center">
@@ -21,7 +22,7 @@ const SetFaceID = () => {
         <AppButton
           text="Setup FaceID"
           variant="primary"
-          onPress={setFaceID}
+          onPress={enableFaceID}
           mb="mb-[17px]"
         />
         <AppButton

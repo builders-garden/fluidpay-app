@@ -10,7 +10,7 @@ import {
   isNotCreated,
   getUserEmbeddedWallet,
 } from "@privy-io/expo";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   useUserStore,
   useTransactionsStore,
@@ -56,17 +56,22 @@ export default function LoginForm({
   const chain = useChainStore((state) => state.chain);
 
   const wallet = useEmbeddedWallet();
-  const { state } = useLoginWithEmail({
+
+  const { state, sendCode, loginWithCode } = useLoginWithEmail({
     onError: (error) => {
-      console.error(error);
+      console.error("ERRRORRRR", error);
+      setLoginStatus(LoginStatus.CODE_ERROR);
     },
-    onLoginSuccess(user) {
-      console.log("Logged in", user);
+    onLoginSuccess(user, isNewUser) {
+      console.log("New Actual Logged in", {
+        user: JSON.stringify(user),
+        isNewUser,
+      });
     },
   });
 
   useEffect(() => {
-    if (state.status === "done" && address) {
+    if (state.status === "done") {
       try {
         setIsLoading(true);
         handleConnection().then((path: string) => {
@@ -74,12 +79,14 @@ export default function LoginForm({
           router.push(path);
         });
       } catch (e) {
+        console.log("Error Connecting Stuffs", JSON.stringify(e));
         router.replace("/");
+        throw new Error(JSON.stringify(e));
       }
     } else if (state.status === "initial") {
       setLoginStatus(LoginStatus.INITIAL);
     }
-  }, [state, address]);
+  }, [state]);
 
   const fetchUserData = async (token: string) => {
     const [userData, payments, groups] = await Promise.all([
@@ -93,11 +100,13 @@ export default function LoginForm({
     return userData;
   };
 
-  const handleConnection = async (): Promise<string> => {
+  const handleConnection = useCallback(async (): Promise<string> => {
     if (isNotCreated(wallet)) {
       setLoadingMessage("Creating wallet...");
       await wallet.create!();
     }
+
+    console.log("this is it here");
     setLoadingMessage("Signing in...");
     const { message, nonce } = await getAuthNonce();
     const provider = await wallet.getProvider!();
@@ -132,7 +141,8 @@ export default function LoginForm({
     } else {
       return "/app/home";
     }
-  };
+  }, []);
+
   return (
     <>
       <KeyboardAvoidingView className="w-full" behavior="padding">
@@ -156,6 +166,8 @@ export default function LoginForm({
               setIsLoading={setIsLoading}
               setLoginStatus={setLoginStatus}
               setLoadingMessage={setLoadingMessage}
+              sendCode={sendCode}
+              loginWithCode={loginWithCode}
             />
           )}
 

@@ -23,7 +23,7 @@ export enum LoginStatus {
 }
 
 const Home = () => {
-  const { isReady, user, getAccessToken, logout } = usePrivy();
+  const { isReady, user, logout } = usePrivy();
   const { address } = usePrivyWagmiProvider();
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
@@ -33,17 +33,9 @@ const Home = () => {
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(
     LoginStatus.INITIAL
   );
-  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+
   const [isProfileReady, setIsProfileReady] = useState(false);
   const [skipBiometrics, setSkipBiometrics] = useState(false);
-
-  // Check if hardware supports biometrics
-  useEffect(() => {
-    (async () => {
-      const compatible = await LocalAuthentication.hasHardwareAsync();
-      setIsBiometricSupported(compatible);
-    })();
-  }, []);
 
   useEffect(() => {
     if (address && user) {
@@ -83,7 +75,6 @@ const Home = () => {
       if (!skipBiometrics) {
         const auth = await LocalAuthentication.authenticateAsync({
           promptMessage: "Login to Plink",
-          fallbackLabel: "Enter Password",
         });
 
         if (!auth.success) {
@@ -91,8 +82,12 @@ const Home = () => {
         }
       }
 
+      const passcode = await SecureStore.getItemAsync("user-passcode");
+
       if (!userData?.username) {
         router.push("/onboarding");
+      } else if (userData?.username && !passcode) {
+        router.push("/set-pin");
       } else {
         router.push("/app/home");
       }
@@ -134,13 +129,13 @@ const Home = () => {
     }
   };
 
-  // if (!isReady || !isProfileReady) {
-  //   return (
-  //     <SafeAreaView className="flex flex-1 justify-center items-center">
-  //       <ActivityIndicator animating={true} color={"#FF238C"} />
-  //     </SafeAreaView>
-  //   );
-  // }
+  if (!isReady) {
+    return (
+      <SafeAreaView className="flex flex-1 justify-center items-center">
+        <ActivityIndicator animating={true} color={"#FF238C"} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
@@ -158,7 +153,7 @@ const Home = () => {
         </View>
       </View>
 
-      {isLoading && skipBiometrics && (
+      {isLoading && (
         <View className="flex flex-col space-y-8">
           <ActivityIndicator animating={true} color={"#FF238C"} />
           <Text className="text-primary font-medium text-lg text-center ">
@@ -166,7 +161,7 @@ const Home = () => {
           </Text>
         </View>
       )}
-
+      {/* 
       {isReady && user && !skipBiometrics && (
         <View className="w-full">
           <AppButton
@@ -174,7 +169,7 @@ const Home = () => {
             text="Unlock"
           />
         </View>
-      )}
+      )} */}
 
       {isReady && (
         <LoginForm

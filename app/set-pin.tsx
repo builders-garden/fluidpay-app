@@ -6,13 +6,28 @@ import {
   SafeAreaView,
   Text,
 } from "react-native";
+import { router } from "expo-router";
+import * as LocalAuthentication from "expo-local-authentication";
+import * as SecureStore from "expo-secure-store";
+
 import CodeTextInput from "../components/code-text-input";
 import AppButton from "../components/app-button";
-import { router } from "expo-router";
 
 const SetPin = () => {
   const [code, setCode] = useState<`${number}` | "">("");
   const MAX_CODE_LENGTH = 4;
+
+  const setPin = async () => {
+    await SecureStore.setItemAsync("user-passcode", code);
+    // Check if hardware supports biometrics
+    const compatible = await LocalAuthentication.hasHardwareAsync();
+
+    if (compatible) {
+      router.push("/set-faceid");
+    } else {
+      router.push("/app/home");
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-black">
       <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
@@ -44,7 +59,7 @@ const SetPin = () => {
             <AppButton
               text="Confirm"
               variant={code.length < MAX_CODE_LENGTH ? "disabled" : "primary"}
-              onPress={() => router.push("/set-faceid")}
+              onPress={setPin}
             />
           </SafeAreaView>
         </Pressable>

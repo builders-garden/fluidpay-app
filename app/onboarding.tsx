@@ -43,14 +43,14 @@ export default function Onboarding() {
     if (token) {
       const res = await updateMe(token, data);
 
-      const [payments, groups] = await Promise.all([
-        getPayments(token, { limit: 10, chainId: chain.id }),
-        getGroups(token),
-      ]);
+      // const [payments, groups] = await Promise.all([
+      //   getPayments(token, { limit: 10, chainId: chain.id }),
+      //   getGroups(token),
+      // ]);
       setUser({ ...res, token } as DBUser);
-      setTransactions(payments as any[]);
-      setGroups(groups);
-      router.push("/app/home");
+      // setTransactions(payments as any[]);
+      // setGroups(groups);
+      router.push("/set-pin");
     }
   };
 
@@ -99,7 +99,7 @@ export default function Onboarding() {
             </View>
           </View>
           <AppButton
-            text="Done!"
+            text="Continue"
             variant={
               username.length > 3 && name.length > 3 ? "primary" : "disabled"
             }
