@@ -8,9 +8,12 @@ import { useUserStore } from "../../store";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "../../lib/utils";
 import AppButton from "../../components/app-button";
+import { updateMe } from "../../lib/api";
+import { DBUser } from "../../store/interfaces";
 
 const userProfile = () => {
-  const user = useUserStore((state) => state.user);
+  const { user, setUser } = useUserStore((state) => state);
+  const [isLoading, setIsLoading] = useState(false);
   const [userDetails, setUserDetails] = useState<{
     displayName: string;
     username: string;
@@ -18,6 +21,8 @@ const userProfile = () => {
     displayName: user?.displayName || "",
     username: user?.username || "",
   });
+
+  const { displayName, username } = userDetails;
 
   const handleChange = (key: string, value: string) => {
     setUserDetails((prev) => ({
@@ -35,9 +40,29 @@ const userProfile = () => {
     [userDetails]
   );
 
-  const hasFarcaster = true;
+  const buttonDisabled = useMemo(() => {
+    return displayName === user?.displayName && username === user?.username;
+  }, [displayName, username]);
+
+  const hasFarcaster = false;
 
   const handleConnectFarcaster = () => {};
+
+  const handleUpdateProfile = async () => {
+    if (buttonDisabled) return;
+    setIsLoading(true);
+    const data = {
+      displayName,
+      username,
+    };
+
+    if (user?.token) {
+      const res = await updateMe(user?.token, data);
+      setUser({ ...res, token: user?.token } as DBUser);
+      setIsLoading(false);
+    }
+    setIsLoading(false);
+  };
 
   return (
     <View className="flex-1 bg-black h-full">
@@ -137,7 +162,13 @@ const userProfile = () => {
         </View>
         <SafeAreaView>
           <View className="mt-auto px-4">
-            <AppButton onPress={() => {}} text="Save" variant="primary" />
+            <AppButton
+              onPress={handleUpdateProfile}
+              text="Save"
+              variant={buttonDisabled ? "disabled" : "primary"}
+              disabled={buttonDisabled || isLoading}
+              loading={isLoading}
+            />
           </View>
         </SafeAreaView>
       </View>
@@ -160,6 +191,7 @@ const Detail = ({
 }) => {
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [text, setText] = useState(value);
 
   return (
     <View
@@ -172,8 +204,8 @@ const Detail = ({
         </Text>
         {editing ? (
           <TextInput
-            value={value}
-            onChangeText={handleTextChange}
+            value={text}
+            onChangeText={setText}
             autoFocus
             className="!p-0 h-6 text-primary font-medium !bg-transparent"
             textAlign="left"
@@ -192,7 +224,12 @@ const Detail = ({
       </View>
       {editable &&
         (editing ? (
-          <Pressable onPress={() => setEditing(false)}>
+          <Pressable
+            onPress={() => {
+              handleTextChange?.(text);
+              setEditing(false);
+            }}
+          >
             <Check size={20} color={"#FF238C"} />
           </Pressable>
         ) : (
