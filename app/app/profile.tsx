@@ -4,14 +4,31 @@ import * as Clipboard from "expo-clipboard";
 import { ArrowLeft, Check, Copy, Pen } from "lucide-react-native";
 import { Image, Pressable, SafeAreaView, Text, View } from "react-native";
 import { Appbar, TextInput } from "react-native-paper";
+import { useLinkWithFarcaster, usePrivy } from "@privy-io/expo";
 import { useUserStore } from "../../store";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "../../lib/utils";
 import AppButton from "../../components/app-button";
 import { updateMe } from "../../lib/api";
 import { DBUser } from "../../store/interfaces";
+import Toast from "react-native-toast-message";
 
 const userProfile = () => {
+  const { user: privyUser } = usePrivy();
+  const { linkWithFarcaster } = useLinkWithFarcaster({
+    onSuccess() {
+      setIsLoading(false);
+    },
+    onError(error) {
+      console.log("error", error);
+      setIsLoading(false);
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error.message,
+      });
+    },
+  });
   const { user, setUser } = useUserStore((state) => state);
   const [isLoading, setIsLoading] = useState(false);
   const [userDetails, setUserDetails] = useState<{
@@ -44,18 +61,46 @@ const userProfile = () => {
     return displayName === user?.displayName && username === user?.username;
   }, [displayName, username]);
 
-  const hasFarcaster = false;
+  const hasFarcaster = useMemo(() => {
+    return !!privyUser?.linked_accounts?.some(
+      (account) => account.type === "farcaster"
+    );
+  }, [privyUser]);
 
-  const handleConnectFarcaster = () => {};
+  const handleConnectFarcaster = async () => {
+    try {
+      setIsLoading(true);
+      const newPrivyUser = await linkWithFarcaster({
+        relyingParty: "https://plink.finance",
+      });
 
-  const handleUpdateProfile = async () => {
-    if (buttonDisabled) return;
-    setIsLoading(true);
-    const data = {
-      displayName,
-      username,
-    };
+      const farcasterUser = newPrivyUser.linked_accounts.find(
+        (account) => account.type === "farcaster"
+      );
 
+      if (farcasterUser?.type === "farcaster") {
+        await handleUpdateProfile({
+          farcasterUsername: farcasterUser.username ?? "",
+        });
+      }
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  const handleUpdateProfile = async (
+    data?:
+      | { farcasterUsername: string }
+      | { displayName: string; username: string }
+  ) => {
+    if (!data) {
+      if (buttonDisabled) return;
+      setIsLoading(true);
+      data = {
+        displayName,
+        username,
+      };
+    }
     if (user?.token) {
       const res = await updateMe(user?.token, data);
       setUser({ ...res, token: user?.token } as DBUser);
@@ -146,8 +191,9 @@ const userProfile = () => {
             </View>
           ) : (
             <Pressable
+              disabled={isLoading}
               onPress={handleConnectFarcaster}
-              className="bg-[#855DCD4D] py-5 px-10 rounded-xl flex-row items-center justify-center space-x-3.5"
+              className={`bg-[#855DCD4D] py-5 px-10 rounded-xl flex-row items-center justify-center space-x-3.5 ${isLoading && "disabled:opacity-50"}`}
             >
               <Image
                 source={require("../../images/icons/farcaster.png")}

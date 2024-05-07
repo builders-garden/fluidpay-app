@@ -138,6 +138,7 @@ export type UpdateMeBody = {
   displayName?: string;
   avatarUrl?: string;
   isDiscoverable?: boolean;
+  farcasterUsername?: string;
 };
 
 export type UsersByIdUsernameOrAddressParams = {
