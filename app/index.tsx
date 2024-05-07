@@ -1,7 +1,15 @@
-import { Image, SafeAreaView, Text, View } from "react-native";
+import {
+  Image,
+  Keyboard,
+  KeyboardAvoidingView,
+  Pressable,
+  SafeAreaView,
+  Text,
+  View,
+} from "react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
-import { usePrivy } from "@privy-io/expo";
+import { useUserStore } from "../store";
+import { getUserEmbeddedWallet, usePrivy } from "@privy-io/expo";
 import * as LocalAuthentication from "expo-local-authentication";
 
 import { useEffect, useState } from "react";
@@ -10,9 +18,11 @@ import * as SecureStore from "expo-secure-store";
 import { DBUser } from "../store/interfaces";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
-import { getMe, UsersMeResponse } from "../lib/api";
-import { useChainStore } from "../store/use-chain-store";
+import { getMe } from "../lib/api";
+import { ScanFace } from "lucide-react-native";
 import AppButton from "../components/app-button";
+import CodeTextInput from "../components/code-text-input";
+import { useDisconnect } from "wagmi";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -23,82 +33,68 @@ export enum LoginStatus {
 }
 
 const Home = () => {
-  const { isReady, user, getAccessToken, logout } = usePrivy();
-  const { address } = usePrivyWagmiProvider();
+  const { isReady, user, logout } = usePrivy();
+  // const { address } = usePrivyWagmiProvider();
+  const address = getUserEmbeddedWallet(user)?.address;
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
+  const { disconnect } = useDisconnect();
 
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
+  const [code, setCode] = useState<`${number}` | "">("");
+  const [codeError, setCodeError] = useState("");
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(
     LoginStatus.INITIAL
   );
-  const [isBiometricSupported, setIsBiometricSupported] = useState(false);
-  const [isProfileReady, setIsProfileReady] = useState(false);
-  const [skipBiometrics, setSkipBiometrics] = useState(false);
 
-  // Check if hardware supports biometrics
-  useEffect(() => {
-    (async () => {
-      const compatible = await LocalAuthentication.hasHardwareAsync();
-      setIsBiometricSupported(compatible);
-    })();
-  }, []);
+  const token = SecureStore.getItem(`token-${address}`);
+  const useBiometrics = !!SecureStore.getItem(`user-faceid-${address}`);
+  const passcode = SecureStore.getItem("user-passcode");
 
   useEffect(() => {
-    if (address && user) {
+    if (address && isReady) {
       setIsLoading(true);
       setLoadingMessage("Logging in...");
-      getToken(address)
+      getToken()
         .then(() => {
           setIsLoading(false);
         })
         .catch(() => {
           SecureStore.deleteItemAsync(`token-${address}`).then(() => logout());
           setIsLoading(false);
-          setIsProfileReady(true);
-          setSkipBiometrics(true);
         });
     }
-  }, [address, user]);
+  }, [address, isReady]);
 
-  useEffect(() => {
-    getToken(address!)
-      .then((token) => {
-        if (!token) {
-          setIsProfileReady(true);
-          setSkipBiometrics(true);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }, [address]);
+  const authenticatePin = () => {
+    if (code === passcode) {
+      router.push("/app/home");
+    } else {
+      setCodeError("Incorrect passcode. Please try again");
+    }
+  };
 
-  const authorise = async (
-    userData: UsersMeResponse,
-    skipBiometrics: boolean = false
-  ) => {
+  const authenticateBiometrics = async () => {
+    const auth = await LocalAuthentication.authenticateAsync({
+      promptMessage: "Login to Plink",
+    });
+    if (auth.success) {
+      router.push("/app/home");
+    }
+  };
+
+  const universalLogout = async () => {
     try {
-      if (!skipBiometrics) {
-        const auth = await LocalAuthentication.authenticateAsync({
-          promptMessage: "Login to Plink",
-          fallbackLabel: "Enter Password",
-        });
+      await SecureStore.deleteItemAsync(`token-${address}`);
+      await logout();
+      disconnect();
 
-        if (!auth.success) {
-          throw new Error(auth.error);
-        }
-      }
+      setUser(undefined);
 
-      if (!userData?.username) {
-        router.push("/onboarding");
-      } else {
-        router.push("/app/home");
-      }
+      router.replace("/");
     } catch (error) {
-      console.log("Authentication failed", error);
-      throw new Error(JSON.stringify(error));
+      console.error("Error logging out", error);
     }
   };
 
@@ -106,41 +102,104 @@ const Home = () => {
     try {
       const userData = await getMe(token);
       setUser({ ...userData, token } as DBUser);
-      setIsProfileReady(true);
 
       return userData;
     } catch (error) {
-      console.log("An error occured", error);
-      await SecureStore.deleteItemAsync(`token-${address}`);
-      await logout();
+      console.log("Error fetching user data", { error });
       setIsLoading(false);
-      setIsProfileReady(true);
-      setSkipBiometrics(true);
-      throw new Error(JSON.stringify(error));
+
+      throw new Error(error as any);
     }
   };
 
-  const getToken = async (address: string) => {
+  const getToken = async () => {
     try {
-      const token = await SecureStore.getItemAsync(`token-${address}`);
       if (token) {
         const userData = await fetchUserData(token);
 
-        await authorise(userData!, skipBiometrics);
+        if (!userData?.username) {
+          router.push("/onboarding");
+        } else if (userData?.username && !passcode) {
+          router.push("/set-pin");
+        }
+
         return token;
       }
     } catch (error) {
-      throw new Error(JSON.stringify(error));
+      console.error(error as any);
+      throw new Error(error as any);
     }
   };
 
-  // if (!isReady || !isProfileReady) {
-  //   return (
-  //     <SafeAreaView className="flex flex-1 justify-center items-center">
-  //       <ActivityIndicator animating={true} color={"#FF238C"} />
-  //     </SafeAreaView>
-  //   );
-  // }
+  if (!isReady) {
+    return (
+      <SafeAreaView className="flex flex-1 justify-center items-center">
+        <ActivityIndicator animating={true} color={"#FF238C"} />
+      </SafeAreaView>
+    );
+  }
+
+  if (!!token && storedUser && !!passcode) {
+    return (
+      <SafeAreaView className="flex-1">
+        <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
+          <Pressable onPress={Keyboard.dismiss} className="px-4 flex-1">
+            <Text className="text-4xl text-white font-semibold mb-1">
+              Welcome back 👋
+            </Text>
+
+            <Text className="text-xl text-mutedGrey font-normal mb-5">
+              @{storedUser.username}
+            </Text>
+
+            <View className="flex-row justify-center py-6">
+              {useBiometrics && (
+                <Pressable
+                  onPress={authenticateBiometrics}
+                  className="rounded-xl h-12 w-12 flex items-center justify-center bg-primary"
+                >
+                  <ScanFace size={24} color="#FFF" />
+                </Pressable>
+              )}
+            </View>
+
+            <Text className="text-mutedGrey text-sm text-center font-semibold mb-2">
+              Enter your passcode
+            </Text>
+            <CodeTextInput
+              code={code}
+              error={!!codeError}
+              setCode={setCode}
+              maxCodeLength={4}
+              codeBoxHeight={99}
+              hidden
+            />
+
+            {!!codeError && (
+              <Text className="text-center text-red-500 text-base mt-5">
+                {codeError}
+              </Text>
+            )}
+
+            <View className="flex-row justify-center items-center gap-2 mt-5">
+              <Text className="text-white">Not you?</Text>
+              <Pressable onPress={universalLogout}>
+                <Text className="text-primary font-semibold">Log out</Text>
+              </Pressable>
+            </View>
+
+            <SafeAreaView className="mt-auto">
+              <AppButton
+                text="Confirm"
+                variant={code.length < 4 ? "disabled" : "primary"}
+                onPress={authenticatePin}
+              />
+            </SafeAreaView>
+          </Pressable>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
@@ -158,7 +217,7 @@ const Home = () => {
         </View>
       </View>
 
-      {isLoading && skipBiometrics && (
+      {isLoading && (
         <View className="flex flex-col space-y-8">
           <ActivityIndicator animating={true} color={"#FF238C"} />
           <Text className="text-primary font-medium text-lg text-center ">
@@ -166,7 +225,7 @@ const Home = () => {
           </Text>
         </View>
       )}
-
+      {/* 
       {isReady && user && !skipBiometrics && (
         <View className="w-full">
           <AppButton
@@ -174,7 +233,7 @@ const Home = () => {
             text="Unlock"
           />
         </View>
-      )}
+      )} */}
 
       {isReady && (
         <LoginForm

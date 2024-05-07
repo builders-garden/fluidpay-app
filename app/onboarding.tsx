@@ -4,11 +4,10 @@ import { View, Text, TextInput } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import AppButton from "../components/app-button";
 import { router } from "expo-router";
-import { useGroupsStore, useTransactionsStore, useUserStore } from "../store";
+import { useUserStore } from "../store";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getGroups, getPayments, updateMe } from "../lib/api";
+import { updateMe } from "../lib/api";
 import { DBUser } from "../store/interfaces";
-import { useChainStore } from "../store/use-chain-store";
 
 const generatePassword = () => {
   const chars =
@@ -26,15 +25,12 @@ export default function Onboarding() {
   const [step] = useState(0);
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { address } = usePrivyWagmiProvider();
-  const chain = useChainStore((state) => state.chain);
   const setUser = useUserStore((state) => state.setUser);
-  const setTransactions = useTransactionsStore(
-    (state) => state.setTransactions
-  );
-  const setGroups = useGroupsStore((state) => state.setGroups);
 
   const finishOnboarding = async () => {
+    setIsLoading(true);
     const data = {
       displayName: name,
       username,
@@ -43,15 +39,11 @@ export default function Onboarding() {
     if (token) {
       const res = await updateMe(token, data);
 
-      const [payments, groups] = await Promise.all([
-        getPayments(token, { limit: 10, chainId: chain.id }),
-        getGroups(token),
-      ]);
       setUser({ ...res, token } as DBUser);
-      setTransactions(payments as any[]);
-      setGroups(groups);
-      router.push("/app/home");
+      setIsLoading(false);
+      router.push("/set-pin");
     }
+    setIsLoading(false);
   };
 
   return (
@@ -99,9 +91,11 @@ export default function Onboarding() {
             </View>
           </View>
           <AppButton
-            text="Done!"
+            text="Continue"
             variant={
-              username.length > 3 && name.length > 3 ? "primary" : "disabled"
+              username.length > 3 && name.length > 3 && !isLoading
+                ? "primary"
+                : "disabled"
             }
             onPress={() => finishOnboarding()}
           />
