@@ -13,7 +13,7 @@ export default function AppButton({
   text: string;
   loading?: boolean;
   onPress: () => void;
-  variant?: "primary" | "ghost" | "disabled" | "secondary";
+  variant?: "primary" | "ghost" | "disabled" | "secondary" | "farcaster";
   disabled?: boolean;
   mt?: `mt-${string}`;
   mb?: `mb-${string}`;
@@ -24,7 +24,7 @@ export default function AppButton({
     <ActivityIndicator size="small" color="#FFF" />
   ) : (
     <Text
-      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-primary" : variant === "disabled" ? "text-gray-300" : "text-black"}`}
+      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-primary" : variant === "disabled" ? "text-gray-300" : variant === "farcaster" ? "text-white" : "text-black"}`}
     >
       {text}
     </Text>
@@ -58,6 +58,18 @@ export default function AppButton({
         onPress={onPress}
         disabled={disabled || loading}
         className={`bg-white border-2 border-white rounded-full flex items-center justify-center py-3 px-4 text-black ${verticalMargin}`}
+      >
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  if (variant === "farcaster") {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={disabled || loading}
+        className={`bg-[#855DCD] border-2 border-[#855DCD] rounded-full flex items-center justify-center py-3 px-4 text-white ${verticalMargin}`}
       >
         {content}
       </TouchableOpacity>
