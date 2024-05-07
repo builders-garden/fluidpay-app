@@ -62,6 +62,7 @@ export default function AppLayout() {
         name="group-settings-modal"
         options={{ presentation: "modal", headerShown: false }}
       />
+      <Stack.Screen name="profile" options={{ headerShown: false }} />
       <Stack.Screen
         name="profile-modal"
         options={{ presentation: "fullScreenModal", headerShown: false }}
