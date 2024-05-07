@@ -40,6 +40,8 @@ const Home = () => {
   const { user: storedUser, setUser } = useUserStore((state) => state);
   const { disconnect } = useDisconnect();
 
+  const [isFetchingUser, setIsFetchingUser] = useState(false);
+  const [userFetchingCounter, setUserFetchingCounter] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
   const [code, setCode] = useState<`${number}` | "">("");
@@ -53,7 +55,7 @@ const Home = () => {
   const passcode = SecureStore.getItem("user-passcode");
 
   useEffect(() => {
-    if (address && isReady) {
+    if (address) {
       setIsLoading(true);
       setLoadingMessage("Logging in...");
       getToken()
@@ -65,7 +67,7 @@ const Home = () => {
           setIsLoading(false);
         });
     }
-  }, [address, isReady]);
+  }, [address]);
 
   const authenticatePin = () => {
     if (code === passcode) {
@@ -100,13 +102,17 @@ const Home = () => {
 
   const fetchUserData = async (token: string) => {
     try {
+      setIsFetchingUser(true);
+      setUserFetchingCounter(userFetchingCounter + 1);
       const userData = await getMe(token);
       setUser({ ...userData, token } as DBUser);
+      setIsFetchingUser(false);
 
       return userData;
     } catch (error) {
       console.log("Error fetching user data", { error });
       setIsLoading(false);
+      setIsFetchingUser(false);
 
       throw new Error(error as any);
     }
@@ -131,7 +137,7 @@ const Home = () => {
     }
   };
 
-  if (!isReady) {
+  if (!isReady || (isFetchingUser && userFetchingCounter < 2)) {
     return (
       <SafeAreaView className="flex flex-1 justify-center items-center">
         <ActivityIndicator animating={true} color={"#FF238C"} />
