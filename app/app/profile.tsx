@@ -61,10 +61,11 @@ const userProfile = () => {
     return displayName === user?.displayName && username === user?.username;
   }, [displayName, username]);
 
-  const hasFarcaster = useMemo(() => {
-    return !!privyUser?.linked_accounts?.some(
+  const farcasterAccount = useMemo(() => {
+    const farcaster = privyUser?.linked_accounts?.find(
       (account) => account.type === "farcaster"
     );
+    return farcaster?.type === "farcaster" ? farcaster : null;
   }, [privyUser]);
 
   const handleConnectFarcaster = async () => {
@@ -156,7 +157,7 @@ const userProfile = () => {
             ))}
           </View>
 
-          {hasFarcaster ? (
+          {!!farcasterAccount ? (
             <View className="bg-[#855DCD4D] py-5 px-5 rounded-xl w-full">
               <View className="flex-row items-center justify-center space-x-3.5 mb-6">
                 <Image
@@ -169,16 +170,27 @@ const userProfile = () => {
                 </Text>
               </View>
               <View className="flex-row items-center space-x-6 mb-6">
-                <Image
-                  source={require("../../images/base.png")}
-                  className="rounded-full h-[45px] w-[45px]"
-                />
+                {farcasterAccount.profile_picture_url ? (
+                  <Image
+                    source={{ uri: farcasterAccount.profile_picture_url }}
+                    className="rounded-full h-[45px] w-[45px]"
+                  />
+                ) : (
+                  <Avatar
+                    name={
+                      farcasterAccount?.display_name
+                        ?.charAt(0)
+                        ?.toUpperCase() || ""
+                    }
+                    size={45}
+                  />
+                )}
                 <View className="mb-1">
                   <Text className="text-base text-white font-semibold">
-                    limone.eth - serial frame hacker
+                    {farcasterAccount.display_name}
                   </Text>
                   <Text className="text-base text-mutedGrey font-semibold">
-                    @limone.eth
+                    @{farcasterAccount.username}
                   </Text>
                 </View>
               </View>
@@ -193,12 +205,13 @@ const userProfile = () => {
             <Pressable
               disabled={isLoading}
               onPress={handleConnectFarcaster}
-              className={`bg-[#855DCD4D] py-5 px-10 rounded-xl flex-row items-center justify-center space-x-3.5 ${isLoading && "disabled:opacity-50"}`}
+              className={`bg-[#855DCD4D] py-5 px-10 rounded-xl flex-row items-center justify-center ${isLoading && "opacity-50"}`}
             >
               <Image
                 source={require("../../images/icons/farcaster.png")}
                 width={24}
                 height={24}
+                className="mr-3.5"
               />
               <Text className="text-[#855DCD] font-medium text-base">
                 Connect your Farcaster account
