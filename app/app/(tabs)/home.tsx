@@ -1,5 +1,5 @@
 import { Link, Redirect, useNavigation } from "expo-router";
-import { View, Text, Pressable, ScrollView, ViewStyle } from "react-native";
+import { View, Text, Pressable, ScrollView, Image } from "react-native";
 import Avatar from "../../../components/avatar";
 import CircularButton from "../../../components/circular-button";
 import { router } from "expo-router";
@@ -21,6 +21,7 @@ import { formatBigInt } from "../../../lib/utils";
 import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
 import TransactionSkeletonLayout from "../../../components/skeleton-layout/transactions";
+import { base } from "viem/chains";
 
 export default function Home() {
   const { isReady } = usePrivyWagmiProvider();
@@ -129,9 +130,20 @@ export default function Home() {
                 </Text>
                 <View>
                   <PillButton
-                    text="Accounts"
                     onPress={() => router.push("/app/accounts-modal")}
-                  />
+                  >
+                    <Image
+                      className="h-6 w-6 rounded-full"
+                      source={
+                        chain === base
+                          ? require("../../../images/base.png")
+                          : require("../../../images/sepolia.png")
+                      }
+                    />
+                    <Text className="text-white text-base font-semibold">
+                      {chain === base ? "Base" : "Sepolia"}
+                    </Text>
+                  </PillButton>
                 </View>
               </View>
               <View></View>

@@ -1,19 +1,18 @@
-import { Pressable, View, Text } from "react-native";
+import { PropsWithChildren } from "react";
+import { Pressable, View } from "react-native";
 
 export default function PillButton({
-  text,
   onPress,
-}: {
-  text: string;
-  onPress?: () => void;
-}) {
+  children,
+}: PropsWithChildren<{ onPress?: () => void }>) {
   return (
-    <Pressable onPress={onPress}>
-      <View className="flex flex-col rounded-lg items-center justify-center space-y-2">
-        <View className="bg-white/20 rounded-full p-4 flex items-center justify-center">
-          <Text className="text-white font-semibold">{text}</Text>
-        </View>
-      </View>
-    </Pressable>
+    <View className="flex flex-col rounded-lg items-center justify-center space-y-2">
+      <Pressable
+        onPress={onPress}
+        className="bg-white/20 rounded-full py-1.5 px-2.5 flex-row space-x-2.5 items-center justify-center"
+      >
+        {children}
+      </Pressable>
+    </View>
   );
 }
