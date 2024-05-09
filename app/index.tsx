@@ -149,7 +149,7 @@ const Home = () => {
     return (
       <SafeAreaView className="flex-1">
         <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
-          <Pressable onPress={Keyboard.dismiss} className="px-4 flex-1">
+          <Pressable onPress={Keyboard.dismiss} className="px-4 flex-1 mb-12">
             <Text className="text-4xl text-white font-semibold mb-1">
               Welcome back 👋
             </Text>

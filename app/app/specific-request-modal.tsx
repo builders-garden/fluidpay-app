@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Text, View } from "react-native";
+import { KeyboardAvoidingView, Text, View } from "react-native";
 import { Appbar } from "react-native-paper";
 import { useUserStore } from "../../store";
 import AppButton from "../../components/app-button";
@@ -43,32 +43,34 @@ export default function SpecificRequestModal() {
           titleStyle={{ fontWeight: "600", color: "#FAFBFA", fontSize: 16 }}
         />
       </Appbar.Header>
-      <View className="flex flex-col items-center px-4 space-y-4 h-full">
-        <AmountChooser
-          dollars={amount}
-          onSetDollars={setAmount}
-          showAmountAvailable
-          autoFocus={true}
-          lagAutoFocus={false}
-        />
+      <KeyboardAvoidingView className="w-full" behavior="padding">
+        <View className="flex flex-col items-center px-4 space-y-4 h-full">
+          <AmountChooser
+            dollars={amount}
+            onSetDollars={setAmount}
+            showAmountAvailable
+            autoFocus={true}
+            lagAutoFocus={false}
+          />
 
-        <Text className="text-[#8F8F91] font-semibold">No fees</Text>
+          <Text className="text-[#8F8F91] font-semibold">No fees</Text>
 
-        <View className="flex flex-grow" />
-        <SafeAreaView className="flex flex-col w-full mb-24">
-          <View className="mb-4">
-            <AppButton
-              text="Create link"
-              variant="primary"
-              onPress={async () => {
-                await Share.share({
-                  message: `gm! join me on fluidpay using this link: https://plink.finance/u/${user?.username}/request/${amount}`,
-                });
-              }}
-            />
-          </View>
-        </SafeAreaView>
-      </View>
+          <View className="flex flex-grow" />
+          <SafeAreaView className="flex flex-col w-full mb-24">
+            <View className="mb-4">
+              <AppButton
+                text="Create link"
+                variant="primary"
+                onPress={async () => {
+                  await Share.share({
+                    message: `gm! join me on fluidpay using this link: https://plink.finance/u/${user?.username}/request/${amount}`,
+                  });
+                }}
+              />
+            </View>
+          </SafeAreaView>
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
