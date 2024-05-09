@@ -375,7 +375,10 @@ const getDetails = (
     username: string;
     smartAccountAddress: string;
   },
-  handleChange: (key: string, value: string) => void
+  handleChange: (
+    key: Exclude<keyof typeof user, "smartAccountAddress">,
+    value: string
+  ) => void
 ) => [
   {
     key: "Display Name",
