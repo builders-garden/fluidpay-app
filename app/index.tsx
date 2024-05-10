@@ -231,7 +231,7 @@ const Home = () => {
           </Text>
         </View>
       )}
-      {/* 
+      {/*
       {isReady && user && !skipBiometrics && (
         <View className="w-full">
           <AppButton

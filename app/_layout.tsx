@@ -99,12 +99,12 @@ function AppLayout() {
 
   return (
     <>
-      <PostHogProvider
+      {/* <PostHogProvider
         apiKey={process.env.EXPO_PUBLIC_POSTHOG_API_KEY!}
         options={{
           host: process.env.EXPO_PUBLIC_POSTHOG_HOST,
         }}
-      >
+      > */}
         <PaperProvider
           settings={{
             icon: (props) => <Icon {...props} />,
@@ -122,7 +122,7 @@ function AppLayout() {
             </PrivyWagmiProvider>
           </PrivyProvider>
         </PaperProvider>
-      </PostHogProvider>
+      {/* </PostHogProvider> */}
       <Toast
         config={toastConfig}
         position="top"
