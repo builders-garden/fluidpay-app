@@ -32,9 +32,11 @@ export default function SelectPaidByModal({
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
         >
-          <BottomSheetView className="bg-[#232324]">
-            <View className="rounded-lg flex flex-col space-y-4 bg-[#232324] py-4 px-4">
-              <Text className="text-2xl text-white font-bold">Paid by</Text>
+          <BottomSheetView className="bg-white dark:bg-greyInput">
+            <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-greyInput py-4 px-4">
+              <Text className="text-2xl text-darkGrey dark:text-white font-bold">
+                Paid by
+              </Text>
               {members?.map((member: any, index: number) => (
                 <Pressable
                   key={`${member.id}-${index}`}
@@ -59,7 +61,7 @@ export default function SelectPaidByModal({
                     <Avatar
                       name={member.user.displayName.charAt(0).toUpperCase()}
                     />
-                    <Text className="text-white font-semibold text-lg ml-2">
+                    <Text className="text-darkGrey dark:text-white font-semibold text-lg ml-2">
                       {member.user.username === user?.username
                         ? "You"
                         : member.user.username}

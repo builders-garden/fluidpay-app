@@ -17,10 +17,12 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Withdraw from "../../components/bottom-sheets/withdraw";
 import BottomSheet from "@gorhom/bottom-sheet";
 import Deposit from "../../components/bottom-sheets/deposit";
+import { useColorScheme } from "nativewind";
 
 export default function AddMoneyModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
+  const { colorScheme } = useColorScheme();
 
   const [openedBottomSheet, setBottomSheet] = React.useState<
     "deposit" | "withdraw" | ""
@@ -37,28 +39,35 @@ export default function AddMoneyModal() {
 
   return (
     <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
-      <View className="flex-1 flex-col bg-black">
+      <View className="flex-1 flex-col bg-absoluteWhite dark:bg-black">
         {!isPresented && <Link href="../">Dismiss</Link>}
         <Appbar.Header
           elevated={false}
           statusBarHeight={48}
-          className="bg-black text-white"
+          className="bg-absoluteWhite dark:bg-black text-darkGrey dark:text-white"
         >
           <Appbar.Action
-            icon={() => <ArrowLeft size={24} color="#FFF" />}
+            icon={() => (
+              <ArrowLeft
+                size={24}
+                color={colorScheme === "dark" ? "#FFF" : "#161618"}
+              />
+            )}
             onPress={() => router.back()}
-            color="#fff"
+            color={colorScheme === "dark" ? "#FFF" : "#161618"}
             size={20}
           />
           <Appbar.Content
             title=""
-            color="#fff"
+            color={colorScheme === "dark" ? "#FFF" : "#161618"}
             titleStyle={{ fontWeight: "bold" }}
           />
         </Appbar.Header>
         <View className="flex px-4">
-          <Text className="text-4xl text-white font-semibold">Add money</Text>
-          <Text className="text-[#8F8F91] mt-1.5">
+          <Text className="text-4xl text-darkGrey dark:text-white font-semibold">
+            Add money
+          </Text>
+          <Text className="text-mutedGrey mt-1.5">
             Refund your account using your preferred method.
           </Text>
 
@@ -109,7 +118,7 @@ const DepositOption = ({
   isExternalLink: boolean;
 }) => {
   const bgColor = isExternalLink
-    ? "bg-darkGrey"
+    ? "bg-white dark:bg-darkGrey"
     : option.variant === "ghost"
       ? "bg-[#FF5D8F4D]"
       : "bg-primary";
@@ -125,7 +134,7 @@ const DepositOption = ({
           className="rounded-full w-[50px] h-[50px]"
         />
         <Text
-          className={`text-lg font-medium ${option.variant === "ghost" ? "text-primary" : "text-white"}`}
+          className={`text-lg font-medium ${option.variant === "ghost" ? "text-primary" : "text-darkGrey dark:text-white"}`}
         >
           {option.title}
         </Text>

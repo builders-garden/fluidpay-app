@@ -19,11 +19,11 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
   const tabs = useRef(["Scan", "Pay me"] as QRScreenOptions[]).current;
 
   return (
-    <View className="flex-1 flex-col px-4 bg-black">
+    <View className="flex-1 flex-col px-4 bg-white dark:bg-black">
       <Appbar.Header
         elevated={false}
         statusBarHeight={48}
-        className="bg-black text-white"
+        className="bg-white dark:bg-black text-darkGrey dark:text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}
@@ -41,7 +41,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
       </Appbar.Header>
       <View className="flex flex-row items-center justify-between px-4 pb-8">
         <View className="flex space-y-2">
-          <Text className="text-3xl text-white font-bold">
+          <Text className="text-3xl text-darkGrey dark:text-white font-bold">
             {shortenAddress(user?.smartAccountAddress!)}
           </Text>
           <Text className="font-bold text-[#FF238C]">@{user?.username}</Text>
@@ -49,7 +49,7 @@ export default function QRScreen({ option }: { option?: QRScreenOptions }) {
         <Avatar name={user!.displayName.charAt(0).toUpperCase()} />
       </View>
       {tab === "Pay me" && (
-        <View className="bg-[#161618] mx-auto rounded-lg p-8">
+        <View className="bg-darkGrey mx-auto rounded-lg p-8">
           <QRCode />
         </View>
       )}

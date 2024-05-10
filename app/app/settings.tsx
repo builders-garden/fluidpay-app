@@ -28,7 +28,7 @@ export default function Settings() {
   }
 
   return (
-    <View className="flex-1 bg-black h-full">
+    <View className="flex-1 bg-white dark:bg-black h-full">
       <ImageBackground
         source={require("../../images/blur-bg.png")}
         className="flex-1"
@@ -37,7 +37,7 @@ export default function Settings() {
           <Appbar.Header
             elevated={false}
             statusBarHeight={48}
-            className="bg-transparent text-white"
+            className="bg-transparent text-darkGrey dark:text-white"
           >
             <Appbar.Action
               icon={() => <ArrowLeft size={24} color="#FFF" />}
@@ -63,7 +63,7 @@ export default function Settings() {
                 @{user?.username}
               </Text>
               <View className="flex flex-row space-x-2 items-center">
-                <Text className="text-[#8F8F91] text-xl text-ellipsis">
+                <Text className="text-white dark:text-mutedGrey text-xl text-ellipsis">
                   {shortenAddress(user?.smartAccountAddress)}
                 </Text>
                 <QrCode

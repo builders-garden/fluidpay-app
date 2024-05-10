@@ -24,11 +24,11 @@ export default function SecurityPrivacy() {
     }
   };
   return (
-    <View className="flex-1 flex-col bg-black">
+    <View className="flex-1 flex-col bg-white dark:bg-black">
       <Appbar.Header
         elevated={false}
         statusBarHeight={48}
-        className="bg-black text-white"
+        className="bg-white dark:bg-black text-darkGrey dark:text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={20} color="#FFF" />}
@@ -45,10 +45,12 @@ export default function SecurityPrivacy() {
         />
       </Appbar.Header>
       <View className="flex px-4 space-y-4">
-        <Text className="text-3xl text-white font-bold">
+        <Text className="text-3xl text-darkGrey dark:text-white font-bold">
           Security & Privacy
         </Text>
-        <Text className="text-white font-semibold">Security</Text>
+        <Text className="text-darkGrey dark:text-white font-semibold">
+          Security
+        </Text>
         <View>
           <AppButton
             onPress={() => {
@@ -57,11 +59,11 @@ export default function SecurityPrivacy() {
             text="Export private key"
           />
         </View>
-        <View className="bg-[#161618] w-full mx-auto rounded-2xl mt-8 p-4">
+        <View className="bg-darkGrey w-full mx-auto rounded-2xl mt-8 p-4">
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center space-x-4">
               <ScanFace size={24} color="#3F89FF" />
-              <Text className="text-white font-semibold">
+              <Text className="text-darkGrey dark:text-white font-semibold">
                 Sign in with Face ID
               </Text>
             </View>
@@ -72,14 +74,16 @@ export default function SecurityPrivacy() {
             />
           </View>
         </View>
-        <Text className="text-white font-semibold">Privacy</Text>
+        <Text className="text-darkGrey dark:text-white font-semibold">
+          Privacy
+        </Text>
 
-        <View className="bg-[#161618] w-full mx-auto rounded-2xl mt-8 p-4 flex flex-col space-y-6">
+        <View className="bg-darkGrey w-full mx-auto rounded-2xl mt-8 p-4 flex flex-col space-y-6">
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center space-x-4">
               <Search size={24} color="#3F89FF" />
               <View className="flex flex-col">
-                <Text className="text-white font-semibold">
+                <Text className="text-darkGrey dark:text-white font-semibold">
                   Make me discoverable
                 </Text>
                 <Text className="text-gray-400">
@@ -93,7 +97,7 @@ export default function SecurityPrivacy() {
             <View className="flex flex-row items-center space-x-4">
               <Users2 size={24} color="#3F89FF" />
               <View className="flex flex-col">
-                <Text className="text-white font-semibold">
+                <Text className="text-darkGrey dark:text-white font-semibold">
                   Allow others to add me to groups
                 </Text>
               </View>

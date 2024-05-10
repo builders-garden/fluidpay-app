@@ -38,10 +38,12 @@ export default function CircularButton({
       className={`${disabled ? "opacity-25" : ""}`}
     >
       <View className="flex flex-col items-center justify-center space-y-2">
-        <View className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center">
+        <View className="bg-primary dark:bg-white/20 rounded-full w-16 h-16 flex items-center justify-center">
           <Icon name={icon} color="white" size={24} />
         </View>
-        <Text className="text-white font-semibold">{text}</Text>
+        <Text className="text-darkGrey dark:text-white font-semibold">
+          {text}
+        </Text>
       </View>
     </Pressable>
   );

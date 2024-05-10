@@ -116,7 +116,7 @@ const SendConfirmation = ({
   // renders
   return (
     <View
-      className="flex-1 p-6 bg-black/70 absolute w-full bottom-0 z-10"
+      className="flex-1 p-6 bg-white dark:bg-black/70 absolute w-full bottom-0 z-10"
       style={{ height: sceenHeight }}
     >
       <BottomSheet
@@ -148,7 +148,7 @@ const SendConfirmation = ({
                 name={sendUser?.displayName.charAt(0).toUpperCase()}
                 size={50}
               />
-              <Text className="text-white text-xl mt-2.5 mb-1 text-center font-medium">
+              <Text className="text-darkGrey dark:text-white text-xl mt-2.5 mb-1 text-center font-medium">
                 {sendUser?.displayName}
               </Text>
               <Text className="text-mutedGrey text-base text-center font-medium">
@@ -157,7 +157,7 @@ const SendConfirmation = ({
             </View>
 
             <View className="mt-auto">
-              <Text className="text-center text-white text-[40px] leading-[48px] font-medium">
+              <Text className="text-center text-darkGrey dark:text-white text-[40px] leading-[48px] font-medium">
                 ${amount}
               </Text>
               <Text className="text-center text-mutedGrey text-base font-medium">

@@ -34,7 +34,7 @@ export default function CodeInput({
   const MAX_CODE_LENGTH = 6;
   return (
     <View className="w-full flex flex-col">
-      <Text className="text-white text-xl text-center mb-4">
+      <Text className="text-darkGrey dark:text-white text-xl text-center mb-4">
         We sent a code to {email}
       </Text>
 

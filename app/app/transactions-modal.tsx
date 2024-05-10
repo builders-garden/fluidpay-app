@@ -85,11 +85,11 @@ export default function TransactionsModal() {
   const dates = Object.keys(transactionsByDay);
 
   return (
-    <View className="flex-1 flex-col bg-black">
+    <View className="flex-1 flex-col bg-white dark:bg-black">
       <Appbar.Header
         elevated={false}
         statusBarHeight={48}
-        className="bg-black text-white"
+        className="bg-white dark:bg-black text-darkGrey dark:text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}
@@ -108,7 +108,9 @@ export default function TransactionsModal() {
       </Appbar.Header>
 
       <View className="flex-row items-center justify-between px-4">
-        <Text className="font-semibold text-4xl text-white">Transactions</Text>
+        <Text className="font-semibold text-4xl text-darkGrey dark:text-white">
+          Transactions
+        </Text>
         <Pressable onPress={handleChangeTransactionDirection}>
           {trxDirection === TransanctionDirection.DEFAULT && (
             <ArrowUpDown color="#8F8F91" />
@@ -123,7 +125,7 @@ export default function TransactionsModal() {
       </View>
       <ScrollView className="w-full space-y-4 mt-8 px-4">
         {fetchingPayments && (
-          <ScrollView className="bg-[#161618] w-full mx-auto rounded-lg p-4 space-y-4">
+          <ScrollView className="bg-darkGrey w-full mx-auto rounded-lg p-4 space-y-4">
             {Array(3)
               .fill(null)
               .map((_, i) => (
@@ -137,10 +139,10 @@ export default function TransactionsModal() {
             const transactionList = transactionsByDay[date].transactions;
             return (
               <View key={date} className="w-full rounded-lg">
-                <Text className="text-xl text-white font-medium mb-2.5">
+                <Text className="text-xl text-darkGrey dark:text-white font-medium mb-2.5">
                   {isTodayOrYesterday(date) || formatDateToMonthDay(date)}
                 </Text>
-                <View className="bg-[#161618] w-full rounded-lg px-4 space-y-4">
+                <View className="bg-darkGrey w-full rounded-lg px-4 space-y-4">
                   {transactionList.map((transaction, index) => (
                     <TransactionItem
                       key={transaction.id}

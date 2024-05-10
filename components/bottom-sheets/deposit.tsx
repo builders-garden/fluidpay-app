@@ -25,7 +25,7 @@ const Deposit = ({ user, bottomSheetRef, cancelTransaction }: DepositProps) => {
   // renders
   return (
     <View
-      className="flex-1 p-6 bg-black/70 absolute w-full bottom-0 z-10"
+      className="flex-1 p-6 bg-white dark:bg-black/70 absolute w-full bottom-0 z-10"
       style={{ height: sceenHeight }}
     >
       <BottomSheet
@@ -52,7 +52,7 @@ const Deposit = ({ user, bottomSheetRef, cancelTransaction }: DepositProps) => {
           }}
         >
           <View className="w-full flex-1 pb-10 px-4">
-            <Text className="text-white font-semibold text-2xl text-center pt-5">
+            <Text className="text-darkGrey dark:text-white font-semibold text-2xl text-center pt-5">
               Deposit
             </Text>
 
@@ -62,8 +62,8 @@ const Deposit = ({ user, bottomSheetRef, cancelTransaction }: DepositProps) => {
               address below.
             </Text>
 
-            <View className="bg-[#232324] rounded-[10px] flex flex-row justify-between items-center px-4 py-3">
-              <Text className="text-[#8F8F91] text-xs text-ellipsis">
+            <View className="bg-white dark:bg-greyInput rounded-[10px] flex flex-row justify-between items-center px-4 py-3">
+              <Text className="text-mutedGrey text-xs text-ellipsis">
                 {user?.smartAccountAddress!}
               </Text>
               <Pressable

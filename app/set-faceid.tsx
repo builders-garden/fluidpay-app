@@ -14,10 +14,10 @@ const SetFaceID = () => {
       <View className="flex-1 px-4 justify-end items-center">
         <ScanFace size={150} color="#FF238C" />
 
-        <Text className="text-white text-4xl text-center font-semibold my-5">
+        <Text className="text-darkGrey dark:text-white text-4xl text-center font-semibold my-5">
           Face Recognition
         </Text>
-        <Text className="text-xl text-white text-center font-semibold">
+        <Text className="text-xl text-darkGrey dark:text-white text-center font-semibold">
           For even faster and more secure access.
         </Text>
       </View>

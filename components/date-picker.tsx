@@ -25,9 +25,11 @@ export default function DatePicker({
   };
 
   return (
-    <View className="bg-[#232324] rounded-lg px-3 py-4">
+    <View className="bg-white dark:bg-greyInput rounded-lg px-3 py-4">
       <Pressable onPress={showDatePicker}>
-        <Text className="text-white">{date.toDateString()}</Text>
+        <Text className="text-darkGrey dark:text-white">
+          {date.toDateString()}
+        </Text>
       </Pressable>
       <DateTimePickerModal
         isVisible={isDatePickerVisible}

@@ -22,6 +22,7 @@ import { useChainStore } from "../../../store/use-chain-store";
 import PillButton from "../../../components/pill-button";
 import TransactionSkeletonLayout from "../../../components/skeleton-layout/transactions";
 import { base } from "viem/chains";
+import { useColorScheme } from "nativewind";
 
 export default function Home() {
   const { isReady } = usePrivyWagmiProvider();
@@ -31,10 +32,10 @@ export default function Home() {
   const setProfileUserTransactions = useProfileStore(
     (state) => state.setProfileUserTransactions
   );
-  const transactions = useTransactionsStore((state) => state.transactions);
-  const setTransactions = useTransactionsStore(
-    (state) => state.setTransactions
+  const { transactions, setTransactions } = useTransactionsStore(
+    (state) => state
   );
+
   const {
     balance,
     isLoading: isLoadingBalance,
@@ -45,6 +46,8 @@ export default function Home() {
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
   const navigation = useNavigation();
+
+  const { colorScheme } = useColorScheme();
 
   useEffect(() => {
     const refresh = async () => {
@@ -99,10 +102,13 @@ export default function Home() {
 
   return (
     <LinearGradient
-      start={{ x: 0.5, y: 0.2 }}
-      colors={["#71103E", "#000000", "#000000"]}
+      start={{ x: 0.5, y: colorScheme === "dark" ? 0.2 : 0 }}
+      colors={
+        colorScheme === "dark"
+          ? ["#71103E", "#000000", "#000000"]
+          : ["#F2F2F2", "#FFDBEC"]
+      }
       className="h-full"
-      style={{}}
     >
       <SafeAreaView className="bg-transparent flex-1">
         <View className="flex flex-col bg-transparent">
@@ -122,12 +128,6 @@ export default function Home() {
           <ScrollView className="px-4" scrollEnabled={transactions.length > 0}>
             <View className="py-8 flex flex-col space-y-16">
               <View className="flex flex-col space-y-4">
-                <Text className="text-white font-semibold text-center">
-                  {chain.name} • USDC
-                </Text>
-                <Text className="text-white font-bold text-center text-5xl">
-                  {isLoadingBalance ? "--.--" : `$${formatBigInt(balance!, 2)}`}
-                </Text>
                 <View>
                   <PillButton
                     onPress={() => router.push("/app/accounts-modal")}
@@ -145,6 +145,9 @@ export default function Home() {
                     </Text>
                   </PillButton>
                 </View>
+                <Text className="text-darkGrey dark:text-white font-semibold text-center text-5xl">
+                  {isLoadingBalance ? "--.--" : `$${formatBigInt(balance!, 2)}`}
+                </Text>
               </View>
               <View></View>
               <View className="flex flex-row items-center justify-evenly w-full">
@@ -171,7 +174,7 @@ export default function Home() {
               </View>
             </View>
             {fetchingPayments && (
-              <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
+              <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl p-4">
                 {Array(3)
                   .fill(null)
                   .map((_, i) => (
@@ -181,7 +184,7 @@ export default function Home() {
             )}
 
             {!fetchingPayments && transactions.length > 0 && (
-              <View className="bg-[#161618] w-full mx-auto rounded-2xl p-4">
+              <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl p-4">
                 {transactions.slice(0, 3).map((payment, index) => (
                   <TransactionItem
                     transaction={payment}
@@ -217,10 +220,15 @@ export default function Home() {
             )}
 
             {recentPayees.length > 0 && (
-              <View className="bg-[#161618] w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
+              <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
                 <View className="flex flex-row items-center pb-6">
-                  <Text className="text-gray-400">Recent payees</Text>
-                  <ChevronRight color="grey" size={14} />
+                  <Text className="text-mutedGrey dark:text-gray-400">
+                    Recent payees
+                  </Text>
+                  <ChevronRight
+                    color={colorScheme === "dark" ? "grey" : "#8F8F91"}
+                    size={14}
+                  />
                 </View>
                 <View className="flex flex-row justify-evenly w-full">
                   {getUniquePayees().map((payment, index) => (
@@ -240,7 +248,7 @@ export default function Home() {
                             .charAt(0)
                             .toUpperCase()}
                         />
-                        <Text className="text-white font-semibold">
+                        <Text className="text-darkGrey dark:text-white font-semibold">
                           {payment.payee.username}
                         </Text>
                       </View>

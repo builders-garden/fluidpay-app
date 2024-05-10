@@ -116,7 +116,7 @@ function AppLayout() {
             supportedChains={[sepolia, base]}
           >
             <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
-              <View className="bg-black flex-1">
+              <View className="bg-absoluteWhite dark:bg-black flex-1">
                 <Slot />
               </View>
             </PrivyWagmiProvider>

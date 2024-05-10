@@ -49,7 +49,7 @@ export default function EmailInput({
           clearButtonMode="while-editing"
           placeholder="youremail@example.com"
           placeholderTextColor={"#8F8F91"}
-          className=" text-white bg-[#232324] px-3 py-4 rounded-lg"
+          className=" text-darkGrey dark:text-white bg-white dark:bg-greyInput px-3 py-4 rounded-lg"
         />
         {!isEmailValid && (
           <Text className="text-red-500 text-sm">

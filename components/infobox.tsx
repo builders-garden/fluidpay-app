@@ -13,7 +13,8 @@ export function InfoBox({
 }) {
   const backgroundColor =
     variant === "info" ? "bg-white/25" : "bg-amber-600/25";
-  const textColor = variant === "info" ? "text-white" : "text-amber-600";
+  const textColor =
+    variant === "info" ? "text-darkGrey dark:text-white" : "text-amber-600";
   const iconColor = variant === "info" ? "#FFFFFF" : "#FFFF00";
   return (
     <View

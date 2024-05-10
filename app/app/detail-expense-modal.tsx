@@ -19,8 +19,10 @@ import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import SelectPaidByModal from "./select-paid-by-modal";
 import DatePicker from "../../components/date-picker";
+import { useColorScheme } from "nativewind";
 
 export default function DetailExpenseModal() {
+  const { colorScheme } = useColorScheme();
   const { expense, group } = useLocalSearchParams();
   const expenseData = JSON.parse(expense as string);
   const groupData = JSON.parse(group as string);
@@ -104,26 +106,31 @@ export default function DetailExpenseModal() {
 
   return (
     <SafeAreaView
-      className="flex-1 flex-col bg-[#161618]"
+      className="flex-1 flex-col bg-absoluteWhite dark:bg-darkGrey"
       edges={{ top: "additive" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#161618] text-white"
+        className="bg-absoluteWhite dark:bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
         />
         <Appbar.Content
           title=""
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
         <Appbar.Action
@@ -131,13 +138,15 @@ export default function DetailExpenseModal() {
           onPress={async () => {
             await deleteExpense();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
         />
       </Appbar.Header>
       <View className="flex-1 px-4">
         <View className="flex space-y-2">
-          <Text className="text-3xl text-white font-bold">Expense detail</Text>
+          <Text className="text-3xl text-darkGrey dark:text-white font-bold">
+            Expense detail
+          </Text>
           <View className="flex flex-row space-x-1">
             <Text className="text-gray-400">Paid by</Text>
             <Pressable onPress={handlePresentModalPress}>
@@ -174,16 +183,20 @@ export default function DetailExpenseModal() {
               placeholder="Description"
               placeholderTextColor={"#8F8F91"}
               clearButtonMode="always"
-              className="text-white bg-[#232324] px-3 py-4 rounded-lg"
+              className="text-darkGrey dark:text-white bg-white dark:bg-greyInput px-3 py-4 rounded-lg"
             />
             <View>
               <DatePicker date={date} setDate={setDate} />
             </View>
-            <View className="bg-[#232324] rounded-lg px-3 py-4 mb-4">
+            <View className="bg-white dark:bg-greyInput rounded-lg px-3 py-4 mb-4">
               <RNPickerSelect
                 style={{
-                  inputAndroid: { color: "white" },
-                  inputIOS: { color: "white" },
+                  inputAndroid: {
+                    color: colorScheme === "dark" ? "#FFF" : "#161618",
+                  },
+                  inputIOS: {
+                    color: colorScheme === "dark" ? "#FFF" : "#161618",
+                  },
                 }}
                 value={category}
                 placeholder={{ label: "Select a category", value: null }}
@@ -195,8 +208,10 @@ export default function DetailExpenseModal() {
               />
             </View>
           </View>
-          <Text className="text-2xl text-white font-bold">Split among</Text>
-          <View className="rounded-lg flex flex-col space-y-4 bg-[#232324] py-4 px-2 mt-2">
+          <Text className="text-2xl text-darkGrey dark:text-white font-bold">
+            Split among
+          </Text>
+          <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-greyInput py-4 px-2 mt-2">
             {groupData?.members?.map((member: any, index: number) => (
               <View className="flex flex-row items-center" key={index}>
                 <Checkbox.Android
@@ -212,7 +227,7 @@ export default function DetailExpenseModal() {
                 <Avatar
                   name={member.user.displayName.charAt(0).toUpperCase()}
                 />
-                <Text className="text-white font-semibold text-lg ml-2">
+                <Text className="text-darkGrey dark:text-white font-semibold text-lg ml-2">
                   {member.user.username === user?.username
                     ? "You"
                     : member.user.username}

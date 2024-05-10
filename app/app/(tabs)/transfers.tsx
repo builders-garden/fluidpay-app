@@ -68,7 +68,7 @@ export default function Send() {
   const interactedUsers = getInteractedUsers();
 
   return (
-    <SafeAreaView className="bg-black flex-1">
+    <SafeAreaView className="bg-absoluteWhite dark:bg-black flex-1">
       <View className="flex flex-row items-center justify-between px-4 max-w-screen">
         <View className="flex flex-row items-center space-x-4 pl-2">
           <Link href={"/app/settings"}>
@@ -79,7 +79,7 @@ export default function Send() {
           placeholder="@username"
           onChangeText={onChangeText}
           value={searchQuery}
-          className="bg-white/10 !text-white w-3/4 mb-1"
+          className="bg-darkGrey/10 dark:bg-white/10 !text-darkGrey dark:!text-white w-[80%] mb-1"
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect={false}
@@ -89,15 +89,17 @@ export default function Send() {
           theme={{ colors: { onSurfaceVariant: "#FFF" } }}
         />
       </View>
-      <View className="flex-1 flex-col px-4 bg-black">
+      <View className="flex-1 flex-col px-4">
         {searchQuery !== "" ? (
           <>
-            <Text className="text-[#8F8F91] font-semibold mt-8">
+            <Text className="text-mutedGrey font-semibold mt-8">
               Search results
             </Text>
             <View className="flex flex-col space-y-4 mt-4">
               {results.length === 0 && (
-                <Text className="text-white font-semibold">No results</Text>
+                <Text className="text-darkGrey dark:text-white font-semibold">
+                  No results
+                </Text>
               )}
               {results.map((result, index) => (
                 <UserSearchResult
@@ -108,7 +110,7 @@ export default function Send() {
             </View>
           </>
         ) : transactions.length > 0 ? (
-          <View className="bg-[#161618] w-full mx-auto rounded-2xl px-4 mt-8">
+          <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl px-4 mt-8">
             {interactedUsers
               ?.slice(0, 5)
               .map((user, index) => (

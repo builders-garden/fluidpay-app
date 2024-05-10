@@ -16,14 +16,14 @@ export default function TransactionDetailModal() {
 
   return (
     <SafeAreaView
-      className="flex-1 flex-col bg-[#161618]"
+      className="flex-1 flex-col bg-darkGrey"
       edges={{ top: "off" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#161618] text-white"
+        className="bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}
@@ -50,7 +50,7 @@ export default function TransactionDetailModal() {
       <View className="flex px-4 h-full space-y-8 mt-2">
         <View className="flex">
           <View className="flex flex-row items-center justify-between space-x-2">
-            <Text className="text-3xl text-white font-bold">
+            <Text className="text-3xl text-darkGrey dark:text-white font-bold">
               -${data.amount.toFixed(2)}
             </Text>
             <Avatar name={data.payee.displayName.charAt(0).toUpperCase()} />
@@ -59,24 +59,26 @@ export default function TransactionDetailModal() {
             <Text className="text-[#FF238C] text-base font-semibold">
               {data.payee.displayName} - @{data.payee.username}
             </Text>
-            <Text className="text-[#8F8F91] text-xs">
+            <Text className="text-mutedGrey text-xs">
               <TimeAgo dateTo={new Date(data.createdAt)} />
             </Text>
           </View>
         </View>
 
-        <View className="bg-[#232324] w-full mx-auto rounded-lg p-4 space-y-4">
+        <View className="bg-white dark:bg-greyInput w-full mx-auto rounded-lg p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-base text-mutedGrey font-medium">Note</Text>
 
-            <Text className="text-white text-base font-medium">
+            <Text className="text-darkGrey dark:text-white text-base font-medium">
               {data.description ?? "None"}
             </Text>
           </View>
           <View className="flex flex-row items-center justify-between">
             <Text className="text-base text-mutedGrey font-medium">Status</Text>
 
-            <Text className="text-white text-base font-medium">Success</Text>
+            <Text className="text-darkGrey dark:text-white text-base font-medium">
+              Success
+            </Text>
           </View>
           <View className="flex flex-row items-center justify-between">
             <Text className="text-mutedGrey text-base font-medium">Link</Text>

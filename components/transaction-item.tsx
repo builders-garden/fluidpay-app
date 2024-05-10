@@ -53,7 +53,7 @@ export default function TransactionItem({
           </Pressable>
 
           <View className="flex flex-col">
-            <Text className="text-white font-semibold text-lg">
+            <Text className="text-darkGrey dark:text-white font-semibold text-lg">
               {isFrom ? payee.username : payer.username}
             </Text>
             {/* <Pressable
@@ -64,18 +64,14 @@ export default function TransactionItem({
                 );
               }}
             > */}
-            <Text className="text-[#8F8F91]">
+            <Text className="text-mutedGrey">
               {time ?? <TimeAgo dateTo={new Date(createdAt)} />}
             </Text>
             {/* </Pressable> */}
           </View>
         </View>
         <View className="flex flex-col items-end justify-center">
-          <Text
-            className={`${
-              !isFrom ? "text-emerald-500" : "text-red-500"
-            } font-semibold text-lg`}
-          >
+          <Text className={`text-darkGrey dark:text-white font-normal text-lg`}>
             {!isFrom ? "+" : "-"} ${amount.toFixed(2)}
           </Text>
         </View>

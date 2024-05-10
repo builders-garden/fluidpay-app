@@ -47,16 +47,18 @@ export default function Onboarding() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-black px-4">
-      <Text className="text-3xl text-white font-bold">Setup your profile</Text>
+    <SafeAreaView className="flex-1 bg-white dark:bg-black px-4">
+      <Text className="text-3xl text-darkGrey dark:text-white font-bold">
+        Setup your profile
+      </Text>
       {step === 0 && (
         <View className="flex flex-col flex-grow justify-between mb-12">
           <View className="flex flex-col space-y-4">
             <View className="w-full mt-4">
-              <Text className="text-white text-xl font-semibold my-2">
+              <Text className="text-darkGrey dark:text-white text-xl font-semibold my-2">
                 What's your name?
               </Text>
-              <Text className="text-[#8F8F91] mb-2">
+              <Text className="text-mutedGrey mb-2">
                 This is just for displaying purposes.
               </Text>
               <TextInput
@@ -67,14 +69,14 @@ export default function Onboarding() {
                 autoCorrect={false}
                 placeholder="First and last name"
                 placeholderTextColor={"#8F8F91"}
-                className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg"
+                className="mb-2 text-darkGrey dark:text-white bg-white dark:bg-greyInput px-3 py-4 rounded-lg"
               />
             </View>
             <View className="w-full mt-4">
-              <Text className="text-white text-xl font-semibold my-2">
+              <Text className="text-darkGrey dark:text-white text-xl font-semibold my-2">
                 Pick a username
               </Text>
-              <Text className="text-[#8F8F91] mb-2">
+              <Text className="text-mutedGrey mb-2">
                 This is how your frens will be able to find you in the app and
                 it’s unique.
               </Text>
@@ -86,7 +88,7 @@ export default function Onboarding() {
                 autoCorrect={false}
                 placeholder="username"
                 placeholderTextColor={"#8F8F91"}
-                className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg"
+                className="mb-2 text-darkGrey dark:text-white bg-white dark:bg-greyInput px-3 py-4 rounded-lg"
               />
             </View>
           </View>
@@ -103,7 +105,7 @@ export default function Onboarding() {
       )}
       {step === 2 && (
         <View className="flex-1 flex-col items-center justify-center space-y-2">
-          <Text className="text-white font-semibold text-xl">
+          <Text className="text-darkGrey dark:text-white font-semibold text-xl">
             Your account has been created!
           </Text>
           <View className="w-full max-w-[300px]">

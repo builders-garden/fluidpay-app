@@ -85,7 +85,9 @@ export default function SplitAmong({
   return (
     <View className="flex flex-col">
       <View className="flex flex-row justify-between items-center">
-        <Text className="text-2xl text-white font-bold">Split among</Text>
+        <Text className="text-2xl text-darkGrey dark:text-white font-bold">
+          Split among
+        </Text>
         <Pressable
           className="flex flex-row items-center"
           onPress={handleSplitOptionsPresentModalPress}
@@ -96,7 +98,7 @@ export default function SplitAmong({
           <ChevronDown size={16} color={`${COLORS.primary}`} />
         </Pressable>
       </View>
-      <View className="rounded-lg flex flex-col space-y-4 bg-[#232324] py-4 px-4 mt-2">
+      <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-greyInput py-4 px-4 mt-2">
         {members?.map((member: any, index: number) => (
           <View
             key={"mem-" + index}
@@ -115,7 +117,7 @@ export default function SplitAmong({
               />
               <Avatar name={member.user.displayName.charAt(0).toUpperCase()} />
               <View className="flex flex-col ">
-                <Text className="text-white font-semibold text-lg">
+                <Text className="text-darkGrey dark:text-white font-semibold text-lg">
                   {member.user.username === user?.username
                     ? "You"
                     : member.user.username}
@@ -177,7 +179,7 @@ export default function SplitAmong({
               {!splitAmong.find((split) => {
                 return split.userId === member.userId;
               }) && (
-                <Text className="font-underline text-white">
+                <Text className="font-underline text-darkGrey dark:text-white">
                   {splitType === SplitType.PERCENTAGE ? "0%" : "$0"}
                 </Text>
               )}
@@ -185,11 +187,11 @@ export default function SplitAmong({
                 .filter((split) => split.userId === member.userId)
                 .map((split) =>
                   splitType === SplitType.PERCENTAGE ? (
-                    <Text className="text-white">
+                    <Text className="text-darkGrey dark:text-white">
                       {split.amount.toFixed(0)}%
                     </Text>
                   ) : (
-                    <Text className="text-white">
+                    <Text className="text-darkGrey dark:text-white">
                       ${split.amount.toFixed(2)}
                     </Text>
                   )

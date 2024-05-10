@@ -13,8 +13,10 @@ import { shortenAddress } from "../../lib/utils";
 import AppButton from "../../components/app-button";
 import { updateMe } from "../../lib/api";
 import { DBUser } from "../../store/interfaces";
+import { useColorScheme } from "nativewind";
 
 const userProfile = () => {
+  const { colorScheme } = useColorScheme();
   const { user: privyUser } = usePrivy();
   const { linkWithFarcaster } = useLinkWithFarcaster({
     onSuccess() {
@@ -127,6 +129,8 @@ const userProfile = () => {
       | { displayName: string; username: string; avatar: Blob | null }
   ) => {
     try {
+      const formData = new FormData();
+
       if (!data) {
         if (buttonDisabled) return;
         setIsLoading(true);
@@ -138,6 +142,10 @@ const userProfile = () => {
           username,
           avatar: avatarBlob,
         };
+
+        if (data.avatar) {
+          formData.append("avatar", new File([data.avatar], "avatar.png"));
+        }
       }
 
       if (user?.token) {
@@ -153,19 +161,24 @@ const userProfile = () => {
   };
 
   return (
-    <View className="flex-1 bg-black h-full">
+    <View className="flex-1 bg-absoluteWhite dark:bg-black h-full">
       <View className="flex-1 h-full">
         <Appbar.Header
           elevated={false}
           statusBarHeight={48}
-          className="bg-transparent text-white"
+          className="bg-transparent text-darkGrey dark:text-white"
         >
           <Appbar.Action
-            icon={() => <ArrowLeft size={24} color="#FFF" />}
+            icon={() => (
+              <ArrowLeft
+                size={24}
+                color={colorScheme === "dark" ? "#FFF" : "#161618"}
+              />
+            )}
             onPress={() => {
               router.back();
             }}
-            color="#fff"
+            color={colorScheme === "dark" ? "#fff" : "#161618"}
             size={24}
             animated={false}
           />
@@ -194,7 +207,7 @@ const userProfile = () => {
             </Text>
           </Pressable>
 
-          <View className="bg-greyInput p-5 rounded-2xl mb-6 space-y-6 w-full">
+          <View className="bg-white dark:bg-greyInput p-5 rounded-2xl mb-6 space-y-6 w-full">
             {details.map((detail, index) => (
               <Detail
                 key={detail.key}
@@ -237,7 +250,7 @@ const userProfile = () => {
                   />
                 )}
                 <View className="mb-1">
-                  <Text className="text-base text-white font-semibold">
+                  <Text className="text-base text-darkGrey dark:text-white font-semibold">
                     {farcasterAccount.display_name}
                   </Text>
                   <Text className="text-base text-mutedGrey font-semibold">

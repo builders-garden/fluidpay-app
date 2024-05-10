@@ -37,10 +37,12 @@ const Withdraw = ({
     console.log("handleSheetChanges", index);
   }, []);
 
+  const sendTokens = () => {};
+
   // renders
   return (
     <View
-      className="flex-1 p-6 bg-black/70 absolute w-full bottom-0 z-10"
+      className="flex-1 p-6 bg-white dark:bg-black/70 absolute w-full bottom-0 z-10"
       style={{ height: sceenHeight }}
     >
       <BottomSheet
@@ -68,7 +70,7 @@ const Withdraw = ({
         >
           <View className="w-full flex-1 pb-10">
             <View className="w-full flex-1 pb-10 px-4">
-              <Text className="text-white font-semibold text-2xl text-center pt-5">
+              <Text className="text-darkGrey dark:text-white font-semibold text-2xl text-center pt-5">
                 Withdraw
               </Text>
 
@@ -79,7 +81,7 @@ const Withdraw = ({
 
             <View className="mt-auto px-4 relative">
               <TextInput
-                className={`flex-grow text-base h-[62px] bg-greyInput rounded-2xl p-2.5 pl-5 text-white tabular-nums`}
+                className={`flex-grow text-base h-[62px] bg-white dark:bg-greyInput rounded-2xl p-2.5 pl-5 text-darkGrey dark:text-white tabular-nums`}
                 selectTextOnFocus={false}
                 placeholderTextColor={"#8F8F91"}
                 placeholder="Address"

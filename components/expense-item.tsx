@@ -35,10 +35,10 @@ export default function ExpenseItem({
             }}
           >
             <View className="flex flex-col">
-              <Text className="text-white font-semibold text-lg">
+              <Text className="text-darkGrey dark:text-white font-semibold text-lg">
                 {description}
               </Text>
-              <Text className="text-[#8F8F91]">
+              <Text className="text-mutedGrey">
                 {paidBy.username} -{" "}
                 {(() => {
                   const distance = formatDistanceToNow(new Date(createdAt));
@@ -53,7 +53,9 @@ export default function ExpenseItem({
           </Pressable>
         </View>
         <View className="flex flex-col items-end justify-center">
-          <Text className={`font-semibold text-lg text-white`}>
+          <Text
+            className={`font-semibold text-lg text-darkGrey dark:text-white`}
+          >
             ${amount.toFixed(2)}
           </Text>
         </View>

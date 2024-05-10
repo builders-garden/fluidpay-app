@@ -151,12 +151,12 @@ function AmountInput({
     <TouchableWithoutFeedback onPress={focus}>
       <View className="flex flex-row items-center">
         <Text
-          className={`text-4xl font-semibold text-right text-white leading-[43px] -mb-1.5`}
+          className={`text-4xl font-semibold text-right text-darkGrey dark:text-white leading-[43px] -mb-1.5`}
         >
           $
         </Text>
         <TextInput
-          className="flex-grow text-5xl h-16 font-semibold text-white tabular-nums leading-[58px]"
+          className="flex-grow text-5xl h-16 font-semibold text-darkGrey dark:text-white tabular-nums leading-[58px]"
           keyboardType="numeric"
           placeholder="0"
           placeholderTextColor={"#374151"}

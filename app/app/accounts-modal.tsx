@@ -48,7 +48,7 @@ export default function AccountsModal() {
   };
 
   return (
-    <View className="flex-1 bg-black h-full">
+    <View className="flex-1 bg-white dark:bg-black h-full">
       <ImageBackground
         source={require("../../images/blur-bg.png")}
         className="flex-1"
@@ -57,7 +57,7 @@ export default function AccountsModal() {
           <Appbar.Header
             elevated={false}
             statusBarHeight={48}
-            className="bg-transparent text-white"
+            className="bg-transparent text-darkGrey dark:text-white"
           >
             <Appbar.Action
               icon={() => <X size={24} color="#FFF" />}
@@ -66,6 +66,7 @@ export default function AccountsModal() {
               }}
               color="#fff"
               size={24}
+              animated={false}
             />
             <Appbar.Content
               title=""

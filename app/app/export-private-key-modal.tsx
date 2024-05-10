@@ -15,7 +15,7 @@ export default function ExportPrivateKeyModal() {
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#201F2D] text-white"
+        className="bg-[#201F2D] text-darkGrey dark:text-white"
       >
         <Appbar.Content
           title="Export private key"
