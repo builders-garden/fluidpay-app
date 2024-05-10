@@ -122,8 +122,6 @@ const userProfile = () => {
       | { displayName: string; username: string }
   ) => {
     try {
-      const formData = new FormData();
-
       if (!data) {
         if (buttonDisabled) return;
         setIsLoading(true);
@@ -132,10 +130,6 @@ const userProfile = () => {
           displayName,
           username,
         };
-
-        if (data.avatar) {
-          formData.append("avatar", new File([data.avatar], "avatar.png"));
-        }
       }
 
       if (user?.token) {
