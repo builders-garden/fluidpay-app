@@ -238,44 +238,19 @@ const Home = () => {
             onPress={() => authorise(storedUser as UsersMeResponse)}
             text="Unlock"
           />
-          <View className="px-16">
-            <Text
-              className={`text-white text-xl text-center leading-tight font-semibold`}
-            >
-              Your USDC shortcut.
-            </Text>
-          </View>
         </View>
       )} */}
 
-        {isLoading && skipBiometrics && (
-          <View className="flex flex-col space-y-8">
-            <ActivityIndicator animating={true} color={"#FF238C"} />
-            <Text className="text-primary font-medium text-lg text-center ">
-              {loadingMessage}
-            </Text>
-          </View>
-        )}
-
-        {isReady && user && !skipBiometrics && (
-          <View className="w-full">
-            <AppButton
-              onPress={() => authorise(storedUser as UsersMeResponse)}
-              text="Unlock"
-            />
-          </View>
-        )}
-
-        {isReady && (
-          <LoginForm
-            setIsLoading={setIsLoading}
-            setLoadingMessage={setLoadingMessage}
-            loginStatus={loginStatus}
-            setLoginStatus={setLoginStatus}
-          />
-        )}
-      </SafeAreaView>
+      {isReady && (
+        <LoginForm
+          setIsLoading={setIsLoading}
+          setLoadingMessage={setLoadingMessage}
+          loginStatus={loginStatus}
+          setLoginStatus={setLoginStatus}
+        />
+      )}
+    </SafeAreaView>
   );
-}
+};
 
 export default Home;
