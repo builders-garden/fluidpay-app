@@ -11,7 +11,7 @@ import { useUserStore } from "../../store";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "../../lib/utils";
 import AppButton from "../../components/app-button";
-import { updateMe } from "../../lib/api";
+import { updateMe, updateMyAvatar } from "../../lib/api";
 import { DBUser } from "../../store/interfaces";
 
 const userProfile = () => {
@@ -114,35 +114,29 @@ const userProfile = () => {
     }
   };
 
-  const fetchImageFromUri = async (uri: string | null) => {
-    if (uri === null) return null;
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    return blob;
-  };
-
   const handleUpdateProfile = async (
     data?:
       | { farcasterUsername: string }
-      | { displayName: string; username: string; avatar: Blob | null }
+      | { displayName: string; username: string }
   ) => {
     try {
       if (!data) {
         if (buttonDisabled) return;
         setIsLoading(true);
-        const avatarBlob = await fetchImageFromUri(
-          avatar === user?.avatarUrl ? null : avatar
-        );
+
         data = {
           displayName,
           username,
-          avatar: avatarBlob,
         };
       }
 
       if (user?.token) {
-        const res = await updateMe(user?.token, data);
-        setUser({ ...res, token: user?.token } as DBUser);
+        if (avatar) {
+          await updateMyAvatar(user.token, avatar);
+        }
+
+        const res = await updateMe(user.token, data);
+        setUser({ ...res, token: user.token } as DBUser);
         setIsLoading(false);
       }
       setIsLoading(false);
