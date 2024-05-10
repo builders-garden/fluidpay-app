@@ -1,5 +1,12 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, Text, TextInput, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from "react-native-reanimated";
 
 type CodeTextInputProps = {
   code: `${number}` | "";
@@ -7,12 +14,14 @@ type CodeTextInputProps = {
   maxCodeLength: number;
   codeBoxHeight?: number;
   error?: boolean;
+  errorCount?: number;
   hidden?: boolean;
 };
 const CodeTextInput = ({
   code,
   setCode,
   error,
+  errorCount,
   hidden,
   maxCodeLength,
   codeBoxHeight = 62,
@@ -20,6 +29,28 @@ const CodeTextInput = ({
   const [inputFocused, setInputFocused] = useState(false);
 
   const textInputRef = useRef<TextInput>(null);
+
+  const offset = useSharedValue(0);
+  const style = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: offset.value }],
+    };
+  });
+
+  const OFFSET = 10;
+  const TIME = 80;
+
+  const animateError = () => {
+    offset.value = withSequence(
+      withTiming(-OFFSET, { duration: TIME / 2 }),
+      withRepeat(withTiming(OFFSET, { duration: TIME / 2 }), 4, true),
+      withTiming(0, { duration: TIME / 2 })
+    );
+  };
+
+  useEffect(() => {
+    if (!!errorCount) animateError();
+  }, [errorCount]);
 
   const handleTextChange = (text: string) => {
     const numericValue = text.replace(/[^0-9]/g, "");
@@ -32,7 +63,7 @@ const CodeTextInput = ({
   };
 
   return (
-    <>
+    <Animated.View style={style}>
       <Pressable
         onPress={handleTextFocus}
         className={`flex flex-row justify-center space-x-2.5`}
@@ -83,7 +114,7 @@ const CodeTextInput = ({
         ref={textInputRef}
         className="w-px h-px absolute opacity-0"
       />
-    </>
+    </Animated.View>
   );
 };
 

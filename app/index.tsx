@@ -45,7 +45,10 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
   const [code, setCode] = useState<`${number}` | "">("");
-  const [codeError, setCodeError] = useState("");
+  const [codeError, setCodeError] = useState({
+    message: "",
+    count: 0,
+  });
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(
     LoginStatus.INITIAL
   );
@@ -73,7 +76,10 @@ const Home = () => {
     if (code === passcode) {
       router.push("/app/home");
     } else {
-      setCodeError("Incorrect passcode. Please try again");
+      setCodeError({
+        message: "Incorrect passcode. Please try again",
+        count: codeError.count + 1,
+      });
     }
   };
 
@@ -174,16 +180,17 @@ const Home = () => {
             </Text>
             <CodeTextInput
               code={code}
-              error={!!codeError}
+              error={!!codeError.count}
+              errorCount={codeError.count}
               setCode={setCode}
               maxCodeLength={4}
               codeBoxHeight={99}
               hidden
             />
 
-            {!!codeError && (
+            {!!codeError.count && (
               <Text className="text-center text-red-500 text-base mt-5">
-                {codeError}
+                {codeError.message}
               </Text>
             )}
 

@@ -1,4 +1,5 @@
 import ky from "ky";
+import * as FileSystem from "expo-file-system";
 
 /**
  * AUTHENTICATION API
@@ -168,6 +169,24 @@ export const updateMe = async (
       headers: { Authorization: `Bearer ${token}` },
     })
     .json<UsersMeResponse>();
+
+export const updateMyAvatar = async (
+  token: string,
+  avatar: string
+): Promise<FileSystem.FileSystemUploadResult> =>
+  FileSystem.uploadAsync(
+    `${process.env.EXPO_PUBLIC_BASE_API}/users/me/avatar`,
+    avatar,
+    {
+      httpMethod: "PUT",
+      uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+      fieldName: "avatar",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
 
 export const getUserByIdUsernameOrAddress = async (
   token: string,

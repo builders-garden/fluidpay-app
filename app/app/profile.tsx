@@ -1,17 +1,18 @@
 import { useMemo, useState } from "react";
 import { router } from "expo-router";
 import * as Clipboard from "expo-clipboard";
+import * as ImagePicker from "expo-image-picker";
 import { ArrowLeft, Check, Copy, Pen } from "lucide-react-native";
 import { Image, Pressable, SafeAreaView, Text, View } from "react-native";
 import { Appbar, TextInput } from "react-native-paper";
 import { useLinkWithFarcaster, usePrivy } from "@privy-io/expo";
+import Toast from "react-native-toast-message";
 import { useUserStore } from "../../store";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "../../lib/utils";
 import AppButton from "../../components/app-button";
-import { updateMe } from "../../lib/api";
+import { updateMe, updateMyAvatar } from "../../lib/api";
 import { DBUser } from "../../store/interfaces";
-import Toast from "react-native-toast-message";
 
 const userProfile = () => {
   const { user: privyUser } = usePrivy();
@@ -34,18 +35,38 @@ const userProfile = () => {
   const [userDetails, setUserDetails] = useState<{
     displayName: string;
     username: string;
+    avatar: string | null;
   }>({
     displayName: user?.displayName || "",
     username: user?.username || "",
+    avatar: user?.avatarUrl || null,
   });
 
-  const { displayName, username } = userDetails;
+  const { displayName, username, avatar } = userDetails;
 
-  const handleChange = (key: string, value: string) => {
+  type UserDetails = typeof userDetails;
+  const handleChange = <T extends keyof UserDetails>(
+    key: T,
+    value: UserDetails[T]
+  ) => {
     setUserDetails((prev) => ({
       ...prev,
       [key]: value,
     }));
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      handleChange("avatar", result.assets[0].uri);
+    }
   };
 
   const details = useMemo(
@@ -58,8 +79,12 @@ const userProfile = () => {
   );
 
   const buttonDisabled = useMemo(() => {
-    return displayName === user?.displayName && username === user?.username;
-  }, [displayName, username]);
+    return (
+      displayName === user?.displayName &&
+      username === user?.username &&
+      avatar === user?.avatarUrl
+    );
+  }, [avatar, displayName, username]);
 
   const farcasterAccount = useMemo(() => {
     const farcaster = privyUser?.linked_accounts?.find(
@@ -94,20 +119,31 @@ const userProfile = () => {
       | { farcasterUsername: string }
       | { displayName: string; username: string }
   ) => {
-    if (!data) {
-      if (buttonDisabled) return;
-      setIsLoading(true);
-      data = {
-        displayName,
-        username,
-      };
-    }
-    if (user?.token) {
-      const res = await updateMe(user?.token, data);
-      setUser({ ...res, token: user?.token } as DBUser);
+    try {
+      if (!data) {
+        if (buttonDisabled) return;
+        setIsLoading(true);
+
+        data = {
+          displayName,
+          username,
+        };
+      }
+
+      if (user?.token) {
+        if (avatar) {
+          await updateMyAvatar(user.token, avatar);
+        }
+
+        const res = await updateMe(user.token, data);
+        setUser({ ...res, token: user.token } as DBUser);
+        setIsLoading(false);
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error updating profile", error);
       setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   return (
@@ -135,13 +171,22 @@ const userProfile = () => {
         </Appbar.Header>
 
         <View className="flex-1 flex-col items-center px-4 bg-transparent">
-          <Avatar
-            name={user?.displayName?.charAt(0)?.toUpperCase() || ""}
-            size={90}
-          />
-          <Text className="text-mutedGrey font-medium text-base mt-2.5 mb-3.5">
-            Edit
-          </Text>
+          {avatar ? (
+            <Image
+              source={{ uri: avatar }}
+              className="rounded-full w-[90px] h-[90px]"
+            />
+          ) : (
+            <Avatar
+              name={user?.displayName?.charAt(0)?.toUpperCase() || ""}
+              size={90}
+            />
+          )}
+          <Pressable onPress={pickImage}>
+            <Text className="text-mutedGrey font-medium text-base mt-2.5 mb-3.5">
+              Edit
+            </Text>
+          </Pressable>
 
           <View className="bg-greyInput p-5 rounded-2xl mb-6 space-y-6 w-full">
             {details.map((detail, index) => (
@@ -222,7 +267,7 @@ const userProfile = () => {
         <SafeAreaView>
           <View className="mt-auto px-4">
             <AppButton
-              onPress={handleUpdateProfile}
+              onPress={() => handleUpdateProfile()}
               text="Save"
               variant={buttonDisabled ? "disabled" : "primary"}
               disabled={buttonDisabled || isLoading}
@@ -324,7 +369,10 @@ const getDetails = (
     username: string;
     smartAccountAddress: string;
   },
-  handleChange: (key: string, value: string) => void
+  handleChange: (
+    key: Exclude<keyof typeof user, "smartAccountAddress">,
+    value: string
+  ) => void
 ) => [
   {
     key: "Display Name",
