@@ -1,10 +1,28 @@
+import { useState } from "react";
 import { Text, View } from "react-native";
 import { router } from "expo-router";
 import { Appbar, Switch } from "react-native-paper";
 import AppButton from "../../components/app-button";
 import { ArrowLeft, ScanFace, Search, Users2 } from "lucide-react-native";
+import * as SecureStore from "expo-secure-store";
+import { disableFaceID, enableFaceID } from "../../lib/auth";
+import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 
 export default function SecurityPrivacy() {
+  const { address } = usePrivyWagmiProvider();
+  const [faceId, setFaceID] = useState(
+    !!SecureStore.getItem(`user-faceid-${address}`)
+  );
+
+  const handleChangeFaceID = async () => {
+    if (faceId) {
+      await disableFaceID(address!);
+      setFaceID(false);
+    } else {
+      await enableFaceID(address!);
+      setFaceID(true);
+    }
+  };
   return (
     <View className="flex-1 flex-col bg-black">
       <Appbar.Header
@@ -47,7 +65,11 @@ export default function SecurityPrivacy() {
                 Sign in with Face ID
               </Text>
             </View>
-            <Switch value={false} />
+            <Switch
+              value={faceId}
+              onChange={handleChangeFaceID}
+              trackColor={{ true: "#FF238C" }}
+            />
           </View>
         </View>
         <Text className="text-white font-semibold">Privacy</Text>
@@ -65,7 +87,7 @@ export default function SecurityPrivacy() {
                 </Text>
               </View>
             </View>
-            <Switch value={false} />
+            <Switch value={false} trackColor={{ true: "#FF238C" }} />
           </View>
           <View className="flex flex-row items-center justify-between">
             <View className="flex flex-row items-center space-x-4">
@@ -76,7 +98,7 @@ export default function SecurityPrivacy() {
                 </Text>
               </View>
             </View>
-            <Switch value={false} />
+            <Switch value={false} trackColor={{ true: "#FF238C" }} />
           </View>
         </View>
       </View>

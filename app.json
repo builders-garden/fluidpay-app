@@ -3,7 +3,7 @@
     "name": "Plink",
     "slug": "plink-payments",
     "scheme": "plink",
-    "version": "1.0.8",
+    "version": "1.0.10",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

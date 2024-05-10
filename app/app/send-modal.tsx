@@ -54,7 +54,7 @@ export default function SendModal() {
     refetch: refetchBalance,
   } = useERC20BalanceOf({
     network: chain.id,
-    args: [user!.smartAccountAddress],
+    args: [user?.smartAccountAddress!],
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
 
@@ -71,7 +71,7 @@ export default function SendModal() {
         idOrUsernameOrAddress: sendUser?.username,
       }).then((result) => {
         if (result) {
-          setSendUserAddress(result.smartAccountAddress!);
+          setSendUserAddress(result?.smartAccountAddress!);
         }
       });
     }
@@ -117,7 +117,7 @@ export default function SendModal() {
         <Appbar.Action
           icon={() => (
             <Avatar
-              name={sendUser?.displayName.charAt(0).toUpperCase()}
+              name={sendUser?.displayName?.charAt(0)?.toUpperCase() || ""}
               size={37.5}
             />
           )}
@@ -153,7 +153,7 @@ export default function SendModal() {
             ) : (
               <Text className="text-white leading-4 font-semibold">
                 {chain === base ? "Base" : "Sepolia"} • $
-                {formatBigInt(balance!, 2)}
+                {formatBigInt(balance ?? BigInt(0), 2)}
               </Text>
             )}
           </View>

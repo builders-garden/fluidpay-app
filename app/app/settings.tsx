@@ -1,4 +1,4 @@
-import { View, Text, Pressable, ImageBackground } from "react-native";
+import { View, Text, Pressable, ImageBackground, Image } from "react-native";
 import { Appbar } from "react-native-paper";
 import { Redirect, router } from "expo-router";
 import Avatar from "../../components/avatar";
@@ -13,6 +13,7 @@ import {
   Shield,
   LogOut,
   ArrowLeft,
+  CircleHelp,
 } from "lucide-react-native";
 
 import LogoutModal from "../../components/modals/logout-modal";
@@ -75,10 +76,20 @@ export default function Settings() {
               </View>
             </View>
             <View className="bg-white/20 w-full mx-auto rounded-2xl p-6 flex flex-col space-y-8">
-              <View className="flex flex-row items-center space-x-4">
-                <LifeBuoy size={24} color="#FFF" />
-                <Text className="text-white text-xl">Help</Text>
-              </View>
+              <Pressable
+                onPress={() => {
+                  router.push("/app/profile");
+                }}
+              >
+                <View className="flex flex-row items-center space-x-4">
+                  <Image
+                    source={require("../../images/icons/user.png")}
+                    height={24}
+                    width={24}
+                  />
+                  <Text className="text-white text-xl">Profile</Text>
+                </View>
+              </Pressable>
               <Pressable
                 onPress={() => {
                   router.push("/app/security-privacy");
@@ -101,6 +112,10 @@ export default function Settings() {
                   </Text>
                 </View>
               </Pressable>
+              <View className="flex flex-row items-center space-x-4">
+                <CircleHelp size={24} color="#FFF" />
+                <Text className="text-white text-xl">Help</Text>
+              </View>
             </View>
 
             <View className="bg-white/20 w-full mx-auto rounded-2xl p-6 flex flex-col space-y-6">

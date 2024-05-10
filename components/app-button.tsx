@@ -7,18 +7,24 @@ export default function AppButton({
   variant = "primary",
   disabled = false,
   loading = false,
+  mt,
+  mb,
 }: {
   text: string;
   loading?: boolean;
   onPress: () => void;
-  variant?: "primary" | "ghost" | "disabled" | "secondary";
+  variant?: "primary" | "ghost" | "disabled" | "secondary" | "farcaster";
   disabled?: boolean;
+  mt?: `mt-${string}`;
+  mb?: `mb-${string}`;
 }) {
+  const verticalMargin = `${mt} ${mb}`;
+
   const content = loading ? (
     <ActivityIndicator size="small" color="#FFF" />
   ) : (
     <Text
-      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-[#FF238C]" : variant === "disabled" ? "text-gray-300" : "text-black"}`}
+      className={`text-lg font-semibold ${variant === "primary" ? "text-white" : variant === "ghost" ? "text-primary" : variant === "disabled" ? "text-gray-300" : variant === "farcaster" ? "text-white" : "text-black"}`}
     >
       {text}
     </Text>
@@ -29,7 +35,7 @@ export default function AppButton({
       <TouchableOpacity
         onPress={onPress}
         disabled={disabled || loading}
-        className="bg-[#FF238C]/20 rounded-full flex items-center justify-center py-3"
+        className={`bg-[#FF5D8F4D] rounded-full flex items-center justify-center py-3 ${verticalMargin}`}
       >
         {content}
       </TouchableOpacity>
@@ -38,7 +44,9 @@ export default function AppButton({
 
   if (variant === "disabled") {
     return (
-      <View className="bg-[#FF238C] border-2 opacity-50 border-[#FF238C] rounded-full flex items-center justify-center py-3">
+      <View
+        className={`bg-primary border-2 opacity-50 border-primary rounded-full flex items-center justify-center py-3 ${verticalMargin}`}
+      >
         {content}
       </View>
     );
@@ -49,7 +57,19 @@ export default function AppButton({
       <TouchableOpacity
         onPress={onPress}
         disabled={disabled || loading}
-        className="bg-white border-2 border-white rounded-full flex items-center justify-center py-3 px-4 text-black"
+        className={`bg-white border-2 border-white rounded-full flex items-center justify-center py-3 px-4 text-black ${verticalMargin}`}
+      >
+        {content}
+      </TouchableOpacity>
+    );
+  }
+
+  if (variant === "farcaster") {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        disabled={disabled || loading}
+        className={`bg-[#855DCD] border-2 border-[#855DCD] rounded-full flex items-center justify-center py-3 px-4 text-white ${verticalMargin}`}
       >
         {content}
       </TouchableOpacity>
@@ -60,7 +80,7 @@ export default function AppButton({
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
-      className="bg-[#FF238C] border-2 border-[#FF238C] rounded-full flex items-center justify-center py-3"
+      className={`bg-primary border-2 border-primary rounded-full flex items-center justify-center py-3 ${verticalMargin}`}
     >
       {content}
     </TouchableOpacity>
