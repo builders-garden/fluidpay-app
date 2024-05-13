@@ -4,8 +4,8 @@ import { Home, ArrowLeftRight, LayoutGrid } from "lucide-react-native";
 import { useColorScheme } from "nativewind";
 
 export default function AppTabsLayout() {
-  const { colorScheme, toggleColorScheme } = useColorScheme();
-  console.log("colorScheme", colorScheme);
+  const { colorScheme } = useColorScheme();
+
   return (
     <Tabs
       screenOptions={{
@@ -28,7 +28,13 @@ export default function AppTabsLayout() {
           tabBarInactiveTintColor: "#8F8F91",
           tabBarActiveTintColor: "#FF238C",
           tabBarBackground: () => (
-            <View className="bg-[#ffdbec80] dark:bg-[#252526] flex-1" />
+            <View
+              className="bg-[#ffdbec80] dark:bg-[#252526] flex-1"
+              style={{
+                backgroundColor:
+                  colorScheme === "dark" ? "#252526" : "#ffdbec80",
+              }}
+            />
           ),
         }}
       />
@@ -43,7 +49,12 @@ export default function AppTabsLayout() {
           tabBarInactiveTintColor: "#8F8F91",
           tabBarActiveTintColor: "#FF238C",
           tabBarBackground: () => (
-            <View className="bg-white dark:bg-[#252526] flex-1" />
+            <View
+              className="bg-white dark:bg-[#252526] flex-1"
+              style={{
+                backgroundColor: colorScheme === "dark" ? "#252526" : "#fff",
+              }}
+            />
           ),
         }}
       />
@@ -58,7 +69,12 @@ export default function AppTabsLayout() {
           tabBarInactiveTintColor: "#8F8F91",
           tabBarActiveTintColor: "#FF238C",
           tabBarBackground: () => (
-            <View className="bg-white dark:bg-[#252526] flex-1" />
+            <View
+              className="bg-white dark:bg-[#252526] flex-1"
+              style={{
+                backgroundColor: colorScheme === "dark" ? "#252526" : "#fff",
+              }}
+            />
           ),
         }}
       />

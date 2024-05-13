@@ -20,6 +20,7 @@ import {
   isTodayOrYesterday,
 } from "../../lib/utils";
 import TransactionSkeletonLayout from "../../components/skeleton-layout/transactions";
+import { useColorScheme } from "nativewind";
 
 enum TransanctionDirection {
   DEFAULT = 0,
@@ -28,6 +29,7 @@ enum TransanctionDirection {
 }
 
 export default function TransactionsModal() {
+  const { colorScheme } = useColorScheme();
   const { transactions: transactionsData } = useLocalSearchParams();
   const [transactions, setTransactions] = useState(
     JSON.parse(transactionsData as string) as DBTransaction[]
@@ -85,24 +87,29 @@ export default function TransactionsModal() {
   const dates = Object.keys(transactionsByDay);
 
   return (
-    <View className="flex-1 flex-col bg-white dark:bg-black">
+    <View className="flex-1 flex-col bg-absoluteWhite dark:bg-black">
       <Appbar.Header
         elevated={false}
         statusBarHeight={48}
-        className="bg-white dark:bg-black text-darkGrey dark:text-white"
+        className="bg-absoluteWhite dark:bg-black text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#fff" : "#161618"}
           size={24}
           animated={false}
         />
         <Appbar.Content
           title=""
-          color="#fff"
+          color={colorScheme === "dark" ? "#fff" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
@@ -129,7 +136,10 @@ export default function TransactionsModal() {
             {Array(3)
               .fill(null)
               .map((_, i) => (
-                <TransactionSkeletonLayout key={i} />
+                <TransactionSkeletonLayout
+                  key={i}
+                  isDark={colorScheme === "dark"}
+                />
               ))}
           </ScrollView>
         )}
@@ -142,7 +152,7 @@ export default function TransactionsModal() {
                 <Text className="text-xl text-darkGrey dark:text-white font-medium mb-2.5">
                   {isTodayOrYesterday(date) || formatDateToMonthDay(date)}
                 </Text>
-                <View className="bg-darkGrey w-full rounded-lg px-4 space-y-4">
+                <View className="bg-white dark:bg-darkGrey w-full rounded-lg px-4 space-y-4">
                   {transactionList.map((transaction, index) => (
                     <TransactionItem
                       key={transaction.id}

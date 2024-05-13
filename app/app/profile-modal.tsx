@@ -104,14 +104,14 @@ export default function ProfileModal() {
           />
           <View className="flex flex-col items-center">
             {fetching ? (
-              <DisplayNameSkeletonLayout />
+              <DisplayNameSkeletonLayout isDark={colorScheme === "dark"} />
             ) : (
               <Text className="text-darkGrey dark:text-white text-4xl text-center font-semibold">
                 {profileUser?.displayName}
               </Text>
             )}
             {fetching ? (
-              <UsernameSkeletonLayout />
+              <UsernameSkeletonLayout isDark={colorScheme === "dark"} />
             ) : (
               <Text className="text-mutedGrey text-xl text-ellipsis text-center">
                 @{profileUser?.username}
@@ -170,7 +170,10 @@ export default function ProfileModal() {
             {Array(3)
               .fill(null)
               .map((_, i) => (
-                <TransactionSkeletonLayout key={i} />
+                <TransactionSkeletonLayout
+                  key={i}
+                  isDark={colorScheme === "dark"}
+                />
               ))}
           </ScrollView>
         )}

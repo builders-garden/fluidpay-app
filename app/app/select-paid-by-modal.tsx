@@ -32,8 +32,8 @@ export default function SelectPaidByModal({
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
         >
-          <BottomSheetView className="bg-white dark:bg-greyInput">
-            <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-greyInput py-4 px-4">
+          <BottomSheetView className="bg-white dark:bg-[#232324]">
+            <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-[#232324] py-4 px-4">
               <Text className="text-2xl text-darkGrey dark:text-white font-bold">
                 Paid by
               </Text>

@@ -8,34 +8,41 @@ import TimeAgo from "@andordavoti/react-native-timeago";
 import { ArrowLeft } from "lucide-react-native";
 import { base, sepolia } from "viem/chains";
 import * as WebBrowser from "expo-web-browser";
+import { useColorScheme } from "nativewind";
 
 export default function TransactionDetailModal() {
+  const { colorScheme } = useColorScheme();
   const { transaction } = useLocalSearchParams();
   const data = JSON.parse(transaction as string);
   const isPresented = router.canGoBack();
 
   return (
     <SafeAreaView
-      className="flex-1 flex-col bg-darkGrey"
+      className="flex-1 flex-col bg-absoluteWhite dark:bg-darkGrey"
       edges={{ top: "off" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-darkGrey text-darkGrey dark:text-white"
+        className="bg-absoluteWhite dark:bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
         />
         <Appbar.Content
           title=""
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
         {/* <Appbar.Action
@@ -65,7 +72,7 @@ export default function TransactionDetailModal() {
           </View>
         </View>
 
-        <View className="bg-white dark:bg-greyInput w-full mx-auto rounded-lg p-4 space-y-4">
+        <View className="bg-white dark:bg-[#232324] w-full mx-auto rounded-lg p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-base text-mutedGrey font-medium">Note</Text>
 

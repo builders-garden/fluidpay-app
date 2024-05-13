@@ -147,13 +147,13 @@ export default function CreateExpenseModal() {
                 placeholder="Description"
                 placeholderTextColor={"#8F8F91"}
                 clearButtonMode="always"
-                className="text-darkGrey dark:text-white bg-white dark:bg-greyInput px-3 py-4 rounded-lg"
+                className="text-darkGrey dark:text-white bg-white dark:bg-[#232324] px-3 py-4 rounded-lg"
               />
             </View>
             <View>
               <DatePicker date={date} setDate={setDate} />
             </View>
-            <View className="bg-white dark:bg-greyInput rounded-lg px-3 py-4 mb-4">
+            <View className="bg-white dark:bg-[#232324] rounded-lg px-3 py-4 mb-4">
               <RNPickerSelect
                 style={{
                   inputAndroid: { color: "white" },

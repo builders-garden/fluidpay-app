@@ -1,11 +1,12 @@
 import { View, Text, Pressable, ImageBackground, Image } from "react-native";
 import { Appbar } from "react-native-paper";
 import { Redirect, router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "../../lib/utils";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import { useUserStore } from "../../store";
-import React from "react";
+import React, { useContext } from "react";
 import {
   QrCode,
   Bell,
@@ -14,14 +15,19 @@ import {
   LogOut,
   ArrowLeft,
   CircleHelp,
+  Moon,
+  Sun,
 } from "lucide-react-native";
 
 import LogoutModal from "../../components/modals/logout-modal";
+import { useColorScheme } from "nativewind";
 
 export default function Settings() {
-  const { isConnected, isReady } = usePrivyWagmiProvider();
+  const { isReady } = usePrivyWagmiProvider();
   const [showModal, setShowModal] = React.useState(false);
   const user = useUserStore((state) => state.user);
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
 
   if (!isReady || !user) {
     return <Redirect href={"/"} />;
@@ -46,11 +52,31 @@ export default function Settings() {
               }}
               color="#fff"
               size={24}
+              animated={false}
             />
             <Appbar.Content
               title=""
               color="#fff"
               titleStyle={{ fontWeight: "bold" }}
+            />
+
+            <Appbar.Action
+              icon={() =>
+                colorScheme === "dark" ? (
+                  <Sun size={24} color="#FFF" />
+                ) : (
+                  <Moon size={24} color="#FFF" />
+                )
+              }
+              onPress={async () => {
+                SecureStore.setItem(
+                  "colorScheme",
+                  colorScheme === "dark" ? "light" : "dark"
+                );
+                toggleColorScheme();
+              }}
+              color="#fff"
+              size={24}
             />
           </Appbar.Header>
           <View className="flex-1 flex-col px-4 bg-transparent space-y-8">

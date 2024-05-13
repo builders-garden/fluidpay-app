@@ -183,12 +183,12 @@ export default function DetailExpenseModal() {
               placeholder="Description"
               placeholderTextColor={"#8F8F91"}
               clearButtonMode="always"
-              className="text-darkGrey dark:text-white bg-white dark:bg-greyInput px-3 py-4 rounded-lg"
+              className="text-darkGrey dark:text-white bg-white dark:bg-[#232324] px-3 py-4 rounded-lg"
             />
             <View>
               <DatePicker date={date} setDate={setDate} />
             </View>
-            <View className="bg-white dark:bg-greyInput rounded-lg px-3 py-4 mb-4">
+            <View className="bg-white dark:bg-[#232324] rounded-lg px-3 py-4 mb-4">
               <RNPickerSelect
                 style={{
                   inputAndroid: {
@@ -211,7 +211,7 @@ export default function DetailExpenseModal() {
           <Text className="text-2xl text-darkGrey dark:text-white font-bold">
             Split among
           </Text>
-          <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-greyInput py-4 px-2 mt-2">
+          <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-[#232324] py-4 px-2 mt-2">
             {groupData?.members?.map((member: any, index: number) => (
               <View className="flex flex-row items-center" key={index}>
                 <Checkbox.Android

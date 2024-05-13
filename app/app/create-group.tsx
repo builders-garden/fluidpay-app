@@ -85,7 +85,7 @@ export default function CreateGroupPage() {
             autoCorrect={false}
             placeholder="Your new group name"
             placeholderTextColor={"#8F8F91"}
-            className="mb-2 text-darkGrey dark:text-white bg-white dark:bg-greyInput px-3 py-4 rounded-lg"
+            className="mb-2 text-darkGrey dark:text-white bg-white dark:bg-[#232324] px-3 py-4 rounded-lg"
           />
           <Text className="text-darkGrey dark:text-white text-xl font-semibold mt-2 mb-2">
             Add one or more members

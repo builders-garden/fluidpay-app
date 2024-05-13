@@ -4,6 +4,7 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import * as Clipboard from "expo-clipboard";
 import { Check, Copy } from "lucide-react-native";
 import { DBUser } from "../../store/interfaces";
+import { useColorScheme } from "nativewind";
 
 const sceenHeight = Dimensions.get("window").height;
 
@@ -14,6 +15,7 @@ type DepositProps = {
 };
 
 const Deposit = ({ user, bottomSheetRef, cancelTransaction }: DepositProps) => {
+  const { colorScheme } = useColorScheme();
   const [copied, setCopied] = useState(false);
   const snapPoints = useMemo(() => ["30%"], []);
 
@@ -25,7 +27,7 @@ const Deposit = ({ user, bottomSheetRef, cancelTransaction }: DepositProps) => {
   // renders
   return (
     <View
-      className="flex-1 p-6 bg-white dark:bg-black/70 absolute w-full bottom-0 z-10"
+      className="flex-1 p-6 bg-white/70 dark:bg-black/70 absolute w-full bottom-0 z-10"
       style={{ height: sceenHeight }}
     >
       <BottomSheet
@@ -42,7 +44,7 @@ const Deposit = ({ user, bottomSheetRef, cancelTransaction }: DepositProps) => {
           top: 5,
         }}
         backgroundStyle={{
-          backgroundColor: "#161618",
+          backgroundColor: colorScheme === "dark" ? "#161618" : "#fff",
         }}
       >
         <BottomSheetView
@@ -62,7 +64,7 @@ const Deposit = ({ user, bottomSheetRef, cancelTransaction }: DepositProps) => {
               address below.
             </Text>
 
-            <View className="bg-white dark:bg-greyInput rounded-[10px] flex flex-row justify-between items-center px-4 py-3">
+            <View className="bg-white dark:bg-[#232324] rounded-[10px] flex flex-row justify-between items-center px-4 py-3">
               <Text className="text-mutedGrey text-xs text-ellipsis">
                 {user?.smartAccountAddress!}
               </Text>

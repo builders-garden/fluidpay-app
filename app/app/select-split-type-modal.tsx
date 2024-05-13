@@ -40,7 +40,7 @@ export default function SelectSplitTypeModal({
           index={1}
           snapPoints={snapPoints}
         >
-          <BottomSheetView className="bg-white dark:bg-greyInput">
+          <BottomSheetView className="bg-white dark:bg-[#232324]">
             <View className="rounded-lg flex flex-col space-y-4 bg-inputGrey p-4">
               <Text className="text-2xl text-darkGrey dark:text-white font-bold">
                 Split options

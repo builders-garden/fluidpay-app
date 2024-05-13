@@ -98,7 +98,7 @@ export default function SplitAmong({
           <ChevronDown size={16} color={`${COLORS.primary}`} />
         </Pressable>
       </View>
-      <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-greyInput py-4 px-4 mt-2">
+      <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-[#232324] py-4 px-4 mt-2">
         {members?.map((member: any, index: number) => (
           <View
             key={"mem-" + index}

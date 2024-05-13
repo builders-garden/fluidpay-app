@@ -133,7 +133,7 @@ const userProfile = () => {
       }
 
       if (user?.token) {
-        if (avatar) {
+        if (avatar && avatar !== user.avatarUrl) {
           await updateMyAvatar(user.token, avatar);
         }
 
@@ -195,7 +195,7 @@ const userProfile = () => {
             </Text>
           </Pressable>
 
-          <View className="bg-white dark:bg-greyInput p-5 rounded-2xl mb-6 space-y-6 w-full">
+          <View className="bg-white dark:bg-[#232324] p-5 rounded-2xl mb-6 space-y-6 w-full">
             {details.map((detail, index) => (
               <Detail
                 key={detail.key}

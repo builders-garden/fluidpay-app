@@ -174,17 +174,20 @@ export default function Home() {
               </View>
             </View>
             {fetchingPayments && (
-              <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl p-4">
+              <View className="bg-white dark:bg-[#161618] w-full mx-auto rounded-2xl p-4">
                 {Array(3)
                   .fill(null)
                   .map((_, i) => (
-                    <TransactionSkeletonLayout key={i} />
+                    <TransactionSkeletonLayout
+                      key={i}
+                      isDark={colorScheme === "dark"}
+                    />
                   ))}
               </View>
             )}
 
             {!fetchingPayments && transactions.length > 0 && (
-              <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl p-4">
+              <View className="bg-white dark:bg-[#161618] w-full mx-auto rounded-2xl p-4">
                 {transactions.slice(0, 3).map((payment, index) => (
                   <TransactionItem
                     transaction={payment}
@@ -220,7 +223,7 @@ export default function Home() {
             )}
 
             {recentPayees.length > 0 && (
-              <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
+              <View className="bg-white dark:bg-[#161618] w-full mx-auto rounded-2xl mt-8 mb-16 p-4">
                 <View className="flex flex-row items-center pb-6">
                   <Text className="text-mutedGrey dark:text-gray-400">
                     Recent payees

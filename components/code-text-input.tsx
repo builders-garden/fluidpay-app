@@ -83,7 +83,7 @@ const CodeTextInput = ({
               <View
                 key={index}
                 className={
-                  "flex-1 text-darkGrey dark:text-white bg-white dark:bg-white dark:bg-greyInput flex items-center justify-center rounded-lg" +
+                  "flex-1 text-darkGrey dark:text-white bg-white dark:bg-[#232324] flex items-center justify-center rounded-lg" +
                   (error
                     ? " border-2 border-red-500"
                     : focused

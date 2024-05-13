@@ -108,7 +108,7 @@ export default function GroupSettingsModal() {
             autoCorrect={false}
             placeholder="Your new group name"
             clearButtonMode="always"
-            className="mb-2 text-darkGrey dark:text-white bg-white dark:bg-greyInput px-3 py-4 rounded-xl placeholder-mutedGrey"
+            className="mb-2 text-darkGrey dark:text-white bg-white dark:bg-[#232324] px-3 py-4 rounded-xl placeholder-mutedGrey"
           />
           <Text className="text-darkGrey dark:text-white text-xl font-semibold mt-2 mb-2">
             Members

@@ -68,7 +68,7 @@ export default function DetailsModal() {
             source={require("../../images/usdc.png")}
           />
         </View>
-        <View className="bg-white dark:bg-greyInput w-full mx-auto rounded-xl p-4 space-y-4">
+        <View className="bg-white dark:bg-[#232324] w-full mx-auto rounded-xl p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
             <View className="flex space-y-2">
               <Text className="text-gray-400 text-lg font-medium">

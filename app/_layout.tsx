@@ -1,6 +1,7 @@
 import { Slot, useNavigationContainerRef } from "expo-router";
 import { LogBox, View } from "react-native";
 import { PaperProvider } from "react-native-paper";
+import { StatusBar } from "expo-status-bar";
 import * as Linking from "expo-linking";
 import Toast, {
   BaseToast,
@@ -24,6 +25,8 @@ import { handleDeepLinks } from "../lib/deeplinks";
 import "react-native-gesture-handler";
 import { isRunningInExpoGo } from "expo";
 import * as Sentry from "@sentry/react-native";
+import { ThemeProvider } from "./providers";
+import { useColorScheme } from "nativewind";
 
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation();
 
@@ -80,6 +83,9 @@ const toastConfig: ToastConfig = {
 };
 
 function AppLayout() {
+  const { colorScheme } = useColorScheme();
+
+  console.log("theRootScheme", colorScheme);
   const url = Linking.useURL();
 
   useEffect(() => {
@@ -116,9 +122,14 @@ function AppLayout() {
             supportedChains={[sepolia, base]}
           >
             <PrivyWagmiProvider queryClient={queryClient} config={wagmiConfig}>
-              <View className="bg-absoluteWhite dark:bg-black flex-1">
-                <Slot />
-              </View>
+              <ThemeProvider>
+                <View className="bg-absoluteWhite dark:bg-black flex-1">
+                  <Slot />
+                  <StatusBar
+                    style={colorScheme === "dark" ? "light" : "dark"}
+                  />
+                </View>
+              </ThemeProvider>
             </PrivyWagmiProvider>
           </PrivyProvider>
         </PaperProvider>

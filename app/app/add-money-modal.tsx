@@ -56,6 +56,7 @@ export default function AddMoneyModal() {
             onPress={() => router.back()}
             color={colorScheme === "dark" ? "#FFF" : "#161618"}
             size={20}
+            animated={false}
           />
           <Appbar.Content
             title=""

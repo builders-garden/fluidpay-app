@@ -36,7 +36,7 @@ export default function SearchGroupMembers({
         placeholder="@username"
         onChangeText={onChangeText}
         value={searchQuery}
-        className="bg-darkGrey/10 dark:bg-white/10 !text-white mb-1"
+        className="bg-darkGrey/10 dark:bg-[#f2f2f21a] !text-white mb-1"
         autoCapitalize="none"
         autoComplete="off"
         autoCorrect={false}
@@ -75,7 +75,7 @@ export default function SearchGroupMembers({
             <Text className="text-darkGrey dark:text-white text-xl font-semibold">
               Search results
             </Text>
-            <View className="rounded-lg flex flex-col space-y-4 w-full py-4 px-2 bg-white dark:bg-greyInput">
+            <View className="rounded-lg flex flex-col space-y-4 w-full py-4 px-2 bg-white dark:bg-[#232324]">
               {results.map((user: DBUser, index: number) => (
                 <Pressable
                   key={"result- " + user.id}

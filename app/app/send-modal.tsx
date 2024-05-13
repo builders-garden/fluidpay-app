@@ -180,7 +180,7 @@ export default function SendModal() {
             </Text>
           </Pressable>
           <TextInput
-            className={`flex-grow text-base h-[62px] bg-white dark:bg-greyInput rounded-2xl p-2.5 pl-5 text-darkGrey dark:text-white tabular-nums ${note ? "leading-[30px]" : "leading-5"}`}
+            className={`flex-grow text-base h-[62px] bg-white dark:bg-[#232324] rounded-2xl p-2.5 pl-5 text-darkGrey dark:text-white tabular-nums ${note ? "leading-[30px]" : "leading-5"}`}
             selectTextOnFocus={false}
             placeholderTextColor={"#8F8F91"}
             numberOfLines={1}

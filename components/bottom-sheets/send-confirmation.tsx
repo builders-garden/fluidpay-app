@@ -17,6 +17,7 @@ import { useTransactionsStore } from "../../store";
 import { Chain } from "viem";
 import { useEmbeddedWallet } from "@privy-io/expo";
 import { formatBigInt } from "../../lib/utils";
+import { useColorScheme } from "nativewind";
 
 const sceenHeight = Dimensions.get("window").height;
 
@@ -51,7 +52,7 @@ const SendConfirmation = ({
   refetchBalance,
   cancelTransaction,
 }: SendConfirmationProps) => {
-  // ref
+  const { colorScheme } = useColorScheme();
 
   const snapPoints = useMemo(() => ["50%"], []);
 
@@ -116,7 +117,7 @@ const SendConfirmation = ({
   // renders
   return (
     <View
-      className="flex-1 p-6 bg-white dark:bg-black/70 absolute w-full bottom-0 z-10"
+      className="flex-1 p-6 bg-white/70 dark:bg-black/70 absolute w-full bottom-0 z-10"
       style={{ height: sceenHeight }}
     >
       <BottomSheet
@@ -133,7 +134,7 @@ const SendConfirmation = ({
           top: 5,
         }}
         backgroundStyle={{
-          backgroundColor: "#161618",
+          backgroundColor: colorScheme === "dark" ? "#161618" : "#fff",
         }}
       >
         <BottomSheetView
