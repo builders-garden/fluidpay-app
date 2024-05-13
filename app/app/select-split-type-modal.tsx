@@ -40,9 +40,9 @@ export default function SelectSplitTypeModal({
           index={1}
           snapPoints={snapPoints}
         >
-          <BottomSheetView className="bg-[#232324]">
+          <BottomSheetView className="bg-white dark:bg-[#232324]">
             <View className="rounded-lg flex flex-col space-y-4 bg-inputGrey p-4">
-              <Text className="text-2xl text-white font-bold">
+              <Text className="text-2xl text-darkGrey dark:text-white font-bold">
                 Split options
               </Text>
               <View className="flex flex-col space-y-2 bg-[#343435] rounded-lg p-2">
@@ -65,7 +65,7 @@ export default function SelectSplitTypeModal({
                           <DollarSign size={24} color={`${COLORS.primary}`} />
                         )}
                       </View>
-                      <Text className="text-white font-semibold text-lg ml-2">
+                      <Text className="text-darkGrey dark:text-white font-semibold text-lg ml-2">
                         {splitType}
                       </Text>
                     </View>

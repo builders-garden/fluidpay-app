@@ -1,14 +1,12 @@
 import SkeletonLoader from "expo-skeleton-loader";
-import { ViewStyle } from "react-native";
+import { SkeletonType } from "./types";
 
 const TransactionSkeletonLayout = ({
+  isDark,
   size = 48,
   style,
-}: {
-  size?: number;
-  style?: ViewStyle;
-}) => (
-  <SkeletonLoader duration={850}>
+}: SkeletonType) => (
+  <SkeletonLoader duration={850} boneColor={!isDark ? "#f2f2f2" : "#161618"}>
     <SkeletonLoader.Container
       style={[{ flex: 1, flexDirection: "row", alignItems: "center" }, style]}
     >

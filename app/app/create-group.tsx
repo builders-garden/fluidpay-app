@@ -7,6 +7,7 @@ import AppButton from "../../components/app-button";
 import { createGroup, getUsers } from "../../lib/api";
 import { useGroupsStore, useUserStore } from "../../store";
 import SearchGroupMembers from "../../components/search-group-members";
+import { useColorScheme } from "nativewind";
 
 export default function CreateGroupPage() {
   const [groupName, setGroupName] = useState("");
@@ -14,6 +15,7 @@ export default function CreateGroupPage() {
   const addGroup = useGroupsStore((state) => state.addGroup);
   const user = useUserStore((state) => state.user);
   const [addedMembers, setAddedMembers] = useState<any[]>([]);
+  const { colorScheme } = useColorScheme();
 
   const createNewGroup = async () => {
     try {
@@ -41,30 +43,38 @@ export default function CreateGroupPage() {
   };
 
   return (
-    <View className="flex-1 flex-col bg-black">
+    <View className="flex-1 flex-col bg-absoluteWhite dark:bg-black">
       <Appbar.Header
         elevated={false}
         statusBarHeight={48}
-        className="bg-black text-white"
+        className="bg-absoluteWhite dark:bg-black text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={20} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={20}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={20}
+          animated={false}
         />
         <Appbar.Content
           title={""}
-          color="#fff"
+          color={colorScheme === "dark" ? "#fff" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
       <SafeAreaView className="flex-1 justify-between">
         <View className="flex px-4 space-y-4">
-          <Text className="text-3xl text-white font-bold">Create group</Text>
-          <Text className="text-white text-xl font-semibold mt-2">
+          <Text className="text-3xl text-darkGrey dark:text-white font-bold">
+            Create group
+          </Text>
+          <Text className="text-darkGrey dark:text-white text-xl font-semibold mt-2">
             What's the name of your group?
           </Text>
           <TextInput
@@ -75,9 +85,9 @@ export default function CreateGroupPage() {
             autoCorrect={false}
             placeholder="Your new group name"
             placeholderTextColor={"#8F8F91"}
-            className="mb-2 text-white bg-[#232324] px-3 py-4 rounded-lg"
+            className="mb-2 text-darkGrey dark:text-white bg-white dark:bg-[#232324] px-3 py-4 rounded-lg"
           />
-          <Text className="text-white text-xl font-semibold mt-2 mb-2">
+          <Text className="text-darkGrey dark:text-white text-xl font-semibold mt-2 mb-2">
             Add one or more members
           </Text>
           <SearchGroupMembers

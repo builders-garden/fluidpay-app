@@ -8,46 +8,55 @@ import { ArrowLeft, Copy } from "lucide-react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Share } from "react-native";
 import * as Clipboard from "expo-clipboard";
+import { useColorScheme } from "nativewind";
 
 export default function RequestModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
+  const { colorScheme } = useColorScheme();
 
   if (!user) {
-    return <View className="flex-1 bg-black" />;
+    return <View className="flex-1 bg-white dark:bg-black" />;
   }
 
   return (
     <SafeAreaView
-      className="flex-1 flex-col bg-[#161618]"
+      className="flex-1 flex-col bg-white dark:bg-darkGrey"
       edges={{ top: "off" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#161618] text-white"
+        className="bg-white dark:bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#fff" : "#161618"}
           size={20}
         />
         <Appbar.Content
           title={""}
-          color="#fff"
+          color={colorScheme === "dark" ? "#fff" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
       <View className="flex px-4 space-y-4 h-full">
-        <Text className="text-3xl text-white font-bold">Request via link</Text>
+        <Text className="text-3xl text-darkGrey dark:text-white font-bold">
+          Request via link
+        </Text>
         <View className="flex items-center space-y-2 mt-4">
           <Avatar name={user?.displayName.charAt(0)} size={64} />
           <View className="flex flex-row items-center space-x-2">
-            <Text className="text-white font-semibold text-lg">
+            <Text className="text-darkGrey dark:text-white font-semibold text-lg">
               {user?.username}
             </Text>
             <Pressable onPress={() => router.push("/app/qrcode")}>

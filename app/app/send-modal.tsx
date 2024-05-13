@@ -27,6 +27,7 @@ import { base } from "viem/chains";
 import SendConfirmation from "../../components/bottom-sheets/send-confirmation";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useColorScheme } from "nativewind";
 
 export default function SendModal() {
   const { amount: paramsAmount = 0, user: sendUserData } =
@@ -46,6 +47,8 @@ export default function SendModal() {
 
   const closeConfirmSheet = () => setShowConfirmSheet(false);
   const openConfirmSheet = () => setShowConfirmSheet(true);
+
+  const { colorScheme } = useColorScheme();
 
   const { address } = usePrivyWagmiProvider();
   const {
@@ -78,23 +81,30 @@ export default function SendModal() {
   }, []);
 
   if (!sendUser) {
-    return <View className="flex-1 flex-col px-4 bg-black"></View>;
+    return (
+      <View className="flex-1 flex-col px-4 bg-white dark:bg-black"></View>
+    );
   }
 
   return (
-    <View className="flex-1 flex-col bg-[#161618]">
+    <View className="flex-1 flex-col bg-absoluteWhite dark:bg-darkGrey">
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={48}
-        className="bg-[#161618] text-white"
+        className="bg-absoluteWhite dark:bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={20}
           animated={false}
         />
@@ -102,7 +112,7 @@ export default function SendModal() {
           title={
             (
               <View className="items-center">
-                <Text className="font-semibold text-xl text-white leading-6">
+                <Text className="font-semibold text-xl text-darkGrey dark:text-white leading-6">
                   {sendUser.displayName}
                 </Text>
                 <Text className="text-mutedGrey text-base leading-5">
@@ -111,7 +121,7 @@ export default function SendModal() {
               </View>
             ) as ReactNode & string
           }
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
         <Appbar.Action
@@ -139,7 +149,7 @@ export default function SendModal() {
           />
           <Text className="mt-4 mb-3.5 text-mutedGrey text-base">No fees</Text>
 
-          <View className="flex-row p-2.5 space-x-2.5 rounded-[20px] bg-white/20 items-center">
+          <View className="flex-row p-2.5 space-x-2.5 rounded-[20px] bg-darkGrey/10 dark:bg-white/20 items-center">
             <Image
               className="h-6 w-6 rounded-full"
               source={
@@ -151,7 +161,7 @@ export default function SendModal() {
             {isLoadingBalance ? (
               <ActivityIndicator animating={true} color={"#667DFF"} />
             ) : (
-              <Text className="text-white leading-4 font-semibold">
+              <Text className="text-darkGrey dark:text-white leading-4 font-semibold">
                 {chain === base ? "Base" : "Sepolia"} • $
                 {formatBigInt(balance ?? BigInt(0), 2)}
               </Text>
@@ -170,7 +180,7 @@ export default function SendModal() {
             </Text>
           </Pressable>
           <TextInput
-            className={`flex-grow text-base h-[62px] bg-greyInput rounded-2xl p-2.5 pl-5 text-white tabular-nums ${note ? "leading-[30px]" : "leading-5"}`}
+            className={`flex-grow text-base h-[62px] bg-white dark:bg-[#232324] rounded-2xl p-2.5 pl-5 text-darkGrey dark:text-white tabular-nums ${note ? "leading-[30px]" : "leading-5"}`}
             selectTextOnFocus={false}
             placeholderTextColor={"#8F8F91"}
             numberOfLines={1}

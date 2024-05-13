@@ -1,11 +1,12 @@
 import { View, Text, Pressable, ImageBackground, Image } from "react-native";
 import { Appbar } from "react-native-paper";
 import { Redirect, router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import Avatar from "../../components/avatar";
 import { shortenAddress } from "../../lib/utils";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import { useUserStore } from "../../store";
-import React from "react";
+import React, { useContext } from "react";
 import {
   QrCode,
   Bell,
@@ -14,21 +15,26 @@ import {
   LogOut,
   ArrowLeft,
   CircleHelp,
+  Moon,
+  Sun,
 } from "lucide-react-native";
 
 import LogoutModal from "../../components/modals/logout-modal";
+import { useColorScheme } from "nativewind";
 
 export default function Settings() {
-  const { isConnected, isReady } = usePrivyWagmiProvider();
+  const { isReady } = usePrivyWagmiProvider();
   const [showModal, setShowModal] = React.useState(false);
   const user = useUserStore((state) => state.user);
+
+  const { colorScheme, toggleColorScheme } = useColorScheme();
 
   if (!isReady || !user) {
     return <Redirect href={"/"} />;
   }
 
   return (
-    <View className="flex-1 bg-black h-full">
+    <View className="flex-1 bg-white dark:bg-black h-full">
       <ImageBackground
         source={require("../../images/blur-bg.png")}
         className="flex-1"
@@ -37,7 +43,7 @@ export default function Settings() {
           <Appbar.Header
             elevated={false}
             statusBarHeight={48}
-            className="bg-transparent text-white"
+            className="bg-transparent text-darkGrey dark:text-white"
           >
             <Appbar.Action
               icon={() => <ArrowLeft size={24} color="#FFF" />}
@@ -46,11 +52,31 @@ export default function Settings() {
               }}
               color="#fff"
               size={24}
+              animated={false}
             />
             <Appbar.Content
               title=""
               color="#fff"
               titleStyle={{ fontWeight: "bold" }}
+            />
+
+            <Appbar.Action
+              icon={() =>
+                colorScheme === "dark" ? (
+                  <Sun size={24} color="#FFF" />
+                ) : (
+                  <Moon size={24} color="#FFF" />
+                )
+              }
+              onPress={async () => {
+                SecureStore.setItem(
+                  "colorScheme",
+                  colorScheme === "dark" ? "light" : "dark"
+                );
+                toggleColorScheme();
+              }}
+              color="#fff"
+              size={24}
             />
           </Appbar.Header>
           <View className="flex-1 flex-col px-4 bg-transparent space-y-8">
@@ -63,7 +89,7 @@ export default function Settings() {
                 @{user?.username}
               </Text>
               <View className="flex flex-row space-x-2 items-center">
-                <Text className="text-[#8F8F91] text-xl text-ellipsis">
+                <Text className="text-white dark:text-mutedGrey text-xl text-ellipsis">
                   {shortenAddress(user?.smartAccountAddress)}
                 </Text>
                 <QrCode

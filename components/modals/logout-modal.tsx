@@ -43,11 +43,11 @@ export default function LogoutModal({
   return (
     <Portal>
       <Modal visible={visible} onDismiss={hideModal}>
-        <View className="bg-black rounded-lg p-4 mx-4">
-          <Text className="text-center text-white">
+        <View className="bg-white dark:bg-black rounded-lg p-4 mx-4">
+          <Text className="text-center text-darkGrey dark:text-white">
             Are you sure you want to logout?
           </Text>
-          <Text className="text-center text-white mb-4">
+          <Text className="text-center text-darkGrey dark:text-white mb-4">
             You will need to login again if confirmed.
           </Text>
           <AppButton

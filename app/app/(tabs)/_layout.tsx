@@ -1,14 +1,17 @@
 import { Tabs } from "expo-router";
 import { View } from "react-native";
 import { Home, ArrowLeftRight, LayoutGrid } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
 
 export default function AppTabsLayout() {
+  const { colorScheme } = useColorScheme();
+
   return (
     <Tabs
       screenOptions={{
         tabBarStyle: {
-          backgroundColor: "#252526",
-          borderColor: "#252526",
+          backgroundColor: colorScheme === "dark" ? "#252526" : "#F2F2F2",
+          borderColor: colorScheme === "dark" ? "#252526" : "#F2F2F2",
           borderTopWidth: 0,
           minHeight: 94,
         },
@@ -24,7 +27,15 @@ export default function AppTabsLayout() {
           title: "Home",
           tabBarInactiveTintColor: "#8F8F91",
           tabBarActiveTintColor: "#FF238C",
-          tabBarBackground: () => <View className="bg-[#252526] flex-1" />,
+          tabBarBackground: () => (
+            <View
+              className="bg-[#ffdbec80] dark:bg-[#252526] flex-1"
+              style={{
+                backgroundColor:
+                  colorScheme === "dark" ? "#252526" : "#ffdbec80",
+              }}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -37,7 +48,14 @@ export default function AppTabsLayout() {
           title: "Transfers",
           tabBarInactiveTintColor: "#8F8F91",
           tabBarActiveTintColor: "#FF238C",
-          tabBarBackground: () => <View className="bg-[#252526] flex-1" />,
+          tabBarBackground: () => (
+            <View
+              className="bg-white dark:bg-[#252526] flex-1"
+              style={{
+                backgroundColor: colorScheme === "dark" ? "#252526" : "#fff",
+              }}
+            />
+          ),
         }}
       />
       <Tabs.Screen
@@ -50,7 +68,14 @@ export default function AppTabsLayout() {
           title: "Groups",
           tabBarInactiveTintColor: "#8F8F91",
           tabBarActiveTintColor: "#FF238C",
-          tabBarBackground: () => <View className="bg-[#252526] flex-1" />,
+          tabBarBackground: () => (
+            <View
+              className="bg-white dark:bg-[#252526] flex-1"
+              style={{
+                backgroundColor: colorScheme === "dark" ? "#252526" : "#fff",
+              }}
+            />
+          ),
         }}
       />
       {/* <Tabs.Screen

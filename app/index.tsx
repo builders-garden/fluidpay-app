@@ -12,7 +12,7 @@ import { useUserStore } from "../store";
 import { getUserEmbeddedWallet, usePrivy } from "@privy-io/expo";
 import * as LocalAuthentication from "expo-local-authentication";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { DBUser } from "../store/interfaces";
@@ -23,6 +23,8 @@ import { ScanFace } from "lucide-react-native";
 import AppButton from "../components/app-button";
 import CodeTextInput from "../components/code-text-input";
 import { useDisconnect } from "wagmi";
+import { useColorScheme } from "nativewind";
+import { LinearGradient } from "expo-linear-gradient";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -36,6 +38,7 @@ const Home = () => {
   const { isReady, user, logout } = usePrivy();
   // const { address } = usePrivyWagmiProvider();
   const address = getUserEmbeddedWallet(user)?.address;
+  const { colorScheme } = useColorScheme();
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
   const { disconnect } = useDisconnect();
@@ -153,10 +156,10 @@ const Home = () => {
 
   if (!!token && storedUser && !!passcode) {
     return (
-      <SafeAreaView className="flex-1">
+      <SafeAreaView className="flex-1 bg-absoluteWhite dark:bg-black">
         <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
           <Pressable onPress={Keyboard.dismiss} className="px-4 flex-1 mb-12">
-            <Text className="text-4xl text-white font-semibold mb-1">
+            <Text className="text-4xl text-darkGrey dark:text-white font-semibold mb-1">
               Welcome back 👋
             </Text>
 
@@ -195,7 +198,7 @@ const Home = () => {
             )}
 
             <View className="flex-row justify-center items-center gap-2 mt-5">
-              <Text className="text-white">Not you?</Text>
+              <Text className="text-darkGrey dark:text-white">Not you?</Text>
               <Pressable onPress={universalLogout}>
                 <Text className="text-primary font-semibold">Log out</Text>
               </Pressable>
@@ -215,30 +218,41 @@ const Home = () => {
   }
 
   return (
-    <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4">
-      <View className="text-center flex flex-col space-y-4 justify-center items-center">
-        <Image
-          className="mt-24 h-14 w-56"
-          source={require("../images/plink.png")}
-        />
-        <View className="px-16">
-          <Text
-            className={`text-white text-xl text-center leading-tight font-semibold`}
-          >
-            Your USDC shortcut.
-          </Text>
+    <LinearGradient
+      start={{ x: 0.5, y: colorScheme === "dark" ? 0.2 : 0 }}
+      colors={
+        colorScheme === "dark" ? ["#000000", "#000000"] : ["#F2F2F2", "#FFDBEC"]
+      }
+      className="h-full"
+    >
+      <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4 bg-transparent">
+        <View className="text-center flex flex-col space-y-4 justify-center items-center">
+          <Image
+            className="mt-24 h-14 w-56"
+            source={
+              colorScheme === "dark"
+                ? require("../images/plink.png")
+                : require("../images/plink-dark.png")
+            }
+          />
+          <View className="px-16">
+            <Text
+              className={`text-darkGrey dark:text-white text-xl text-center leading-tight font-semibold`}
+            >
+              Your USDC shortcut.
+            </Text>
+          </View>
         </View>
-      </View>
 
-      {isLoading && (
-        <View className="flex flex-col space-y-8">
-          <ActivityIndicator animating={true} color={"#FF238C"} />
-          <Text className="text-primary font-medium text-lg text-center ">
-            {loadingMessage}
-          </Text>
-        </View>
-      )}
-      {/* 
+        {isLoading && (
+          <View className="flex flex-col space-y-8">
+            <ActivityIndicator animating={true} color={"#FF238C"} />
+            <Text className="text-primary font-medium text-lg text-center ">
+              {loadingMessage}
+            </Text>
+          </View>
+        )}
+        {/* 
       {isReady && user && !skipBiometrics && (
         <View className="w-full">
           <AppButton
@@ -248,15 +262,16 @@ const Home = () => {
         </View>
       )} */}
 
-      {isReady && (
-        <LoginForm
-          setIsLoading={setIsLoading}
-          setLoadingMessage={setLoadingMessage}
-          loginStatus={loginStatus}
-          setLoginStatus={setLoginStatus}
-        />
-      )}
-    </SafeAreaView>
+        {isReady && (
+          <LoginForm
+            setIsLoading={setIsLoading}
+            setLoadingMessage={setLoadingMessage}
+            loginStatus={loginStatus}
+            setLoginStatus={setLoginStatus}
+          />
+        )}
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 

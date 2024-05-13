@@ -29,14 +29,14 @@ export default function DetailsModal() {
 
   return (
     <SafeAreaView
-      className="flex-1 flex-col bg-[#161618]"
+      className="flex-1 flex-col bg-darkGrey"
       edges={{ top: "off" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#161618] text-white"
+        className="bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={20} color="#FFF" />}
@@ -55,10 +55,10 @@ export default function DetailsModal() {
       <View className="flex px-4 h-full space-y-8">
         <View className="flex flex-row items-center justify-between space-x-2">
           <View className="flex space-y-2">
-            <Text className="text-3xl text-white font-bold">
+            <Text className="text-3xl text-darkGrey dark:text-white font-bold">
               {isLoadingBalance ? "Loading..." : `${formatBigInt(balance!, 2)}`}
             </Text>
-            <Text className="text-white text-lg font-semibold">
+            <Text className="text-darkGrey dark:text-white text-lg font-semibold">
               {chain.name} • USDC
             </Text>
           </View>
@@ -68,7 +68,7 @@ export default function DetailsModal() {
             source={require("../../images/usdc.png")}
           />
         </View>
-        <View className="bg-[#232324] w-full mx-auto rounded-xl p-4 space-y-4">
+        <View className="bg-white dark:bg-[#232324] w-full mx-auto rounded-xl p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
             <View className="flex space-y-2">
               <Text className="text-gray-400 text-lg font-medium">

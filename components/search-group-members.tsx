@@ -36,7 +36,7 @@ export default function SearchGroupMembers({
         placeholder="@username"
         onChangeText={onChangeText}
         value={searchQuery}
-        className="bg-white/10 !text-white mb-1"
+        className="bg-darkGrey/10 dark:bg-[#f2f2f21a] !text-white mb-1"
         autoCapitalize="none"
         autoComplete="off"
         autoCorrect={false}
@@ -63,7 +63,7 @@ export default function SearchGroupMembers({
                     <X size={8} color={"black"} className={" text-black"} />
                   </View>
                 </View>
-                <Text className="text-white font-semibold">
+                <Text className="text-darkGrey dark:text-white font-semibold">
                   {user.username}
                 </Text>
               </View>
@@ -72,10 +72,10 @@ export default function SearchGroupMembers({
         </View>
         {results?.length > 0 && (
           <View className="flex flex-col space-y-2">
-            <Text className="text-white text-xl font-semibold">
+            <Text className="text-darkGrey dark:text-white text-xl font-semibold">
               Search results
             </Text>
-            <View className="rounded-lg flex flex-col space-y-4 w-full py-4 px-2 bg-greyInput">
+            <View className="rounded-lg flex flex-col space-y-4 w-full py-4 px-2 bg-white dark:bg-[#232324]">
               {results.map((user: DBUser, index: number) => (
                 <Pressable
                   key={"result- " + user.id}
@@ -100,7 +100,7 @@ export default function SearchGroupMembers({
                       uncheckedColor="#8F8F91"
                     />
                     <Avatar name={user.displayName.charAt(0).toUpperCase()} />
-                    <Text className="text-white font-semibold text-lg ml-2">
+                    <Text className="text-darkGrey dark:text-white font-semibold text-lg ml-2">
                       {user.username}
                     </Text>
                   </View>

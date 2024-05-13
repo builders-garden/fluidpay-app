@@ -13,14 +13,14 @@ export default function DetailExpenseModal() {
 
   return (
     <SafeAreaView
-      className="flex-1 flex-col bg-[#161618]"
+      className="flex-1 flex-col bg-darkGrey"
       edges={{ top: "off" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#161618] text-white"
+        className="bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
           icon={() => <ArrowLeft size={24} color="#FFF" />}
@@ -47,20 +47,22 @@ export default function DetailExpenseModal() {
       <View className="flex px-4 h-full space-y-8 mt-6">
         <View className="flex">
           <View className="flex flex-row items-center justify-between space-x-2">
-            <Text className="text-3xl text-white font-bold">-$18,46</Text>
+            <Text className="text-3xl text-darkGrey dark:text-white font-bold">
+              -$18,46
+            </Text>
             <Avatar name="F" />
           </View>
           <View className="flex">
             <Text className="text-[#FF238C] text-lg font-semibold">
               frankc - @frankcc
             </Text>
-            <Text className="text-[#8F8F91]">
+            <Text className="text-mutedGrey">
               <TimeAgo dateTo={new Date()} />
             </Text>
           </View>
         </View>
 
-        <View className="bg-[#161618] w-full mx-auto rounded-lg p-4 space-y-4">
+        <View className="bg-darkGrey w-full mx-auto rounded-lg p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-gray-400 text-lg font-medium">Status</Text>
             <Text className="text-green-500 text-lg font-medium">Success</Text>

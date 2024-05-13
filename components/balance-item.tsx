@@ -37,14 +37,16 @@ export default function BalanceItem(balanceData: any, index: number) {
           <View className="flex flex-col items-start justify-center">
             {isCurrentUserDebtor ? (
               <>
-                <Text className="text-white font-semibold text-xl">You</Text>
+                <Text className="text-darkGrey dark:text-white font-semibold text-xl">
+                  You
+                </Text>
                 <Text className="text-[#DC3F32] font-semibold">
                   owe {balance.creditor.displayName}
                 </Text>
               </>
             ) : (
               <>
-                <Text className="text-white font-semibold text-xl">
+                <Text className="text-darkGrey dark:text-white font-semibold text-xl">
                   {balance.debtor.displayName}
                 </Text>
                 <Text className="text-[#39F183] font-semibold">owes you</Text>
@@ -53,7 +55,9 @@ export default function BalanceItem(balanceData: any, index: number) {
           </View>
         </View>
         <View className="flex flex-col items-end justify-center">
-          <Text className={`font-semibold text-lg text-white`}>
+          <Text
+            className={`font-semibold text-lg text-darkGrey dark:text-white`}
+          >
             ${balance.amount.toFixed(2)}
           </Text>
         </View>

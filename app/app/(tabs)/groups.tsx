@@ -1,6 +1,5 @@
 import { Redirect, router, useNavigation } from "expo-router";
 import { useGroupsStore, useUserStore } from "../../../store";
-import { LinearGradient } from "expo-linear-gradient";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {
   Text,
@@ -8,17 +7,18 @@ import {
   Pressable,
   ScrollView,
   TouchableOpacity,
-  ViewStyle,
   ImageBackground,
 } from "react-native";
-import SkeletonLoader from "expo-skeleton-loader";
 import AppButton from "../../../components/app-button";
 import Avatar from "../../../components/avatar";
 import { PlusIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { getGroups } from "../../../lib/api";
+import { GroupsLayout } from "../../../components/skeleton-layout/groups";
+import { useColorScheme } from "nativewind";
 
 export default function Pocket() {
+  const { colorScheme } = useColorScheme();
   const user = useUserStore((state) => state.user);
   const groups = useGroupsStore((state) => state.groups);
   const { setGroups, fetched, setFetched } = useGroupsStore((state) => state);
@@ -57,10 +57,10 @@ export default function Pocket() {
         className="flex-1"
       >
         <SafeAreaView className="bg-transparent flex-1 items-center py-24 px-16 space-y-4">
-          <Text className="text-white text-4xl font-semibold text-center">
+          <Text className="text-darkGrey dark:text-white text-4xl font-semibold text-center">
             Start sharing expenses
           </Text>
-          <Text className="text-white text-center">
+          <Text className="text-darkGrey dark:text-white text-center">
             Everything you need to split expenses with your frens
           </Text>
           <View>
@@ -76,9 +76,11 @@ export default function Pocket() {
   }
 
   return (
-    <SafeAreaView className="bg-black flex-1 px-4">
+    <SafeAreaView className="bg-absoluteWhite dark:bg-black flex-1 px-4">
       <View className="flex flex-row items-center w-full justify-between mb-4">
-        <Text className="text-4xl text-white font-bold">Groups</Text>
+        <Text className="text-4xl text-darkGrey dark:text-white font-bold">
+          Groups
+        </Text>
 
         <TouchableOpacity
           onPress={() => router.push("/app/create-group")}
@@ -97,9 +99,9 @@ export default function Pocket() {
             .map((_, index) => (
               <View
                 key={index}
-                className="bg-[#232324] rounded-xl mb-4 flex flex-col space-y-4 p-4"
+                className="bg-white dark:bg-[#232324] rounded-xl mb-4 flex flex-col space-y-4 p-4"
               >
-                <TransactionLayout />
+                <GroupsLayout isDark={colorScheme === "dark"} />
               </View>
             ))}
 
@@ -114,8 +116,8 @@ export default function Pocket() {
                 });
               }}
             >
-              <View className="bg-[#232324] rounded-xl mb-4 flex flex-col space-y-4 p-4">
-                <Text className="text-white font-semibold text-2xl">
+              <View className="bg-white dark:bg-[#232324] rounded-xl mb-4 flex flex-col space-y-4 p-4">
+                <Text className="text-darkGrey dark:text-white font-semibold text-2xl">
                   {group.name}
                 </Text>
                 <View className="flex flex-row">
@@ -138,37 +140,3 @@ export default function Pocket() {
     </SafeAreaView>
   );
 }
-
-const TransactionLayout = ({
-  size = 48,
-  style,
-}: {
-  size?: number;
-  style?: ViewStyle;
-}) => (
-  <SkeletonLoader duration={850}>
-    <SkeletonLoader.Container style={[{ flex: 1 }, style]}>
-      <SkeletonLoader.Item style={{ width: 110, height: 30 }} />
-
-      <SkeletonLoader.Container
-        style={{ paddingVertical: 10, flexDirection: "row" }}
-      >
-        <SkeletonLoader.Item
-          style={{
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-          }}
-        />
-        <SkeletonLoader.Item
-          style={{
-            width: size,
-            height: size,
-            borderRadius: size / 2,
-            marginLeft: -24,
-          }}
-        />
-      </SkeletonLoader.Container>
-    </SkeletonLoader.Container>
-  </SkeletonLoader>
-);

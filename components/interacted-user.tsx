@@ -26,7 +26,7 @@ export default function InteractedUser({
       <View className="flex flex-row space-x-4">
         <Avatar name={user.displayName?.charAt(0).toUpperCase()} />
         <View className="flex flex-col">
-          <Text className="text-white font-semibold text-lg">
+          <Text className="text-darkGrey dark:text-white font-semibold text-lg">
             {user.displayName}
           </Text>
           <Text className="text-gray-500 font-semibold text-sm">
@@ -37,7 +37,7 @@ export default function InteractedUser({
         </View>
       </View>
       <View className="flex flex-row space-x-4">
-        <Text className="text-[#8F8F91]">
+        <Text className="text-mutedGrey">
           <TimeAgo dateTo={new Date(transaction.createdAt)} />
         </Text>
       </View>

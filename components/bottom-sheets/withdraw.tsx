@@ -12,6 +12,7 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 
 import AppButton from "../app-button";
 import { CircleX } from "lucide-react-native";
+import { useColorScheme } from "nativewind";
 
 const sceenHeight = Dimensions.get("window").height;
 
@@ -26,6 +27,7 @@ const Withdraw = ({
   bottomSheetRef,
   cancelTransaction,
 }: WithdrawProps) => {
+  const { colorScheme } = useColorScheme();
   const [address, setAddress] = useState("");
 
   const addressRef = useRef<TextInput>(null);
@@ -37,10 +39,12 @@ const Withdraw = ({
     console.log("handleSheetChanges", index);
   }, []);
 
+  const sendTokens = () => {};
+
   // renders
   return (
     <View
-      className="flex-1 p-6 bg-black/70 absolute w-full bottom-0 z-10"
+      className="flex-1 p-6 bg-white/70 dark:bg-black/70 absolute w-full bottom-0 z-10"
       style={{ height: sceenHeight }}
     >
       <BottomSheet
@@ -57,7 +61,7 @@ const Withdraw = ({
           top: 5,
         }}
         backgroundStyle={{
-          backgroundColor: "#161618",
+          backgroundColor: colorScheme === "dark" ? "#161618" : "#fff",
         }}
       >
         <BottomSheetView
@@ -68,7 +72,7 @@ const Withdraw = ({
         >
           <View className="w-full flex-1 pb-10">
             <View className="w-full flex-1 pb-10 px-4">
-              <Text className="text-white font-semibold text-2xl text-center pt-5">
+              <Text className="text-darkGrey dark:text-white font-semibold text-2xl text-center pt-5">
                 Withdraw
               </Text>
 
@@ -79,7 +83,7 @@ const Withdraw = ({
 
             <View className="mt-auto px-4 relative">
               <TextInput
-                className={`flex-grow text-base h-[62px] bg-greyInput rounded-2xl p-2.5 pl-5 text-white tabular-nums`}
+                className={`flex-grow text-base h-[62px] bg-white dark:bg-[#232324] rounded-2xl p-2.5 pl-5 text-darkGrey dark:text-white tabular-nums`}
                 selectTextOnFocus={false}
                 placeholderTextColor={"#8F8F91"}
                 placeholder="Address"

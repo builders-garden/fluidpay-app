@@ -45,7 +45,7 @@ export default function TransactionsList({
 
   return (
     <>
-      <Text className="text-[#8F8F91] font-semibold mt-4 mb-2">
+      <Text className="text-mutedGrey font-semibold mt-4 mb-2">
         {withAddress ? "Transactions between you" : "Transaction History"}
       </Text>
       <Divider />
@@ -55,7 +55,7 @@ export default function TransactionsList({
         </View>
       )}
       {transactions.length === 0 && !loading && (
-        <Text className="mt-4 text-white">
+        <Text className="mt-4 text-darkGrey dark:text-white">
           No recent transactions available.
         </Text>
       )}

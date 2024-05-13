@@ -29,14 +29,14 @@ const SetPin = () => {
     }
   };
   return (
-    <SafeAreaView className="flex-1 bg-black">
+    <SafeAreaView className="flex-1 bg-white dark:bg-black">
       <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
         <Pressable onPress={Keyboard.dismiss} className="px-4 flex-1">
-          <Text className="text-4xl text-white font-semibold mb-7">
+          <Text className="text-4xl text-darkGrey dark:text-white font-semibold mb-7">
             Set a passcode
           </Text>
 
-          <Text className="text-xl text-white font-semibold mb-5">
+          <Text className="text-xl text-darkGrey dark:text-white font-semibold mb-5">
             Choose a 4-digit code only you know
           </Text>
           <Text className="text-base text-mutedGrey mb-5">

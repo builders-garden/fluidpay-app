@@ -16,10 +16,13 @@ import SelectPaidByModal from "./select-paid-by-modal";
 import DatePicker from "../../components/date-picker";
 import SelectSplitTypeModal, { SplitType } from "./select-split-type-modal";
 import SplitAmong, { SplitAmongType } from "../../components/split-among";
+import { useColorScheme } from "nativewind";
 
 export default function CreateExpenseModal() {
   const { group } = useLocalSearchParams();
   const data = JSON.parse(group as string);
+
+  const { colorScheme } = useColorScheme();
 
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
@@ -77,32 +80,39 @@ export default function CreateExpenseModal() {
 
   return (
     <SafeAreaView
-      className="flex-1 flex-col bg-[#161618]"
+      className="flex-1 flex-col bg-absoluteWhite dark:bg-darkGrey"
       edges={{ top: "additive" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#161618] text-white"
+        className="bg-absoluteWhite dark:bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
         />
         <Appbar.Content
           title=""
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
       <View className="flex-1 px-4">
         <View className="flex space-y-2">
-          <Text className="text-3xl text-white font-bold">Create expense</Text>
+          <Text className="text-3xl text-darkGrey dark:text-white font-bold">
+            Create expense
+          </Text>
           <View className="flex flex-row space-x-1">
             <Text className="text-gray-400">Paid by</Text>
             <Pressable onPress={handlePaidByPresentModalPress}>
@@ -137,13 +147,13 @@ export default function CreateExpenseModal() {
                 placeholder="Description"
                 placeholderTextColor={"#8F8F91"}
                 clearButtonMode="always"
-                className="text-white bg-[#232324] px-3 py-4 rounded-lg"
+                className="text-darkGrey dark:text-white bg-white dark:bg-[#232324] px-3 py-4 rounded-lg"
               />
             </View>
             <View>
               <DatePicker date={date} setDate={setDate} />
             </View>
-            <View className="bg-[#232324] rounded-lg px-3 py-4 mb-4">
+            <View className="bg-white dark:bg-[#232324] rounded-lg px-3 py-4 mb-4">
               <RNPickerSelect
                 style={{
                   inputAndroid: { color: "white" },

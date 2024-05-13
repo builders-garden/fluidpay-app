@@ -5,6 +5,7 @@ module.exports = {
     "./components/**/*.{js,jsx,ts,tsx}",
     "./screens/**/*.{js,jsx,ts,tsx}",
   ],
+  // darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -12,6 +13,7 @@ module.exports = {
         revolut: "#FF5D8F",
         secondary: "#7209B7",
         white: "#F2F2F2",
+        absoluteWhite: "#FFFFFF",
         darkGrey: "#161618",
         mutedGrey: "#8F8F91",
         greyInput: "#232324",

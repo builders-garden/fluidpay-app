@@ -69,7 +69,7 @@ export default function AppButton({
       <TouchableOpacity
         onPress={onPress}
         disabled={disabled || loading}
-        className={`bg-[#855DCD] border-2 border-[#855DCD] rounded-full flex items-center justify-center py-3 px-4 text-white ${verticalMargin}`}
+        className={`bg-[#855DCD] border-2 border-[#855DCD] rounded-full flex items-center justify-center py-3 px-4 text-darkGrey dark:text-white ${verticalMargin}`}
       >
         {content}
       </TouchableOpacity>

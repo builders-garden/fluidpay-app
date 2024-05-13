@@ -17,6 +17,7 @@ import {
 import { DBTransaction } from "../../store/interfaces";
 import TimeAgo from "@andordavoti/react-native-timeago";
 import { getFormattedTime, isTodayOrYesterday } from "../../lib/utils";
+import { useColorScheme } from "nativewind";
 
 export default function ProfileModal() {
   const isPresented = router.canGoBack();
@@ -26,6 +27,7 @@ export default function ProfileModal() {
   const [profileUser, setProfileUser] = useState<any>();
   const [transactions, setTransaction] = useState<DBTransaction[]>([]);
   const chain = useChainStore((state) => state.chain);
+  const { colorScheme } = useColorScheme();
 
   useEffect(() => {
     if (currentUser) {
@@ -67,24 +69,30 @@ export default function ProfileModal() {
   const dates = Object.keys(transactionsByDay);
 
   return (
-    <View className="flex-1 flex-col bg-black">
+    <View className="flex-1 flex-col bg-absoluteWhite dark:bg-black">
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={48}
-        className="bg-black text-white"
+        className="bg-absoluteWhite dark:bg-black text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#fff" : "#161618"}
           size={24}
+          animated={false}
         />
         <Appbar.Content
           title=""
-          color="#fff"
+          color={colorScheme === "dark" ? "#fff" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
       </Appbar.Header>
@@ -96,16 +104,16 @@ export default function ProfileModal() {
           />
           <View className="flex flex-col items-center">
             {fetching ? (
-              <DisplayNameSkeletonLayout />
+              <DisplayNameSkeletonLayout isDark={colorScheme === "dark"} />
             ) : (
-              <Text className="text-white text-4xl text-center font-semibold">
+              <Text className="text-darkGrey dark:text-white text-4xl text-center font-semibold">
                 {profileUser?.displayName}
               </Text>
             )}
             {fetching ? (
-              <UsernameSkeletonLayout />
+              <UsernameSkeletonLayout isDark={colorScheme === "dark"} />
             ) : (
-              <Text className="text-[#8F8F91] text-xl text-ellipsis text-center">
+              <Text className="text-mutedGrey text-xl text-ellipsis text-center">
                 @{profileUser?.username}
               </Text>
             )}
@@ -135,12 +143,12 @@ export default function ProfileModal() {
           </View>
         </View>
 
-        <View className="bg-[#161618] w-full mx-auto rounded-lg p-4 space-y-4">
+        <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-lg p-4 space-y-4">
           <View className="flex flex-row items-center justify-between">
             <Text className="text-gray-400 text-lg font-medium">
               Total sent
             </Text>
-            <Text className="text-white text-lg font-medium">
+            <Text className="text-darkGrey dark:text-white text-lg font-medium">
               {!fetching
                 ? `$${profileUser.paymentInfo.out.toFixed(2)}`
                 : "--.--"}
@@ -150,7 +158,7 @@ export default function ProfileModal() {
             <Text className="text-gray-400 text-lg font-medium">
               Total received
             </Text>
-            <Text className="text-white text-lg font-medium">
+            <Text className="text-darkGrey dark:text-white text-lg font-medium">
               {!fetching
                 ? `$${profileUser.paymentInfo.in.toFixed(2)}`
                 : "--.--"}
@@ -158,17 +166,20 @@ export default function ProfileModal() {
           </View>
         </View>
         {fetching && (
-          <ScrollView className="bg-[#161618] w-full mx-auto rounded-lg p-4 space-y-4 mt-8">
+          <ScrollView className="bg-white dark:bg-darkGrey w-full mx-auto rounded-lg p-4 space-y-4 mt-8">
             {Array(3)
               .fill(null)
               .map((_, i) => (
-                <TransactionSkeletonLayout key={i} />
+                <TransactionSkeletonLayout
+                  key={i}
+                  isDark={colorScheme === "dark"}
+                />
               ))}
           </ScrollView>
         )}
         {!fetching && dates?.length === 0 && (
           <View className="mt-4">
-            <Text className="text-white text-center">
+            <Text className="text-darkGrey dark:text-white text-center">
               No payments yet with {profileUser?.username}
             </Text>
           </View>
@@ -180,12 +191,12 @@ export default function ProfileModal() {
               const transactionList = transactionsByDay[date].transactions;
               return (
                 <View key={date} className="w-full rounded-lg">
-                  <Text className="text-xl text-white font-medium mb-2.5">
+                  <Text className="text-xl text-darkGrey dark:text-white font-medium mb-2.5">
                     {isTodayOrYesterday(date) || (
                       <TimeAgo dateTo={new Date(date)} />
                     )}
                   </Text>
-                  <View className="bg-[#161618] w-full rounded-lg px-4 space-y-4">
+                  <View className="bg-white dark:bg-darkGrey w-full rounded-lg px-4 space-y-4">
                     {transactionList.map((transaction, index) => (
                       <TransactionItem
                         key={transaction.id}

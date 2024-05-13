@@ -14,12 +14,16 @@ import { useSendStore, useUserStore } from "../../store";
 import ExpenseItem from "../../components/expense-item";
 import Avatar from "../../components/avatar";
 import BalanceItem from "../../components/balance-item";
+import { useColorScheme } from "nativewind";
 
 type GroupOptions = "Expenses" | "Balances";
 
 export default function GroupPage() {
   const { group: localGroup } = useLocalSearchParams();
   const parsedGroup = JSON.parse(localGroup as string);
+
+  const { colorScheme } = useColorScheme();
+
   const [data, setData] = useState<any>(parsedGroup);
   const user = useUserStore((state) => state.user);
 
@@ -64,27 +68,38 @@ export default function GroupPage() {
   };
 
   return (
-    <View className="flex-1 flex-col bg-black">
+    <View className="flex-1 flex-col bg-absoluteWhite dark:bg-black">
       <Appbar.Header
         elevated={false}
         statusBarHeight={48}
-        className="bg-black text-white"
+        className="bg-absoluteWhite dark:bg-black text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
+          animated={false}
         />
         <Appbar.Content
           title={""}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           titleStyle={{ fontWeight: "bold" }}
         />
         <Appbar.Action
-          icon={() => <Cog size={24} color="#FFF" />}
+          icon={() => (
+            <Cog
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
           onPress={() =>
             router.push({
               pathname: "/app/group-settings-modal",
@@ -92,11 +107,14 @@ export default function GroupPage() {
             })
           }
           color="#fff"
+          animated={false}
           size={24}
         />
       </Appbar.Header>
       <View className="flex px-4 space-y-4">
-        <Text className="text-4xl text-white font-bold">{data.name}</Text>
+        <Text className="text-4xl text-darkGrey dark:text-white font-bold">
+          {data.name}
+        </Text>
         <View className="flex flex-row">
           {data.members &&
             data.members.map((member: any, index: number) => (
@@ -127,7 +145,7 @@ export default function GroupPage() {
           <SegmentSlider {...{ tabs, tab, setTab }} />
         </View>
         {tab === "Expenses" && (
-          <ScrollView className="bg-[#161618] w-full mx-auto h-auto rounded-xl px-4 space-y-4 mt-8">
+          <ScrollView className="bg-white dark:bg-darkGrey w-full mx-auto h-auto rounded-xl px-4 space-y-4 mt-8">
             {transactions?.map((transaction, index) => (
               <ExpenseItem
                 key={`expense-${index}`}
@@ -139,7 +157,7 @@ export default function GroupPage() {
           </ScrollView>
         )}
         {tab === "Balances" && (
-          <View className="bg-[#161618] w-full mx-auto rounded-xl px-4 space-y-4 mt-8">
+          <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-xl px-4 space-y-4 mt-8">
             {balances &&
               balances
                 .filter((balance: any) => balance.debtor?.id === user?.id)

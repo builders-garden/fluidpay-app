@@ -8,39 +8,51 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Share } from "react-native";
 import { useState } from "react";
 import { AmountChooser } from "../../components/amount-chooser";
+import { useColorScheme } from "nativewind";
 
 export default function SpecificRequestModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
   const [amount, setAmount] = useState(0);
+  const { colorScheme } = useColorScheme();
 
   if (!user) {
-    return <View className="flex-1 bg-black" />;
+    return <View className="flex-1 bg-white dark:bg-black" />;
   }
 
   return (
     <SafeAreaView
-      className="flex-1 flex-col bg-[#161618]"
+      className="flex-1 flex-col bg-white dark:bg-darkGrey"
       edges={{ top: "off" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
         statusBarHeight={0}
-        className="bg-[#161618] text-white"
+        className="bg-white dark:bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
-          icon={() => <ArrowLeft size={24} color="#FFF" />}
+          icon={() => (
+            <ArrowLeft
+              size={24}
+              color={colorScheme === "dark" ? "#FFF" : "#161618"}
+            />
+          )}
+          animated={false}
           onPress={() => {
             router.back();
           }}
-          color="#fff"
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={20}
         />
         <Appbar.Content
           title={"Request via link"}
-          color="#fff"
-          titleStyle={{ fontWeight: "600", color: "#FAFBFA", fontSize: 16 }}
+          color={colorScheme === "dark" ? "#FFF" : "#161618"}
+          titleStyle={{
+            fontWeight: "600",
+            color: colorScheme === "dark" ? "#FAFBFA" : "#161618",
+            fontSize: 16,
+          }}
         />
       </Appbar.Header>
       <KeyboardAvoidingView className="w-full" behavior="padding">
@@ -53,14 +65,15 @@ export default function SpecificRequestModal() {
             lagAutoFocus={false}
           />
 
-          <Text className="text-[#8F8F91] font-semibold">No fees</Text>
+          <Text className="text-mutedGrey font-semibold">No fees</Text>
 
           <View className="flex flex-grow" />
           <SafeAreaView className="flex flex-col w-full mb-24">
             <View className="mb-4">
               <AppButton
                 text="Create link"
-                variant="primary"
+                variant={amount === 0 ? "disabled" : "primary"}
+                disabled={amount === 0}
                 onPress={async () => {
                   await Share.share({
                     message: `gm! join me on fluidpay using this link: https://plink.finance/u/${user?.username}/request/${amount}`,

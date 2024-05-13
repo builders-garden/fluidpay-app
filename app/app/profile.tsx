@@ -13,8 +13,10 @@ import { shortenAddress } from "../../lib/utils";
 import AppButton from "../../components/app-button";
 import { updateMe, updateMyAvatar } from "../../lib/api";
 import { DBUser } from "../../store/interfaces";
+import { useColorScheme } from "nativewind";
 
 const userProfile = () => {
+  const { colorScheme } = useColorScheme();
   const { user: privyUser } = usePrivy();
   const { linkWithFarcaster } = useLinkWithFarcaster({
     onSuccess() {
@@ -131,7 +133,7 @@ const userProfile = () => {
       }
 
       if (user?.token) {
-        if (avatar) {
+        if (avatar && avatar !== user.avatarUrl) {
           await updateMyAvatar(user.token, avatar);
         }
 
@@ -147,19 +149,24 @@ const userProfile = () => {
   };
 
   return (
-    <View className="flex-1 bg-black h-full">
+    <View className="flex-1 bg-absoluteWhite dark:bg-black h-full">
       <View className="flex-1 h-full">
         <Appbar.Header
           elevated={false}
           statusBarHeight={48}
-          className="bg-transparent text-white"
+          className="bg-transparent text-darkGrey dark:text-white"
         >
           <Appbar.Action
-            icon={() => <ArrowLeft size={24} color="#FFF" />}
+            icon={() => (
+              <ArrowLeft
+                size={24}
+                color={colorScheme === "dark" ? "#FFF" : "#161618"}
+              />
+            )}
             onPress={() => {
               router.back();
             }}
-            color="#fff"
+            color={colorScheme === "dark" ? "#fff" : "#161618"}
             size={24}
             animated={false}
           />
@@ -188,7 +195,7 @@ const userProfile = () => {
             </Text>
           </Pressable>
 
-          <View className="bg-greyInput p-5 rounded-2xl mb-6 space-y-6 w-full">
+          <View className="bg-white dark:bg-[#232324] p-5 rounded-2xl mb-6 space-y-6 w-full">
             {details.map((detail, index) => (
               <Detail
                 key={detail.key}
@@ -231,7 +238,7 @@ const userProfile = () => {
                   />
                 )}
                 <View className="mb-1">
-                  <Text className="text-base text-white font-semibold">
+                  <Text className="text-base text-darkGrey dark:text-white font-semibold">
                     {farcasterAccount.display_name}
                   </Text>
                   <Text className="text-base text-mutedGrey font-semibold">
