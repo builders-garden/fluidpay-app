@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, View } from "react-native";
+import { View } from "react-native";
 import AppButton from "../app-button";
 import CodeInput from "./code-input";
 import EmailInput from "./email-input";
@@ -32,7 +32,7 @@ import { useChainStore } from "../../store/use-chain-store";
 import { sepolia } from "viem/chains";
 import { getPimlicoSmartAccountClient } from "../../lib/pimlico";
 
-export default function LoginForm({
+function LoginForm({
   loginStatus,
   setLoginStatus,
   setIsLoading,
@@ -165,48 +165,46 @@ export default function LoginForm({
   );
 
   return (
-    <>
-      <KeyboardAvoidingView className="w-full" behavior="padding">
-        <View className="flex flex-col items-center space-y-3 w-full mb-12">
-          {loginStatus === LoginStatus.INITIAL && (
-            <EmailInput
-              email={email!}
-              setEmail={(email) => setEmail(email)}
-              setLoginStatus={setLoginStatus}
-              setCode={setCode}
-              setIsLoading={setIsLoading}
-              setLoadingMessage={setLoadingMessage}
-            />
-          )}
+    <View className="flex flex-col items-center space-y-3 w-full">
+      {loginStatus === LoginStatus.INITIAL && (
+        <EmailInput
+          email={email!}
+          setEmail={(email) => setEmail(email)}
+          setLoginStatus={setLoginStatus}
+          setCode={setCode}
+          setIsLoading={setIsLoading}
+          setLoadingMessage={setLoadingMessage}
+        />
+      )}
 
-          {loginStatus === LoginStatus.SUCCESS_EMAIL && (
-            <CodeInput
-              code={code}
-              email={email!}
-              setCode={setCode}
-              setIsLoading={setIsLoading}
-              setLoginStatus={setLoginStatus}
-              setLoadingMessage={setLoadingMessage}
-              sendCode={sendCode}
-              loginWithCode={loginWithCode}
-            />
-          )}
+      {loginStatus === LoginStatus.SUCCESS_EMAIL && (
+        <CodeInput
+          code={code}
+          email={email!}
+          setCode={setCode}
+          setIsLoading={setIsLoading}
+          setLoginStatus={setLoginStatus}
+          setLoadingMessage={setLoadingMessage}
+          sendCode={sendCode}
+          loginWithCode={loginWithCode}
+        />
+      )}
 
-          {state.status === "error" && (
-            <View className="w-full ">
-              <AppButton
-                onPress={async () => {
-                  console.error("Try again");
-                  setEmail("");
-                  setCode("");
-                  await logout();
-                }}
-                text="Try again"
-              />
-            </View>
-          )}
+      {state.status === "error" && (
+        <View className="w-full ">
+          <AppButton
+            onPress={async () => {
+              console.error("Try again");
+              setEmail("");
+              setCode("");
+              await logout();
+            }}
+            text="Try again"
+          />
         </View>
-      </KeyboardAvoidingView>
-    </>
+      )}
+    </View>
   );
 }
+
+export default LoginForm;

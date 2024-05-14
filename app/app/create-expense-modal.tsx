@@ -126,7 +126,7 @@ export default function CreateExpenseModal() {
           </View>
         </View>
 
-        <ScrollView>
+        <ScrollView keyboardDismissMode="on-drag">
           <View className="flex space-y-4">
             <View className="mx-auto">
               <AmountChooser

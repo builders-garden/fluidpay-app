@@ -1,30 +1,18 @@
-import {
-  Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  Pressable,
-  SafeAreaView,
-  Text,
-  View,
-} from "react-native";
+import { Image, SafeAreaView, Text, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { useUserStore } from "../store";
 import { getUserEmbeddedWallet, usePrivy } from "@privy-io/expo";
-import * as LocalAuthentication from "expo-local-authentication";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { DBUser } from "../store/interfaces";
-import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import LoginForm from "../components/login/login-form";
 import { getMe } from "../lib/api";
-import { ScanFace } from "lucide-react-native";
-import AppButton from "../components/app-button";
-import CodeTextInput from "../components/code-text-input";
-import { useDisconnect } from "wagmi";
 import { useColorScheme } from "nativewind";
 import { LinearGradient } from "expo-linear-gradient";
+import Biometrics from "../components/login/biometrics";
+import DismissKeyboardHOC from "../components/hocs/dismiss-keyboard";
 
 export enum LoginStatus {
   INITIAL = "initial",
@@ -41,23 +29,15 @@ const Home = () => {
   const { colorScheme } = useColorScheme();
 
   const { user: storedUser, setUser } = useUserStore((state) => state);
-  const { disconnect } = useDisconnect();
-
   const [isFetchingUser, setIsFetchingUser] = useState(false);
   const [userFetchingCounter, setUserFetchingCounter] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
-  const [code, setCode] = useState<`${number}` | "">("");
-  const [codeError, setCodeError] = useState({
-    message: "",
-    count: 0,
-  });
   const [loginStatus, setLoginStatus] = useState<LoginStatus>(
     LoginStatus.INITIAL
   );
 
   const token = SecureStore.getItem(`token-${address}`);
-  const useBiometrics = !!SecureStore.getItem(`user-faceid-${address}`);
   const passcode = SecureStore.getItem("user-passcode");
 
   useEffect(() => {
@@ -74,40 +54,6 @@ const Home = () => {
         });
     }
   }, [address]);
-
-  const authenticatePin = () => {
-    if (code === passcode) {
-      router.push("/app/home");
-    } else {
-      setCodeError({
-        message: "Incorrect passcode. Please try again",
-        count: codeError.count + 1,
-      });
-    }
-  };
-
-  const authenticateBiometrics = async () => {
-    const auth = await LocalAuthentication.authenticateAsync({
-      promptMessage: "Login to Plink",
-    });
-    if (auth.success) {
-      router.push("/app/home");
-    }
-  };
-
-  const universalLogout = async () => {
-    try {
-      await SecureStore.deleteItemAsync(`token-${address}`);
-      await logout();
-      disconnect();
-
-      setUser(undefined);
-
-      router.replace("/");
-    } catch (error) {
-      console.error("Error logging out", error);
-    }
-  };
 
   const fetchUserData = async (token: string) => {
     try {
@@ -156,64 +102,12 @@ const Home = () => {
 
   if (!!token && storedUser && !!passcode) {
     return (
-      <SafeAreaView className="flex-1 bg-absoluteWhite dark:bg-black">
-        <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
-          <Pressable onPress={Keyboard.dismiss} className="px-4 flex-1 mb-12">
-            <Text className="text-4xl text-darkGrey dark:text-white font-semibold mb-1">
-              Welcome back 👋
-            </Text>
-
-            <Text className="text-xl text-mutedGrey font-normal mb-5">
-              @{storedUser.username}
-            </Text>
-
-            <View className="flex-row justify-center py-6">
-              {useBiometrics && (
-                <Pressable
-                  onPress={authenticateBiometrics}
-                  className="rounded-xl h-12 w-12 flex items-center justify-center bg-primary"
-                >
-                  <ScanFace size={24} color="#FFF" />
-                </Pressable>
-              )}
-            </View>
-
-            <Text className="text-mutedGrey text-sm text-center font-semibold mb-2">
-              Enter your passcode
-            </Text>
-            <CodeTextInput
-              code={code}
-              error={!!codeError.count}
-              errorCount={codeError.count}
-              setCode={setCode}
-              maxCodeLength={4}
-              codeBoxHeight={99}
-              hidden
-            />
-
-            {!!codeError.count && (
-              <Text className="text-center text-red-500 text-base mt-5">
-                {codeError.message}
-              </Text>
-            )}
-
-            <View className="flex-row justify-center items-center gap-2 mt-5">
-              <Text className="text-darkGrey dark:text-white">Not you?</Text>
-              <Pressable onPress={universalLogout}>
-                <Text className="text-primary font-semibold">Log out</Text>
-              </Pressable>
-            </View>
-
-            <SafeAreaView className="mt-auto">
-              <AppButton
-                text="Confirm"
-                variant={code.length < 4 ? "disabled" : "primary"}
-                onPress={authenticatePin}
-              />
-            </SafeAreaView>
-          </Pressable>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
+      <Biometrics
+        address={address!}
+        user={storedUser}
+        logout={logout}
+        setUser={setUser}
+      />
     );
   }
 
@@ -275,4 +169,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default DismissKeyboardHOC(Home);

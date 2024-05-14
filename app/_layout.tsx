@@ -85,7 +85,6 @@ const toastConfig: ToastConfig = {
 function AppLayout() {
   const { colorScheme } = useColorScheme();
 
-  console.log("theRootScheme", colorScheme);
   const url = Linking.useURL();
 
   useEffect(() => {
