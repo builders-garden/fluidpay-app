@@ -39,7 +39,7 @@ export default function ExpenseItem({
                 {description}
               </Text>
               <Text className="text-mutedGrey">
-                {paidBy.username} -{" "}
+                {paidBy.displayName} -{" "}
                 {(() => {
                   const distance = formatDistanceToNow(new Date(createdAt));
                   return distance.startsWith("less than a minute") ? (

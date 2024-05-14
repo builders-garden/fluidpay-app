@@ -187,11 +187,17 @@ export default function SplitAmong({
                 .filter((split) => split.userId === member.userId)
                 .map((split) =>
                   splitType === SplitType.PERCENTAGE ? (
-                    <Text className="text-darkGrey dark:text-white">
+                    <Text
+                      key={split.userId}
+                      className="text-darkGrey dark:text-white"
+                    >
                       {split.amount.toFixed(0)}%
                     </Text>
                   ) : (
-                    <Text className="text-darkGrey dark:text-white">
+                    <Text
+                      key={split.userId}
+                      className="text-darkGrey dark:text-white"
+                    >
                       ${split.amount.toFixed(2)}
                     </Text>
                   )
