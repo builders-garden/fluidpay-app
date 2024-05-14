@@ -79,7 +79,7 @@ export default function Send() {
           placeholder="@username"
           onChangeText={onChangeText}
           value={searchQuery}
-          className="bg-darkGrey/10 dark:bg-white/10 !text-darkGrey dark:!text-white w-[80%] mb-1"
+          className="bg-darkGrey/10 dark:bg-[#ffffff1a] !text-darkGrey dark:!text-white w-[80%] mb-1"
           autoCapitalize="none"
           autoComplete="off"
           autoCorrect={false}

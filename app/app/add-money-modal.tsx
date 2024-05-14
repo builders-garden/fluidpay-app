@@ -1,10 +1,4 @@
-import {
-  Pressable,
-  View,
-  Text,
-  Image,
-  KeyboardAvoidingView,
-} from "react-native";
+import { Pressable, View, Text, Image } from "react-native";
 import { Link, router } from "expo-router";
 import { Appbar } from "react-native-paper";
 import React, { useRef } from "react";
@@ -18,8 +12,9 @@ import Withdraw from "../../components/bottom-sheets/withdraw";
 import BottomSheet from "@gorhom/bottom-sheet";
 import Deposit from "../../components/bottom-sheets/deposit";
 import { useColorScheme } from "nativewind";
+import DismissKeyboardHOC from "../../components/hocs/dismiss-keyboard";
 
-export default function AddMoneyModal() {
+function AddMoneyModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
   const { colorScheme } = useColorScheme();
@@ -38,7 +33,7 @@ export default function AddMoneyModal() {
   const depositOptions = getDepositOptions(user!.smartAccountAddress);
 
   return (
-    <KeyboardAvoidingView className="w-full flex-1" behavior="padding">
+    <>
       <View className="flex-1 flex-col bg-absoluteWhite dark:bg-black">
         {!isPresented && <Link href="../">Dismiss</Link>}
         <Appbar.Header
@@ -105,7 +100,7 @@ export default function AddMoneyModal() {
           />
         )}
       </GestureHandlerRootView>
-    </KeyboardAvoidingView>
+    </>
   );
 }
 
@@ -179,3 +174,5 @@ const getDepositOptions = (address: Address) => [
     variant: "ghost",
   },
 ];
+
+export default DismissKeyboardHOC(AddMoneyModal, false);

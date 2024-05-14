@@ -1,15 +1,16 @@
 import { router } from "expo-router";
-import { ArrowLeft, Search, X, XCircle } from "lucide-react-native";
+import { ArrowLeft } from "lucide-react-native";
 import { useState } from "react";
 import { SafeAreaView, TextInput, Text, View, Pressable } from "react-native";
-import { Appbar, Badge, Checkbox, Searchbar } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import AppButton from "../../components/app-button";
-import { createGroup, getUsers } from "../../lib/api";
+import { createGroup } from "../../lib/api";
 import { useGroupsStore, useUserStore } from "../../store";
 import SearchGroupMembers from "../../components/search-group-members";
 import { useColorScheme } from "nativewind";
+import DismissKeyboardHOC from "../../components/hocs/dismiss-keyboard";
 
-export default function CreateGroupPage() {
+function CreateGroupPage() {
   const [groupName, setGroupName] = useState("");
   const [creatingGroup, setCreatingGroup] = useState(false);
   const addGroup = useGroupsStore((state) => state.addGroup);
@@ -108,3 +109,5 @@ export default function CreateGroupPage() {
     </View>
   );
 }
+
+export default DismissKeyboardHOC(CreateGroupPage);
