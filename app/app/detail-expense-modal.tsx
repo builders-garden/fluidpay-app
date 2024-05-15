@@ -95,9 +95,10 @@ export default function DetailExpenseModal() {
       amount,
       date: date.toISOString(),
       splitAmongIds: groupData.members
-        .filter((member: any, index: number) => selected[index])
+        .filter((member: any, index: number) => !!selected[index])
         .map((member: any) => member.user.id),
     };
+
     await updateGroupExpense(
       user!.token,
       { id: expenseData.groupId, expenseId: expenseData.id },
@@ -219,7 +220,13 @@ export default function DetailExpenseModal() {
             {groupData?.members?.map((member: any, index: number) => (
               <View className="flex flex-row items-center" key={index}>
                 <Checkbox.Android
-                  status={selected[index] ? "checked" : "unchecked"}
+                  status={
+                    updateButtonDisabled
+                      ? "indeterminate"
+                      : selected[index]
+                        ? "checked"
+                        : "unchecked"
+                  }
                   color="#FF238C"
                   uncheckedColor="#8F8F91"
                   onPress={() => {
