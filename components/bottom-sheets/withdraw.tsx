@@ -44,7 +44,7 @@ const Withdraw = ({
   // renders
   return (
     <View
-      className="flex-1 p-6 bg-white/70 dark:bg-black/70 absolute w-full bottom-0 z-10"
+      className="flex-1 p-6 bg-black/70 absolute w-full bottom-0 z-10"
       style={{ height: sceenHeight }}
     >
       <BottomSheet

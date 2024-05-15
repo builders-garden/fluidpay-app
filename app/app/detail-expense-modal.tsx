@@ -17,7 +17,7 @@ import {
 } from "../../lib/api";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import SelectPaidByModal from "./select-paid-by-modal";
+import SelectPaidByModal from "../../components/bottom-sheets/select-paid-by";
 import DatePicker from "../../components/date-picker";
 import { useColorScheme } from "nativewind";
 import DeleteExpenseModal from "../../components/modals/delete-expense";
@@ -42,12 +42,13 @@ export default function DetailExpenseModal() {
   const [category, setCategory] = useState<string | null>(expenseData.category);
   const [date, setDate] = useState(new Date(expenseData.date));
   const [isLoading, setIsLoading] = useState(false);
+  const [paidByModalOpen, setPaidByModalOpen] = useState(false);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+    setPaidByModalOpen(true);
   }, []);
 
   useEffect(() => {
@@ -263,12 +264,15 @@ export default function DetailExpenseModal() {
           </View>
         </SafeAreaView>
       </View>
-      <SelectPaidByModal
-        bottomSheetModalRef={bottomSheetModalRef}
-        members={groupData.members}
-        paidById={paidById}
-        setPaidById={setPaidById}
-      />
+      {paidByModalOpen && (
+        <SelectPaidByModal
+          bottomSheetModalRef={bottomSheetModalRef}
+          members={groupData.members}
+          paidById={paidById!}
+          setPaidById={setPaidById}
+          handleClose={() => setPaidByModalOpen(false)}
+        />
+      )}
       <DeleteExpenseModal
         visible={deleteExpenseModalVisible}
         hideModal={() => setDeleteExpenseModalVisible(false)}

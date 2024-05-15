@@ -2,9 +2,7 @@ import { ChevronDown } from "lucide-react-native";
 import { View, Pressable, Text } from "react-native";
 import Avatar from "./avatar";
 import { Checkbox } from "react-native-paper";
-import SelectSplitTypeModal, {
-  SplitType,
-} from "../app/app/select-split-type-modal";
+import { SplitType } from "../components/bottom-sheets/select-split-type";
 import { COLORS } from "../constants/colors";
 import { useEffect } from "react";
 import { useUserStore } from "../store";

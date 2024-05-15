@@ -1,5 +1,12 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  Keyboard,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
@@ -12,11 +19,14 @@ import RNPickerSelect from "react-native-picker-select";
 import { createGroupExpense } from "../../lib/api";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import SelectPaidByModal from "./select-paid-by-modal";
 import DatePicker from "../../components/date-picker";
-import SelectSplitTypeModal, { SplitType } from "./select-split-type-modal";
+import SelectPaidByModal from "../../components/bottom-sheets/select-paid-by";
+import SelectSplitTypeModal, {
+  SplitType,
+} from "../../components/bottom-sheets/select-split-type";
 import SplitAmong, { SplitAmongType } from "../../components/split-among";
 import { useColorScheme } from "nativewind";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function CreateExpenseModal() {
   const { group } = useLocalSearchParams();
@@ -42,6 +52,8 @@ export default function CreateExpenseModal() {
   const [date, setDate] = useState(new Date());
   const [splitType, setSplitType] = useState<SplitType>(SplitType.PERCENTAGE);
   const [splitAmong, setSplitAmong] = useState<SplitAmongType[]>([]);
+  const [paidByModalOpen, setPaidByModalOpen] = useState(false);
+  const [splitTypeModalOpen, setSplitTypeModalOpen] = useState(false);
   const createExpense = async () => {
     setIsLoading(true);
     const expenseData = {
@@ -64,11 +76,15 @@ export default function CreateExpenseModal() {
 
   // callbacks
   const handlePaidByPresentModalPress = useCallback(() => {
-    paidByBottomSheetModalRef.current?.present();
+    // paidByBottomSheetModalRef.current?.present();
+    Keyboard.dismiss();
+    setPaidByModalOpen(true);
   }, []);
 
   const handleSplitOptionsPresentModalPress = useCallback(() => {
-    splitOptionsBottomSheetModalRef.current?.present();
+    // splitOptionsBottomSheetModalRef.current?.present();
+    Keyboard.dismiss();
+    setSplitTypeModalOpen(true);
   }, []);
 
   const getUserPaidBy = () => {
@@ -101,6 +117,7 @@ export default function CreateExpenseModal() {
           }}
           color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
+          animated={false}
         />
         <Appbar.Content
           title=""
@@ -172,20 +189,23 @@ export default function CreateExpenseModal() {
               />
             </View>
           </View>
-          <SplitAmong
-            members={data.members}
-            selected={selected}
-            setSelected={setSelected}
-            paidById={paidById}
-            amount={amount}
-            splitType={splitType}
-            setSplitType={setSplitType}
-            splitAmong={splitAmong}
-            setSplitAmong={setSplitAmong}
-            handleSplitOptionsPresentModalPress={
-              handleSplitOptionsPresentModalPress
-            }
-          />
+          <GestureHandlerRootView>
+            <SplitAmong
+              members={data.members}
+              selected={selected}
+              setSelected={setSelected}
+              paidById={paidById}
+              amount={amount}
+              splitType={splitType}
+              setSplitType={setSplitType}
+              splitAmong={splitAmong}
+              setSplitAmong={setSplitAmong}
+              handleSplitOptionsPresentModalPress={() => {
+                handleSplitOptionsPresentModalPress();
+                console.log("Split options present modal press");
+              }}
+            />
+          </GestureHandlerRootView>
         </ScrollView>
         <SafeAreaView className="mt-auto">
           <AppButton
@@ -196,17 +216,25 @@ export default function CreateExpenseModal() {
           />
         </SafeAreaView>
       </View>
-      <SelectPaidByModal
-        bottomSheetModalRef={paidByBottomSheetModalRef}
-        members={data.members}
-        paidById={paidById}
-        setPaidById={setPaidById}
-      />
-      <SelectSplitTypeModal
-        selectedSplitType={splitType}
-        bottomSheetModalRef={splitOptionsBottomSheetModalRef}
-        setSplitType={setSplitType}
-      />
+      <GestureHandlerRootView>
+        {paidByModalOpen && (
+          <SelectPaidByModal
+            bottomSheetModalRef={paidByBottomSheetModalRef}
+            members={data.members}
+            paidById={paidById}
+            setPaidById={(id) => setPaidById(id)}
+            handleClose={() => setPaidByModalOpen(false)}
+          />
+        )}
+        {splitTypeModalOpen && (
+          <SelectSplitTypeModal
+            selectedSplitType={splitType}
+            bottomSheetModalRef={splitOptionsBottomSheetModalRef}
+            setSplitType={setSplitType}
+            handleClose={() => setSplitTypeModalOpen(false)}
+          />
+        )}
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 }
