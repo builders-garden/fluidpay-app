@@ -4,11 +4,7 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { DollarSign, Percent } from "lucide-react-native";
 import { COLORS } from "../../constants/colors";
 import { useColorScheme } from "nativewind";
-
-export enum SplitType {
-  PERCENTAGE = "percentage",
-  AMOUNT = "amount",
-}
+import { SplitType } from "../../lib/api";
 
 const sceenHeight = Dimensions.get("window").height;
 

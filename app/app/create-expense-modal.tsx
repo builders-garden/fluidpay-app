@@ -16,19 +16,19 @@ import { AmountChooser } from "../../components/amount-chooser";
 import { useCallback, useRef, useState } from "react";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
-import { createGroupExpense } from "../../lib/api";
+import { createGroupExpense, SplitType } from "../../lib/api";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import DatePicker from "../../components/date-picker";
 import SelectPaidByModal from "../../components/bottom-sheets/select-paid-by";
-import SelectSplitTypeModal, {
-  SplitType,
-} from "../../components/bottom-sheets/select-split-type";
+import SelectSplitTypeModal from "../../components/bottom-sheets/select-split-type";
 import SplitAmong, { SplitAmongType } from "../../components/split-among";
 import { useColorScheme } from "nativewind";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import DismissKeyboardHOC from "../../components/hocs/dismiss-keyboard";
+import Toast from "react-native-toast-message";
 
-export default function CreateExpenseModal() {
+function CreateExpenseModal() {
   const { group } = useLocalSearchParams();
   const data = JSON.parse(group as string);
 
@@ -54,21 +54,57 @@ export default function CreateExpenseModal() {
   const [splitAmong, setSplitAmong] = useState<SplitAmongType[]>([]);
   const [paidByModalOpen, setPaidByModalOpen] = useState(false);
   const [splitTypeModalOpen, setSplitTypeModalOpen] = useState(false);
+
   const createExpense = async () => {
-    setIsLoading(true);
-    const expenseData = {
-      category: category!,
-      paidById,
-      description,
-      date: date.toISOString(),
-      amount,
-      splitAmongIds: data.members
-        .filter((member: any, index: number) => selected[index])
-        .map((member: any) => member.user.id),
-    };
-    await createGroupExpense(user!.token, { id: data.id }, expenseData);
-    router.back();
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const activeSplits = data.members.filter(
+        (_: unknown, index: number) => !!selected[index].selected
+      );
+      const getAmount = (member: any) =>
+        splitAmong.find((split) => split.userId === member.user.id)?.amount;
+
+      const totalSelected = activeSplits.reduce((acc: number, member: any) => {
+        return acc + (getAmount(member) || 0);
+      }, 0);
+
+      if (totalSelected !== amount) {
+        throw new Error("Total amount mismatch.");
+      }
+
+      const expenseData = {
+        category: category!,
+        paidById,
+        description,
+        date: date.toISOString(),
+        amount,
+        splitAmong: activeSplits.map((member: any) => ({
+          userId: member.user.id,
+          amount: getAmount(member),
+          type: splitType,
+        })),
+      };
+
+      const res = await createGroupExpense(
+        user!.token,
+        { id: data.id },
+        expenseData
+      );
+
+      if (!!res.error) {
+        throw new Error(res.error.message);
+      }
+      router.back();
+    } catch (error) {
+      console.error("Creating Expense", error);
+      Toast.show({
+        type: "error",
+        text1: (error as any).message || "An error occurred",
+        position: "bottom",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const paidByBottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -76,13 +112,11 @@ export default function CreateExpenseModal() {
 
   // callbacks
   const handlePaidByPresentModalPress = useCallback(() => {
-    // paidByBottomSheetModalRef.current?.present();
     Keyboard.dismiss();
     setPaidByModalOpen(true);
   }, []);
 
   const handleSplitOptionsPresentModalPress = useCallback(() => {
-    // splitOptionsBottomSheetModalRef.current?.present();
     Keyboard.dismiss();
     setSplitTypeModalOpen(true);
   }, []);
@@ -94,15 +128,17 @@ export default function CreateExpenseModal() {
           .username;
   };
 
+  const disableCreateButton = !amount;
+
   return (
     <SafeAreaView
       className="flex-1 flex-col bg-absoluteWhite dark:bg-darkGrey"
-      edges={{ top: "additive" }}
+      edges={{ top: "off" }}
     >
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
-        statusBarHeight={0}
+        statusBarHeight={48}
         className="bg-absoluteWhite dark:bg-darkGrey text-darkGrey dark:text-white"
       >
         <Appbar.Action
@@ -143,7 +179,7 @@ export default function CreateExpenseModal() {
           </View>
         </View>
 
-        <ScrollView keyboardDismissMode="on-drag">
+        <ScrollView>
           <View className="flex space-y-4">
             <View className="mx-auto">
               <AmountChooser
@@ -193,31 +229,31 @@ export default function CreateExpenseModal() {
               />
             </View>
           </View>
-          <GestureHandlerRootView>
-            <SplitAmong
-              members={data.members}
-              selected={selected}
-              setSelected={setSelected}
-              paidById={paidById}
-              amount={amount}
-              splitType={splitType}
-              setSplitType={setSplitType}
-              splitAmong={splitAmong}
-              setSplitAmong={setSplitAmong}
-              handleSplitOptionsPresentModalPress={() => {
-                handleSplitOptionsPresentModalPress();
-              }}
-            />
-          </GestureHandlerRootView>
+
+          <SplitAmong
+            members={data.members}
+            selected={selected}
+            setSelected={setSelected}
+            paidById={paidById}
+            amount={amount}
+            splitType={splitType}
+            setSplitType={setSplitType}
+            splitAmong={splitAmong}
+            setSplitAmong={setSplitAmong}
+            handleSplitOptionsPresentModalPress={() => {
+              handleSplitOptionsPresentModalPress();
+            }}
+          />
         </ScrollView>
-        <SafeAreaView className="mt-auto">
+        <View className="pt-5">
           <AppButton
             text="Create"
             variant="primary"
             loading={isLoading}
+            disabled={isLoading || disableCreateButton}
             onPress={() => createExpense()}
           />
-        </SafeAreaView>
+        </View>
       </View>
       <GestureHandlerRootView>
         {paidByModalOpen && (
@@ -241,3 +277,5 @@ export default function CreateExpenseModal() {
     </SafeAreaView>
   );
 }
+
+export default DismissKeyboardHOC(CreateExpenseModal);

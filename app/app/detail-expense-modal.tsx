@@ -88,25 +88,44 @@ export default function DetailExpenseModal() {
   };
 
   const updateExpense = async () => {
-    setIsLoading(true);
-    const updatedExpenseData = {
-      category: category!,
-      paidById,
-      description,
-      amount,
-      date: date.toISOString(),
-      splitAmongIds: groupData.members
-        .filter((member: any, index: number) => !!selected[index])
-        .map((member: any) => member.user.id),
-    };
+    try {
+      setIsLoading(true);
+      const updatedExpenseData = {
+        category: category!,
+        paidById,
+        description,
+        amount,
+        date: date.toISOString(),
+        splitAmongIds: groupData.members
+          .filter((member: any, index: number) => !!selected[index])
+          .map((member: any) => member.user.id),
+        // TODO: Fix this
+        // splitAmong: groupData.members
+        //   .filter((_: unknown, index: number) => !!selected[index])
+        //   .map((member: any) => ({
+        //     userId: member.user.id,
+        //     amount: splitAmong.find((split) => split.userId === member.user.id)
+        //       ?.amount,
+        //     type: splitType,
+        //   })),
+      };
 
-    await updateGroupExpense(
-      user!.token,
-      { id: expenseData.groupId, expenseId: expenseData.id },
-      updatedExpenseData
-    );
-    setIsLoading(false);
-    router.back();
+      const res = await updateGroupExpense(
+        user!.token,
+        { id: expenseData.groupId, expenseId: expenseData.id },
+        updatedExpenseData
+      );
+
+      if (!!res.error) {
+        throw new Error(res.error.message);
+      }
+
+      router.back();
+    } catch (error) {
+      console.error("Creating Expense", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
