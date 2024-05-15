@@ -206,7 +206,6 @@ export default function CreateExpenseModal() {
               setSplitAmong={setSplitAmong}
               handleSplitOptionsPresentModalPress={() => {
                 handleSplitOptionsPresentModalPress();
-                console.log("Split options present modal press");
               }}
             />
           </GestureHandlerRootView>
