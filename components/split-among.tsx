@@ -115,7 +115,10 @@ export default function SplitAmong({
                   setSelected(newSelected);
                 }}
               />
-              <Avatar name={member.user.displayName.charAt(0).toUpperCase()} />
+              <Avatar
+                name={member.user.displayName.charAt(0).toUpperCase()}
+                uri={member.user.avatarUrl}
+              />
               <View className="flex flex-col ">
                 <Text className="text-darkGrey dark:text-white font-semibold text-lg">
                   {member.user.username === user?.username

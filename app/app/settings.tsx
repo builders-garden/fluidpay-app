@@ -84,6 +84,7 @@ export default function Settings() {
               <Avatar
                 name={user?.displayName?.charAt(0)?.toUpperCase() || ""}
                 size={64}
+                uri={user?.avatarUrl}
               />
               <Text className="text-white text-4xl text-center font-semibold">
                 @{user?.username}

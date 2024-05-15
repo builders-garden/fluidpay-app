@@ -226,6 +226,7 @@ export default function DetailExpenseModal() {
                 />
                 <Avatar
                   name={member.user.displayName.charAt(0).toUpperCase()}
+                  uri={member.user.avatarUrl}
                 />
                 <Text className="text-darkGrey dark:text-white font-semibold text-lg ml-2">
                   {member.user.username === user?.username

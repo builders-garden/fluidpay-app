@@ -49,6 +49,7 @@ export default function TransactionItem({
               name={(isFrom ? payee.displayName : payer.displayName)
                 .charAt(0)
                 .toUpperCase()}
+              uri={isFrom ? payee.avatarUrl : payer.avatarUrl}
             />
           </Pressable>
 
