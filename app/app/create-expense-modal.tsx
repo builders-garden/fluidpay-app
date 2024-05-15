@@ -173,8 +173,12 @@ export default function CreateExpenseModal() {
             <View className="bg-white dark:bg-[#232324] rounded-lg px-3 py-4 mb-4">
               <RNPickerSelect
                 style={{
-                  inputAndroid: { color: "white" },
-                  inputIOS: { color: "white" },
+                  inputAndroid: {
+                    color: colorScheme === "dark" ? "white" : "black",
+                  },
+                  inputIOS: {
+                    color: colorScheme === "dark" ? "white" : "black",
+                  },
                 }}
                 value={category}
                 placeholder={{ label: "Select a category", value: null }}
