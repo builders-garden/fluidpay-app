@@ -1,4 +1,11 @@
-import { View, Text, Pressable, ImageBackground, Image } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  ImageBackground,
+  Image,
+  Appearance,
+} from "react-native";
 import { Appbar } from "react-native-paper";
 import { Redirect, router } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -6,11 +13,10 @@ import Avatar from "../../components/avatar";
 import { shortenAddress } from "../../lib/utils";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import { useUserStore } from "../../store";
-import React, { useContext } from "react";
+import React from "react";
 import {
   QrCode,
   Bell,
-  LifeBuoy,
   Shield,
   LogOut,
   ArrowLeft,
@@ -68,11 +74,10 @@ export default function Settings() {
                   <Moon size={24} color="#FFF" />
                 )
               }
-              onPress={async () => {
-                SecureStore.setItem(
-                  "colorScheme",
-                  colorScheme === "dark" ? "light" : "dark"
-                );
+              onPress={() => {
+                const newScheme = colorScheme === "dark" ? "light" : "dark";
+                SecureStore.setItem("colorScheme", newScheme);
+                Appearance.setColorScheme(newScheme);
                 toggleColorScheme();
               }}
               color="#fff"

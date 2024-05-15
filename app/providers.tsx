@@ -1,6 +1,7 @@
 import React, { createContext, useEffect } from "react";
 import { useColorScheme } from "nativewind";
 import * as SecureStore from "expo-secure-store";
+import { Appearance } from "react-native";
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -23,7 +24,11 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
           mode = "dark";
         }
         await SecureStore.setItemAsync("colorScheme", mode);
-        setColorScheme(mode === "light" ? "light" : "dark");
+
+        const scheme = mode === "light" ? "light" : "dark";
+        Appearance.setColorScheme(scheme);
+
+        setColorScheme(scheme);
       } catch (error) {
         console.error("Error reading mode:", error);
       }
