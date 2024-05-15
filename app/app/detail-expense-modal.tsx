@@ -20,6 +20,7 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import SelectPaidByModal from "./select-paid-by-modal";
 import DatePicker from "../../components/date-picker";
 import { useColorScheme } from "nativewind";
+import DeleteExpenseModal from "../../components/modals/delete-expense";
 
 export default function DetailExpenseModal() {
   const { colorScheme } = useColorScheme();
@@ -35,6 +36,8 @@ export default function DetailExpenseModal() {
   );
   const [paidById, setPaidById] = useState<number | null>(user?.id!);
   const [updateButtonDisabled, setUpdateButtonDisabled] = useState(true);
+  const [deleteExpenseModalVisible, setDeleteExpenseModalVisible] =
+    useState(false);
   const navigation = useNavigation();
   const [category, setCategory] = useState<string | null>(expenseData.category);
   const [date, setDate] = useState(new Date(expenseData.date));
@@ -61,7 +64,7 @@ export default function DetailExpenseModal() {
   }, []);
 
   const deleteExpense = async () => {
-    const result = await deleteGroupExpense(user!.token, {
+    await deleteGroupExpense(user!.token, {
       id: groupData!.id,
       expenseId: expenseData.id,
     });
@@ -135,11 +138,12 @@ export default function DetailExpenseModal() {
         />
         <Appbar.Action
           icon={() => <Trash2 size={24} color="red" />}
-          onPress={async () => {
-            await deleteExpense();
+          onPress={() => {
+            setDeleteExpenseModalVisible(true);
           }}
           color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
+          animated={false}
         />
       </Appbar.Header>
       <View className="flex-1 px-4">
@@ -257,6 +261,11 @@ export default function DetailExpenseModal() {
         members={groupData.members}
         paidById={paidById}
         setPaidById={setPaidById}
+      />
+      <DeleteExpenseModal
+        visible={deleteExpenseModalVisible}
+        hideModal={() => setDeleteExpenseModalVisible(false)}
+        handleDelete={deleteExpense}
       />
     </SafeAreaView>
   );
