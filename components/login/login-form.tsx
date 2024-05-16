@@ -61,6 +61,7 @@ function LoginForm({
   const { state, sendCode, loginWithCode } = useLoginWithEmail({
     onError: (error) => {
       console.error("ERRRORRRR", error);
+      setIsLoading(false);
       setLoginStatus(LoginStatus.CODE_ERROR);
     },
     onLoginSuccess(user, isNewUser) {
@@ -70,8 +71,6 @@ function LoginForm({
       });
     },
   });
-
-  console.log("user_here", wallet);
 
   useEffect(() => {
     if (state.status === "done" && user) {
@@ -83,6 +82,7 @@ function LoginForm({
             router.push(path);
           })
           .catch((e) => {
+            console.error("Error Handling Connection", e);
             throw new Error(e);
           });
       } catch (e) {
@@ -109,34 +109,29 @@ function LoginForm({
 
   const handleConnection = useCallback(
     async (user: PrivyUser): Promise<string> => {
-      console.log("this shit is here");
       setIsLoading(true);
       if (isNotCreated(wallet)) {
-        console.log("this shit doesn't have wallet");
         setLoadingMessage("Creating wallet...");
         await wallet.create!();
-        console.log("this shit now has wallet");
       }
 
       const address = getUserEmbeddedWallet(user)?.address;
 
-      console.log("this is it here", { address });
       setLoadingMessage("Signing in...");
       const { message, nonce } = await getAuthNonce();
-      console.log("this shit now has gotten auth nonce");
+
       const provider = await wallet.getProvider!();
-      console.log("this shit now has gotten provider");
+
       const signedMessage = await signMessageWithPrivy(
         provider,
         message as `0x${string}`
       );
-      console.log("this shit now has signed message");
+
       const smartAccount = await getPimlicoSmartAccountClient(
         address as `0x${string}`,
         chain,
         wallet
       );
-      console.log("this shit now has smart account");
 
       const { isNewUser, token } = await signIn({
         address: address || getUserEmbeddedWallet(user)?.address!,
@@ -145,7 +140,6 @@ function LoginForm({
         nonce,
       });
 
-      console.log("this shit now has signed in");
       await SecureStore.setItemAsync(`token-${address}`, token);
       if (isNewUser) {
         return "/onboarding";

@@ -165,3 +165,5 @@ export function debounce<T extends (...args: any[]) => any>(
     timeoutId = setTimeout(() => func(...args), delay);
   };
 }
+
+export type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;

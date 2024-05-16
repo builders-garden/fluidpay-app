@@ -3,11 +3,21 @@ import { SafeAreaView, Text, View } from "react-native";
 import { ScanFace } from "lucide-react-native";
 
 import AppButton from "../components/app-button";
-import { enableFaceID } from "../lib/auth";
+import { enableFaceID, getAuthType } from "../lib/auth";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
+import { useEffect, useState } from "react";
+import { UnwrapPromise } from "../lib/utils";
 
 const SetFaceID = () => {
   const { address } = usePrivyWagmiProvider();
+  const [authTypeText, setAuthType] =
+    useState<UnwrapPromise<ReturnType<typeof getAuthType>>>(null);
+
+  useEffect(() => {
+    getAuthType().then((authType) => {
+      setAuthType(authType);
+    });
+  }, []);
 
   return (
     <SafeAreaView className="flex-1">
@@ -15,7 +25,7 @@ const SetFaceID = () => {
         <ScanFace size={150} color="#FF238C" />
 
         <Text className="text-darkGrey dark:text-white text-4xl text-center font-semibold my-5">
-          Face Recognition
+          {authTypeText} Recognition
         </Text>
         <Text className="text-xl text-darkGrey dark:text-white text-center font-semibold">
           For even faster and more secure access.

@@ -119,7 +119,7 @@ const Home = () => {
       }
       className="h-full"
     >
-      <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4 bg-transparent">
+      <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4 mb-5 bg-transparent">
         <View className="text-center flex flex-col space-y-4 justify-center items-center">
           <Image
             className="mt-24 h-14 w-56"
@@ -169,4 +169,4 @@ const Home = () => {
   );
 };
 
-export default DismissKeyboardHOC(Home);
+export default DismissKeyboardHOC(Home, false);

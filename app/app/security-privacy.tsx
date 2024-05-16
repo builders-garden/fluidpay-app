@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, View } from "react-native";
 import { router } from "expo-router";
 import { Appbar, Switch } from "react-native-paper";
 import AppButton from "../../components/app-button";
 import { ArrowLeft, ScanFace, Search, Users2 } from "lucide-react-native";
 import * as SecureStore from "expo-secure-store";
-import { disableFaceID, enableFaceID } from "../../lib/auth";
+import { disableFaceID, enableFaceID, getAuthType } from "../../lib/auth";
 import { usePrivyWagmiProvider } from "@buildersgarden/privy-wagmi-provider";
 import { useColorScheme } from "nativewind";
+import { UnwrapPromise } from "../../lib/utils";
 
 export default function SecurityPrivacy() {
   const { colorScheme } = useColorScheme();
@@ -15,13 +16,26 @@ export default function SecurityPrivacy() {
   const [faceId, setFaceID] = useState(
     !!SecureStore.getItem(`user-faceid-${address}`)
   );
+  const [authTypeText, setAuthType] =
+    useState<UnwrapPromise<ReturnType<typeof getAuthType>>>(null);
+
+  useEffect(() => {
+    getAuthType().then((authType) => {
+      setAuthType(authType);
+    });
+  }, []);
 
   const handleChangeFaceID = async () => {
     if (faceId) {
       await disableFaceID(address!);
       setFaceID(false);
     } else {
-      await enableFaceID(address!);
+      const response = await enableFaceID(address!);
+      console.log("theRes", response);
+      if (response !== "success") {
+        setFaceID(false);
+        return;
+      }
       setFaceID(true);
     }
   };
@@ -66,21 +80,23 @@ export default function SecurityPrivacy() {
             text="Export private key"
           />
         </View>
-        <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl mt-8 p-4">
-          <View className="flex flex-row items-center justify-between">
-            <View className="flex flex-row items-center space-x-4">
-              <ScanFace size={24} color="#3F89FF" />
-              <Text className="text-darkGrey dark:text-white font-semibold">
-                Sign in with Face ID
-              </Text>
+        {!!authTypeText && (
+          <View className="bg-white dark:bg-darkGrey w-full mx-auto rounded-2xl mt-8 p-4">
+            <View className="flex flex-row items-center justify-between">
+              <View className="flex flex-row items-center space-x-4">
+                <ScanFace size={24} color="#3F89FF" />
+                <Text className="text-darkGrey dark:text-white font-semibold">
+                  Sign in with {authTypeText}
+                </Text>
+              </View>
+              <Switch
+                value={faceId}
+                onChange={handleChangeFaceID}
+                trackColor={{ true: "#FF238C" }}
+              />
             </View>
-            <Switch
-              value={faceId}
-              onChange={handleChangeFaceID}
-              trackColor={{ true: "#FF238C" }}
-            />
           </View>
-        </View>
+        )}
         <Text className="text-darkGrey dark:text-white font-semibold">
           Privacy
         </Text>
