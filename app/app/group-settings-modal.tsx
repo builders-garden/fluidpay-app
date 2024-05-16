@@ -1,22 +1,20 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import {
-  ActivityIndicator,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import { Appbar, Badge, Searchbar } from "react-native-paper";
+import { ActivityIndicator, Text, TextInput, View } from "react-native";
+import { Appbar } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
-import { ArrowLeft, Search, Trash2 } from "lucide-react-native";
+import { ArrowLeft, Trash2 } from "lucide-react-native";
 import AppButton from "../../components/app-button";
 import { useState } from "react";
-import { deleteGroup, getUsers, updateGroup } from "../../lib/api";
+import { deleteGroup, updateGroup } from "../../lib/api";
 import SearchGroupMembers from "../../components/search-group-members";
 import { useColorScheme } from "nativewind";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import DeleteGroupModal from "../../components/modals/delete-group";
+import DismissKeyboardHOC from "../../components/hocs/dismiss-keyboard";
+import UpdateGroupMembersModal from "../../components/modals/update-group-members";
 
-export default function GroupSettingsModal() {
+function GroupSettingsModal() {
   const isPresented = router.canGoBack();
   const user = useUserStore((state) => state.user);
   const { group: localGroup } = useLocalSearchParams();
@@ -24,13 +22,16 @@ export default function GroupSettingsModal() {
 
   const { colorScheme } = useColorScheme();
 
-  const [data, setData] = useState<any>(parsedGroup);
+  const [data] = useState<any>(parsedGroup);
   const [groupName, setGroupName] = useState(data.name);
   const [addedMembers, setAddedMembers] = useState<any[]>(
     data.members.map((d: any) => d.user)
   );
+
   const [isUpdateLoading, setIsUpdateLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [deleteGroupModalVisible, setDeleteGroupModalVisible] = useState(false);
+  const [updateGroupModalVisible, setUpdateGroupModalVisible] = useState(false);
 
   const update = async () => {
     setIsUpdateLoading(true);
@@ -50,11 +51,9 @@ export default function GroupSettingsModal() {
     setIsDeleteLoading(false);
   };
 
+  console.log("groundModalOpen", deleteGroupModalVisible);
   return (
-    <SafeAreaView
-      className="flex-1 flex-col bg-absoluteWhite dark:bg-darkGrey"
-      edges={{ top: "off" }}
-    >
+    <SafeAreaView className="flex-1 flex-col bg-absoluteWhite dark:bg-darkGrey">
       {!isPresented && <Link href="../">Dismiss</Link>}
       <Appbar.Header
         elevated={false}
@@ -88,14 +87,12 @@ export default function GroupSettingsModal() {
               <Trash2 size={24} color="red" />
             )
           }
-          onPress={async () => {
-            await deleteG();
-          }}
+          onPress={() => setDeleteGroupModalVisible(true)}
           color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
         />
       </Appbar.Header>
-      <View className="flex-1 px-4">
+      <View className="flex-1 px-4 mb-5">
         <View className="flex space-y-4">
           <Text className="text-3xl text-darkGrey dark:text-white font-bold">
             Group settings
@@ -124,10 +121,26 @@ export default function GroupSettingsModal() {
             loading={isUpdateLoading}
             text="Save"
             variant="primary"
-            onPress={() => update()}
+            onPress={() => setUpdateGroupModalVisible(true)}
           />
         </SafeAreaView>
       </View>
+
+      <GestureHandlerRootView>
+        <DeleteGroupModal
+          visible={deleteGroupModalVisible}
+          hideModal={() => setDeleteGroupModalVisible(false)}
+          handleDelete={deleteG}
+        />
+
+        <UpdateGroupMembersModal
+          visible={updateGroupModalVisible}
+          hideModal={() => setUpdateGroupModalVisible(false)}
+          handleUpdate={update}
+        />
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 }
+
+export default DismissKeyboardHOC(GroupSettingsModal, false);

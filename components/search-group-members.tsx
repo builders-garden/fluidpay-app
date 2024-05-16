@@ -12,7 +12,7 @@ export default function SearchGroupMembers({
   setAddedMembers,
 }: {
   addedMembers: DBUser[];
-  setAddedMembers: any;
+  setAddedMembers: (addedMember: any) => void;
 }) {
   const [results, setResults] = useState<DBUser[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -50,11 +50,11 @@ export default function SearchGroupMembers({
           {addedMembers.map((user: any) => (
             <Pressable
               key={"added-member-" + user.id}
-              onPress={() =>
+              onPress={() => {
                 setAddedMembers(
                   addedMembers.filter((member: any) => member.id !== user.id)
-                )
-              }
+                );
+              }}
             >
               <View className="flex flex-col space-y-2 items-center justify-center">
                 <View>
