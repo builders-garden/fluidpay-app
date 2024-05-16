@@ -54,7 +54,11 @@ export default function RequestModal() {
           Request via link
         </Text>
         <View className="flex items-center space-y-2 mt-4">
-          <Avatar name={user?.displayName.charAt(0)} size={64} />
+          <Avatar
+            name={user?.displayName.charAt(0)}
+            size={64}
+            uri={user?.avatarUrl}
+          />
           <View className="flex flex-row items-center space-x-2">
             <Text className="text-darkGrey dark:text-white font-semibold text-lg">
               {user?.username}

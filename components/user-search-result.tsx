@@ -17,7 +17,10 @@ export default function UserSearchResult({ user }: { user: DBUser }) {
       key={user.id}
     >
       <View className="flex flex-row items-center space-x-4">
-        <Avatar name={user.displayName?.charAt(0).toUpperCase()} />
+        <Avatar
+          name={user.displayName?.charAt(0).toUpperCase()}
+          uri={user.avatarUrl}
+        />
         <View className="flex flex-col">
           <Text className="text-darkGrey dark:text-white font-semibold text-lg">
             {user.displayName}

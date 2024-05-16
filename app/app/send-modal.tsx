@@ -129,6 +129,7 @@ export default function SendModal() {
             <Avatar
               name={sendUser?.displayName?.charAt(0)?.toUpperCase() || ""}
               size={37.5}
+              uri={sendUser?.avatarUrl}
             />
           )}
           onPress={() => {}}

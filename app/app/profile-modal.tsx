@@ -100,6 +100,7 @@ export default function ProfileModal() {
         <View className="flex flex-col items-center mt-4- space-y-3">
           <Avatar
             name={profileUser?.displayName?.charAt(0)?.toUpperCase() || ""}
+            uri={profileUser?.avatarUrl}
             size={64}
           />
           <View className="flex flex-col items-center">

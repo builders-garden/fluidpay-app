@@ -128,7 +128,7 @@ export default function Pocket() {
                     >
                       <Avatar
                         name={member.user.displayName.charAt(0).toUpperCase()}
-                        // color="#FFFFFF"
+                        uri={member.user.avatarUrl}
                       />
                     </View>
                   ))}

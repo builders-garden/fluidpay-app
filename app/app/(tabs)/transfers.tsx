@@ -72,7 +72,10 @@ export default function Send() {
       <View className="flex flex-row items-center justify-between px-4 max-w-screen">
         <View className="flex flex-row items-center space-x-4 pl-2">
           <Link href={"/app/settings"}>
-            <Avatar name={user?.displayName.charAt(0).toUpperCase()!} />
+            <Avatar
+              name={user?.displayName.charAt(0).toUpperCase()!}
+              uri={user?.avatarUrl}
+            />
           </Link>
         </View>
         <Searchbar

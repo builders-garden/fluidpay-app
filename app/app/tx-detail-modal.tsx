@@ -60,7 +60,10 @@ export default function TransactionDetailModal() {
             <Text className="text-3xl text-darkGrey dark:text-white font-bold">
               -${data.amount.toFixed(2)}
             </Text>
-            <Avatar name={data.payee.displayName.charAt(0).toUpperCase()} />
+            <Avatar
+              name={data.payee.displayName.charAt(0).toUpperCase()}
+              uri={data.payee.avatarUrl}
+            />
           </View>
           <View className="flex">
             <Text className="text-[#FF238C] text-base font-semibold">

@@ -115,7 +115,10 @@ export default function Home() {
           <View className="flex flex-row items-center justify-between px-4 mt-2">
             <View className="flex flex-row items-center space-x-4 pl-2">
               <Link href={"/app/settings"}>
-                <Avatar name={user.displayName.charAt(0).toUpperCase()} />
+                <Avatar
+                  name={user.displayName.charAt(0).toUpperCase()}
+                  uri={user.avatarUrl}
+                />
               </Link>
             </View>
             {/* <View className="flex flex-row items-center space-x-0">
@@ -250,6 +253,7 @@ export default function Home() {
                           name={payment.payee.displayName
                             .charAt(0)
                             .toUpperCase()}
+                          uri={payment.payee.avatarUrl}
                         />
                         <Text className="text-darkGrey dark:text-white font-semibold">
                           {payment.payee.username}

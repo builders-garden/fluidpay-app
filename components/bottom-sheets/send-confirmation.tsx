@@ -117,7 +117,7 @@ const SendConfirmation = ({
   // renders
   return (
     <View
-      className="flex-1 p-6 bg-white/70 dark:bg-black/70 absolute w-full bottom-0 z-10"
+      className="flex-1 p-6 bg-black/70 absolute w-full bottom-0 z-10"
       style={{ height: sceenHeight }}
     >
       <BottomSheet
@@ -147,6 +147,7 @@ const SendConfirmation = ({
             <View className="flex flex-col items-center mt-5">
               <Avatar
                 name={sendUser?.displayName.charAt(0).toUpperCase()}
+                uri={sendUser?.avatarUrl}
                 size={50}
               />
               <Text className="text-darkGrey dark:text-white text-xl mt-2.5 mb-1 text-center font-medium">
