@@ -1,5 +1,12 @@
 import { Link, router, useLocalSearchParams, useNavigation } from "expo-router";
-import { Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import {
+  Keyboard,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { Appbar, Checkbox } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useUserStore } from "../../store";
@@ -11,16 +18,21 @@ import Avatar from "../../components/avatar";
 import { CATEGORIES } from "../../constants/categories";
 import RNPickerSelect from "react-native-picker-select";
 import {
+  SplitType,
   deleteGroupExpense,
   getGroupExpenseById,
   updateGroupExpense,
 } from "../../lib/api";
 import { COLORS } from "../../constants/colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import SelectPaidByModal from "./select-paid-by-modal";
+import SelectPaidByModal from "../../components/bottom-sheets/select-paid-by";
 import DatePicker from "../../components/date-picker";
 import { useColorScheme } from "nativewind";
 import DeleteExpenseModal from "../../components/modals/delete-expense";
+import SplitAmong, { SplitAmongType } from "../../components/split-among";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import SelectSplitTypeModal from "../../components/bottom-sheets/select-split-type";
+import Toast from "react-native-toast-message";
 
 export default function DetailExpenseModal() {
   const { colorScheme } = useColorScheme();
@@ -31,9 +43,11 @@ export default function DetailExpenseModal() {
   const user = useUserStore((state) => state.user);
   const [amount, setAmount] = useState(expenseData.amount);
   const [description, setDescription] = useState(expenseData.description);
-  const [selected, setSelected] = useState<boolean[]>(
-    groupData?.members?.map(() => false)
-  );
+  const [selected, setSelected] = useState<
+    { selected: boolean; amount: number }[]
+  >(groupData?.members?.map(() => false));
+  const [splitType, setSplitType] = useState<SplitType | null>(null);
+  const [splitAmong, setSplitAmong] = useState<SplitAmongType[]>([]);
   const [paidById, setPaidById] = useState<number | null>(user?.id!);
   const [updateButtonDisabled, setUpdateButtonDisabled] = useState(true);
   const [deleteExpenseModalVisible, setDeleteExpenseModalVisible] =
@@ -42,12 +56,21 @@ export default function DetailExpenseModal() {
   const [category, setCategory] = useState<string | null>(expenseData.category);
   const [date, setDate] = useState(new Date(expenseData.date));
   const [isLoading, setIsLoading] = useState(false);
+  const [paidByModalOpen, setPaidByModalOpen] = useState(false);
+  const [splitTypeModalOpen, setSplitTypeModalOpen] = useState(false);
 
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const splitOptionsBottomSheetModalRef = useRef<BottomSheetModal>(null);
 
   // callbacks
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+    Keyboard.dismiss();
+    setPaidByModalOpen(true);
+  }, []);
+
+  const handleSplitOptionsPresentModalPress = useCallback(() => {
+    Keyboard.dismiss();
+    setSplitTypeModalOpen(true);
   }, []);
 
   useEffect(() => {
@@ -76,36 +99,79 @@ export default function DetailExpenseModal() {
       id: groupData.id,
       expenseId: expenseData.id,
     });
+
+    setSplitAmong(
+      expense.splitAmong.map((split: any) => ({
+        userId: split.userId,
+        amount: split.amount,
+        type: split.type,
+      }))
+    );
+    setSplitType(expense?.splitAmong?.[0]?.type);
     const splitAmongIds = expense.splitAmong.map(
       (member: any) => member.user.id
     );
+    // splitAmongIds.includes(member.user.id)
     setSelected(
-      groupData.members.map((member: any) =>
-        splitAmongIds.includes(member.user.id)
-      )
+      groupData.members.map((member: any) => ({
+        selected: splitAmongIds.includes(member.user.id),
+        amount: splitAmong.find((split: any) => split.userId === member.user.id)
+          ?.amount,
+      }))
     );
   };
 
   const updateExpense = async () => {
-    setIsLoading(true);
-    const updatedExpenseData = {
-      category: category!,
-      paidById,
-      description,
-      amount,
-      date: date.toISOString(),
-      splitAmongIds: groupData.members
-        .filter((member: any, index: number) => !!selected[index])
-        .map((member: any) => member.user.id),
-    };
+    try {
+      setIsLoading(true);
+      const activeSplits = groupData.members.filter(
+        (_: unknown, index: number) => !!selected[index].selected
+      );
+      const getAmount = (member: any) =>
+        splitAmong.find((split) => split.userId === member.user.id)?.amount;
 
-    await updateGroupExpense(
-      user!.token,
-      { id: expenseData.groupId, expenseId: expenseData.id },
-      updatedExpenseData
-    );
-    setIsLoading(false);
-    router.back();
+      const totalSelected = activeSplits.reduce((acc: number, member: any) => {
+        return acc + (getAmount(member) || 0);
+      }, 0);
+
+      if (splitType === SplitType.AMOUNT && totalSelected !== amount) {
+        throw new Error("Total amount mismatch.");
+      }
+
+      const updatedExpenseData = {
+        category: category!,
+        paidById,
+        description,
+        amount,
+        date: date.toISOString(),
+        splitAmong: activeSplits.map((member: any) => ({
+          userId: member.user.id,
+          amount: getAmount(member),
+          type: splitType,
+        })),
+      };
+
+      const res = await updateGroupExpense(
+        user!.token,
+        { id: expenseData.groupId, expenseId: expenseData.id },
+        updatedExpenseData
+      );
+
+      if (!!res.error) {
+        throw new Error(res.error.message);
+      }
+
+      router.back();
+    } catch (error) {
+      console.error("Updating Expense", error);
+      Toast.show({
+        type: "error",
+        text1: (error as any).message || "An error occurred",
+        position: "bottom",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -131,6 +197,7 @@ export default function DetailExpenseModal() {
           }}
           color={colorScheme === "dark" ? "#FFF" : "#161618"}
           size={24}
+          animated={false}
         />
         <Appbar.Content
           title=""
@@ -213,40 +280,22 @@ export default function DetailExpenseModal() {
               />
             </View>
           </View>
-          <Text className="text-2xl text-darkGrey dark:text-white font-bold">
-            Split among
-          </Text>
-          <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-[#232324] py-4 px-2 mt-2">
-            {groupData?.members?.map((member: any, index: number) => (
-              <View className="flex flex-row items-center" key={index}>
-                <Checkbox.Android
-                  status={
-                    updateButtonDisabled
-                      ? "indeterminate"
-                      : selected[index]
-                        ? "checked"
-                        : "unchecked"
-                  }
-                  color="#FF238C"
-                  uncheckedColor="#8F8F91"
-                  onPress={() => {
-                    const newSelected = selected.slice();
-                    newSelected[index] = !newSelected[index];
-                    setSelected(newSelected);
-                  }}
-                />
-                <Avatar
-                  name={member.user.displayName.charAt(0).toUpperCase()}
-                  uri={member.user.avatarUrl}
-                />
-                <Text className="text-darkGrey dark:text-white font-semibold text-lg ml-2">
-                  {member.user.username === user?.username
-                    ? "You"
-                    : member.user.username}
-                </Text>
-              </View>
-            ))}
-          </View>
+
+          <SplitAmong
+            members={groupData.members}
+            selected={selected}
+            setSelected={setSelected}
+            paidById={paidById!}
+            amount={amount}
+            splitType={splitType!}
+            setSplitType={setSplitType}
+            splitAmong={splitAmong}
+            setSplitAmong={setSplitAmong}
+            fetchingData={updateButtonDisabled}
+            handleSplitOptionsPresentModalPress={() => {
+              handleSplitOptionsPresentModalPress();
+            }}
+          />
         </ScrollView>
         <SafeAreaView className="mt-auto">
           <View className="mb-4">
@@ -263,17 +312,30 @@ export default function DetailExpenseModal() {
           </View>
         </SafeAreaView>
       </View>
-      <SelectPaidByModal
-        bottomSheetModalRef={bottomSheetModalRef}
-        members={groupData.members}
-        paidById={paidById}
-        setPaidById={setPaidById}
-      />
-      <DeleteExpenseModal
-        visible={deleteExpenseModalVisible}
-        hideModal={() => setDeleteExpenseModalVisible(false)}
-        handleDelete={deleteExpense}
-      />
+      <GestureHandlerRootView>
+        {paidByModalOpen && (
+          <SelectPaidByModal
+            bottomSheetModalRef={bottomSheetModalRef}
+            members={groupData.members}
+            paidById={paidById!}
+            setPaidById={setPaidById}
+            handleClose={() => setPaidByModalOpen(false)}
+          />
+        )}
+        {splitTypeModalOpen && (
+          <SelectSplitTypeModal
+            selectedSplitType={splitType!}
+            bottomSheetModalRef={splitOptionsBottomSheetModalRef}
+            setSplitType={setSplitType}
+            handleClose={() => setSplitTypeModalOpen(false)}
+          />
+        )}
+        <DeleteExpenseModal
+          visible={deleteExpenseModalVisible}
+          hideModal={() => setDeleteExpenseModalVisible(false)}
+          handleDelete={deleteExpense}
+        />
+      </GestureHandlerRootView>
     </SafeAreaView>
   );
 }

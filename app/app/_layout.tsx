@@ -45,20 +45,6 @@ export default function AppLayout() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="select-paid-by-modal"
-        options={{
-          presentation: "containedTransparentModal",
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="select-split-type-modal"
-        options={{
-          presentation: "containedTransparentModal",
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
         name="group-settings-modal"
         options={{ presentation: "modal", headerShown: false }}
       />
