@@ -32,6 +32,25 @@ export default function CodeInput({
   loginWithCode,
 }: CodeInputProps) {
   const MAX_CODE_LENGTH = 6;
+
+  const handleConfirmCode = async () => {
+    try {
+      console.log("Logging in with code", code);
+      setIsLoading(true);
+      setLoadingMessage("Verifying code...");
+      await loginWithCode({
+        code: code,
+        email,
+      });
+      setLoginStatus(LoginStatus.SUCCESS_CODE);
+    } catch (error) {
+      setLoadingMessage("");
+      setIsLoading(false);
+      setLoginStatus(LoginStatus.SUCCESS_EMAIL);
+      console.error("Error confirming code", error);
+    }
+  };
+
   return (
     <View className="w-full flex flex-col">
       <Text className="text-darkGrey dark:text-white text-xl text-center mb-4">
@@ -46,18 +65,7 @@ export default function CodeInput({
 
       <AppButton
         disabled={code.length !== 6} // Keeps button disabled until the code has been sent
-        onPress={async () => {
-          console.log("Logging in with code", code);
-          setIsLoading(true);
-          setLoadingMessage("Verifying code...");
-          await loginWithCode({
-            code: code,
-            email,
-          });
-          setIsLoading(false);
-          setLoadingMessage("");
-          setLoginStatus(LoginStatus.SUCCESS_CODE);
-        }}
+        onPress={handleConfirmCode}
         text="Enter code"
         variant={code?.length === 6 ? "primary" : "disabled"}
         mt="mt-4"

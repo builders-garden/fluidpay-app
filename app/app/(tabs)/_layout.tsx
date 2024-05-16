@@ -14,6 +14,7 @@ export default function AppTabsLayout() {
           borderColor: colorScheme === "dark" ? "#252526" : "#F2F2F2",
           borderTopWidth: 0,
           minHeight: 94,
+          // paddingVertical: 25,
         },
       }}
     >

@@ -23,7 +23,7 @@ export default function DetailsModal() {
 
   const { balance, isLoading: isLoadingBalance } = useERC20BalanceOf({
     network: chain.id,
-    args: [user!.smartAccountAddress],
+    args: [user?.smartAccountAddress!],
     address: tokens.USDC[chain.id] as `0x${string}`,
   });
 
@@ -95,7 +95,7 @@ export default function DetailsModal() {
 
             <TouchableOpacity
               onPress={() =>
-                Clipboard.setStringAsync(user!.smartAccountAddress)
+                Clipboard.setStringAsync(user?.smartAccountAddress!)
               }
             >
               <Copy size={20} color="#FF238C" />

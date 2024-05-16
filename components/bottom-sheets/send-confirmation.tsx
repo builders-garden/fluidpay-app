@@ -83,7 +83,7 @@ const SendConfirmation = ({
       smartAccountClient,
       amount,
       chain,
-      sendUser!.smartAccountAddress
+      sendUser?.smartAccountAddress
     );
 
     const payment = {

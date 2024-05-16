@@ -61,7 +61,7 @@ const Biometrics = (props: {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-absoluteWhite dark:bg-black">
+    <SafeAreaView className="flex-1 bg-absoluteWhite dark:bg-black mb-5">
       <View className="px-4 flex-1">
         <Text className="text-4xl text-darkGrey dark:text-white font-semibold mb-1">
           Welcome back 👋

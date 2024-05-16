@@ -28,14 +28,14 @@ export default function AccountsModal() {
   const { balance: sepoliaBalance, isLoading: isLoadingSepoliaBalance } =
     useERC20BalanceOf({
       network: sepolia.id,
-      args: [user!.smartAccountAddress],
+      args: [user?.smartAccountAddress!],
       address: tokens.USDC[sepolia.id] as `0x${string}`,
     });
 
   const { balance: baseBalance, isLoading: isLoadingBaseBalance } =
     useERC20BalanceOf({
       network: base.id,
-      args: [user!.smartAccountAddress],
+      args: [user?.smartAccountAddress!],
       address: tokens.USDC[base.id] as `0x${string}`,
     });
 

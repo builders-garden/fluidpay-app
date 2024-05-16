@@ -24,7 +24,6 @@ export enum LoginStatus {
 
 const Home = () => {
   const { isReady, user, logout } = usePrivy();
-  // const { address } = usePrivyWagmiProvider();
   const address = getUserEmbeddedWallet(user)?.address;
   const { colorScheme } = useColorScheme();
 
@@ -119,7 +118,7 @@ const Home = () => {
       }
       className="h-full"
     >
-      <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4 bg-transparent">
+      <SafeAreaView className="flex flex-1 justify-between items-center space-y-3 mx-4 mb-5 bg-transparent">
         <View className="text-center flex flex-col space-y-4 justify-center items-center">
           <Image
             className="mt-24 h-14 w-56"
@@ -146,15 +145,6 @@ const Home = () => {
             </Text>
           </View>
         )}
-        {/* 
-      {isReady && user && !skipBiometrics && (
-        <View className="w-full">
-          <AppButton
-            onPress={() => authorise(storedUser as UsersMeResponse)}
-            text="Unlock"
-          />
-        </View>
-      )} */}
 
         {isReady && (
           <LoginForm
@@ -169,4 +159,4 @@ const Home = () => {
   );
 };
 
-export default DismissKeyboardHOC(Home);
+export default DismissKeyboardHOC(Home, false);

@@ -30,7 +30,7 @@ function AddMoneyModal() {
 
   const closeBottomSheet = () => setBottomSheet("");
 
-  const depositOptions = getDepositOptions(user!.smartAccountAddress);
+  const depositOptions = getDepositOptions(user?.smartAccountAddress!);
 
   return (
     <>
