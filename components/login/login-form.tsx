@@ -83,6 +83,10 @@ function LoginForm({
           })
           .catch((e) => {
             console.error("Error Handling Connection", e);
+            setIsLoading(false);
+            setLoginStatus(LoginStatus.CODE_ERROR);
+            router.replace("/");
+
             throw new Error(e);
           });
       } catch (e) {
