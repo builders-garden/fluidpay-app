@@ -24,7 +24,6 @@ export enum LoginStatus {
 
 const Home = () => {
   const { isReady, user, logout } = usePrivy();
-  // const { address } = usePrivyWagmiProvider();
   const address = getUserEmbeddedWallet(user)?.address;
   const { colorScheme } = useColorScheme();
 
@@ -146,15 +145,6 @@ const Home = () => {
             </Text>
           </View>
         )}
-        {/* 
-      {isReady && user && !skipBiometrics && (
-        <View className="w-full">
-          <AppButton
-            onPress={() => authorise(storedUser as UsersMeResponse)}
-            text="Unlock"
-          />
-        </View>
-      )} */}
 
         {isReady && (
           <LoginForm
