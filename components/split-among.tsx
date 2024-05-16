@@ -216,7 +216,7 @@ export default function SplitAmong({
                       key={split.userId}
                       className="text-darkGrey dark:text-white"
                     >
-                      {split.amount.toFixed(0)}%
+                      {split?.amount?.toFixed(0)}%
                     </Text>
                   ) : (
                     // <Text
