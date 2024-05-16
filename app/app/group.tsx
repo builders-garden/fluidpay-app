@@ -124,6 +124,7 @@ export default function GroupPage() {
               >
                 <Avatar
                   name={member.user.displayName.charAt(0).toUpperCase()}
+                  uri={member.user.avatarUrl}
                 />
               </View>
             ))}

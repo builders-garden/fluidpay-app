@@ -58,7 +58,10 @@ export default function SearchGroupMembers({
             >
               <View className="flex flex-col space-y-2 items-center justify-center">
                 <View>
-                  <Avatar name={user.displayName.charAt(0).toUpperCase()} />
+                  <Avatar
+                    name={user.displayName.charAt(0).toUpperCase()}
+                    uri={user.avatarUrl}
+                  />
                   <View className="bg-red-600 rounded-full absolute -top-1 -right-1 border border-black p-1">
                     <X size={8} color={"black"} className={" text-black"} />
                   </View>
@@ -99,7 +102,10 @@ export default function SearchGroupMembers({
                       color="#FF238C"
                       uncheckedColor="#8F8F91"
                     />
-                    <Avatar name={user.displayName.charAt(0).toUpperCase()} />
+                    <Avatar
+                      name={user.displayName.charAt(0).toUpperCase()}
+                      uri={user.avatarUrl}
+                    />
                     <Text className="text-darkGrey dark:text-white font-semibold text-lg ml-2">
                       {user.username}
                     </Text>

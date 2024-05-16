@@ -33,6 +33,11 @@ export default function BalanceItem(balanceData: any, index: number) {
                 ? balance.creditor.displayName.charAt(0).toUpperCase()
                 : balance.debtor.displayName.charAt(0).toUpperCase()
             }
+            uri={
+              isCurrentUserDebtor
+                ? balance.creditor.avatarUrl
+                : balance.debtor.avatarUrl
+            }
           />
           <View className="flex flex-col items-start justify-center">
             {isCurrentUserDebtor ? (

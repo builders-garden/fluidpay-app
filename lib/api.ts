@@ -281,13 +281,22 @@ export type GetGroupsQueryResponse = {
   }[];
 };
 
+export enum SplitType {
+  PERCENTAGE = "PERCENTAGE",
+  AMOUNT = "AMOUNT",
+}
+
 export type CreateGroupExpenseBody = {
   paidById: number;
   amount: number;
   description: string;
   category: string;
   date: string;
-  splitAmongIds: number[];
+  splitAmong: Array<{
+    userId: number;
+    amount: number;
+    type: SplitType;
+  }>;
 };
 
 export type UpdateGroupExpenseBody = {
@@ -295,7 +304,11 @@ export type UpdateGroupExpenseBody = {
   description: string;
   category: string;
   date: string;
-  splitAmongIds: number[];
+  splitAmong: Array<{
+    userId: number;
+    amount: number;
+    type: SplitType;
+  }>;
 };
 
 export const getGroupById = async (

@@ -178,23 +178,17 @@ const userProfile = () => {
         </Appbar.Header>
 
         <View className="flex-1 flex-col items-center px-4 bg-transparent">
-          {avatar ? (
-            <Image
-              source={{ uri: avatar }}
-              className="rounded-full w-[90px] h-[90px]"
-            />
-          ) : (
-            <Avatar
-              name={user?.displayName?.charAt(0)?.toUpperCase() || ""}
-              size={90}
-            />
-          )}
+          <Avatar
+            name={user?.displayName?.charAt(0)?.toUpperCase() || ""}
+            uri={avatar}
+            size={90}
+          />
+
           <Pressable onPress={pickImage}>
             <Text className="text-mutedGrey font-medium text-base mt-2.5 mb-3.5">
               Edit
             </Text>
           </Pressable>
-
           <View className="bg-white dark:bg-[#232324] p-5 rounded-2xl mb-6 space-y-6 w-full">
             {details.map((detail, index) => (
               <Detail
@@ -208,7 +202,6 @@ const userProfile = () => {
               />
             ))}
           </View>
-
           {!!farcasterAccount ? (
             <View className="bg-[#855DCD4D] py-5 px-5 rounded-xl w-full">
               <View className="flex-row items-center justify-center space-x-3.5 mb-6">
@@ -222,21 +215,15 @@ const userProfile = () => {
                 </Text>
               </View>
               <View className="flex-row items-center space-x-6 mb-6">
-                {farcasterAccount.profile_picture_url ? (
-                  <Image
-                    source={{ uri: farcasterAccount.profile_picture_url }}
-                    className="rounded-full h-[45px] w-[45px]"
-                  />
-                ) : (
-                  <Avatar
-                    name={
-                      farcasterAccount?.display_name
-                        ?.charAt(0)
-                        ?.toUpperCase() || ""
-                    }
-                    size={45}
-                  />
-                )}
+                <Avatar
+                  name={
+                    farcasterAccount?.display_name?.charAt(0)?.toUpperCase() ||
+                    ""
+                  }
+                  uri={farcasterAccount.profile_picture_url}
+                  size={45}
+                />
+
                 <View className="mb-1">
                   <Text className="text-base text-darkGrey dark:text-white font-semibold">
                     {farcasterAccount.display_name}

@@ -1,13 +1,19 @@
 import { ChevronDown } from "lucide-react-native";
-import { View, Pressable, Text } from "react-native";
+import {
+  View,
+  Pressable,
+  Text,
+  NativeSyntheticEvent,
+  TextInputContentSizeChangeEventData,
+  TextInput,
+} from "react-native";
 import Avatar from "./avatar";
-import { Checkbox } from "react-native-paper";
-import SelectSplitTypeModal, {
-  SplitType,
-} from "../app/app/select-split-type-modal";
+import { Checkbox, TextInput as RNPTextInput } from "react-native-paper";
+import { SplitType } from "../lib/api";
 import { COLORS } from "../constants/colors";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUserStore } from "../store";
+import { useColorScheme } from "nativewind";
 
 export interface SplitAmongType {
   userId: number;
@@ -16,6 +22,7 @@ export interface SplitAmongType {
 }
 
 export default function SplitAmong({
+  fetchingData = false,
   paidById,
   splitType,
   setSplitType,
@@ -27,6 +34,7 @@ export default function SplitAmong({
   setSelected,
   handleSplitOptionsPresentModalPress,
 }: {
+  fetchingData?: boolean;
   paidById: number;
   amount: number;
   splitType: SplitType;
@@ -58,13 +66,12 @@ export default function SplitAmong({
         .filter(Boolean) as any;
     }
     if (splitType === SplitType.AMOUNT) {
-      const amountPerUser = amount / selected.filter((s) => s.selected).length; // calculate the amount per user
       newSplitAmong = selected
         .map((s, index) => {
           if (s.selected) {
             return {
               userId: members[index].user.id,
-              amount: amountPerUser,
+              amount: s.amount,
               type: splitType,
             };
           }
@@ -82,21 +89,34 @@ export default function SplitAmong({
   const getUserSplitAmong = (userId: number) => {
     return splitAmong.find((split) => split.userId === userId);
   };
+
+  const selectUser = (index: number, isSelected: boolean, amount?: number) => {
+    const newSelected = selected.slice();
+    newSelected[index].selected = isSelected;
+
+    if (amount) {
+      newSelected[index].amount = amount;
+    }
+    setSelected(newSelected);
+  };
+
   return (
     <View className="flex flex-col">
       <View className="flex flex-row justify-between items-center">
         <Text className="text-2xl text-darkGrey dark:text-white font-bold">
           Split among
         </Text>
-        <Pressable
-          className="flex flex-row items-center"
-          onPress={handleSplitOptionsPresentModalPress}
-        >
-          <Text className="text-primary">
-            {splitType === SplitType.PERCENTAGE ? "By percent" : "By amount"}
-          </Text>
-          <ChevronDown size={16} color={`${COLORS.primary}`} />
-        </Pressable>
+        {!fetchingData && (
+          <Pressable
+            className="flex flex-row items-center"
+            onPress={handleSplitOptionsPresentModalPress}
+          >
+            <Text className="text-primary">
+              {splitType === SplitType.PERCENTAGE ? "By percent" : "By amount"}
+            </Text>
+            <ChevronDown size={16} color={`${COLORS.primary}`} />
+          </Pressable>
+        )}
       </View>
       <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-[#232324] py-4 px-4 mt-2">
         {members?.map((member: any, index: number) => (
@@ -106,16 +126,21 @@ export default function SplitAmong({
           >
             <View className="flex flex-row items-center space-x-4">
               <Checkbox.Android
-                status={selected[index].selected ? "checked" : "unchecked"}
+                status={
+                  fetchingData
+                    ? "indeterminate"
+                    : selected[index].selected
+                      ? "checked"
+                      : "unchecked"
+                }
                 color="#FF238C"
                 uncheckedColor="#8F8F91"
-                onPress={() => {
-                  const newSelected = selected.slice();
-                  newSelected[index].selected = !newSelected[index].selected;
-                  setSelected(newSelected);
-                }}
+                onPress={() => selectUser(index, !selected[index].selected)}
               />
-              <Avatar name={member.user.displayName.charAt(0).toUpperCase()} />
+              <Avatar
+                name={member.user.displayName.charAt(0).toUpperCase()}
+                uri={member.user.avatarUrl}
+              />
               <View className="flex flex-col ">
                 <Text className="text-darkGrey dark:text-white font-semibold text-lg">
                   {member.user.username === user?.username
@@ -187,13 +212,26 @@ export default function SplitAmong({
                 .filter((split) => split.userId === member.userId)
                 .map((split) =>
                   splitType === SplitType.PERCENTAGE ? (
-                    <Text className="text-darkGrey dark:text-white">
+                    <Text
+                      key={split.userId}
+                      className="text-darkGrey dark:text-white"
+                    >
                       {split.amount.toFixed(0)}%
                     </Text>
                   ) : (
-                    <Text className="text-darkGrey dark:text-white">
-                      ${split.amount.toFixed(2)}
-                    </Text>
+                    // <Text
+                    //   key={split.userId}
+                    //   className="text-darkGrey dark:text-white"
+                    // >
+                    //   ${split.amount.toFixed(2)}
+                    // </Text>
+
+                    <SplitTextInput
+                      key={split.userId}
+                      saveSplit={(amount: number) =>
+                        selectUser(index, true, amount)
+                      }
+                    />
                   )
                 )}
             </View>
@@ -203,3 +241,72 @@ export default function SplitAmong({
     </View>
   );
 }
+
+const SplitTextInput = ({
+  saveSplit,
+}: {
+  saveSplit: (amount: number) => void;
+}) => {
+  const { colorScheme } = useColorScheme();
+  const [text, setText] = useState("");
+  const [inputWidth, setInputWidth] = useState(100); // Initial width
+
+  const inputRef = useRef<TextInput>(null);
+
+  const handleContentSizeChange = (
+    event: NativeSyntheticEvent<TextInputContentSizeChangeEventData>
+  ) => {
+    setInputWidth(event.nativeEvent.contentSize.width);
+  };
+
+  const onEndEditing = () => {
+    const amount = parseFloat(!!text ? text : "0");
+    saveSplit(amount);
+  };
+
+  return (
+    <View className="flex-row items-center">
+      <Pressable onPress={() => inputRef.current?.focus()}>
+        <Text
+          className="text-base pb-px"
+          style={{
+            color: !!text
+              ? colorScheme === "dark"
+                ? "#f2f2f2"
+                : "#161618"
+              : "#8F8F91",
+          }}
+        >
+          $
+        </Text>
+      </Pressable>
+      <RNPTextInput
+        value={text}
+        onChangeText={setText}
+        autoFocus
+        className="h-4 font-normal placeholder:text-base text-base !bg-transparent"
+        placeholderTextColor="#8F8F91"
+        numberOfLines={1}
+        keyboardType="number-pad"
+        style={{
+          paddingStart: 0,
+          paddingEnd: 0,
+          paddingHorizontal: 0,
+          paddingBottom: 5,
+          width: inputWidth,
+          paddingVertical: 0,
+        }}
+        placeholder="0"
+        textColor={colorScheme === "dark" ? "#F2F2F2" : "#161618"}
+        underlineColor="transparent"
+        onContentSizeChange={handleContentSizeChange}
+        // activeUnderlineColor="transparent"
+        cursorColor="#FF238C"
+        selectionColor="#FF238C"
+        theme={{ colors: { primary: "#FF238C" } }}
+        onEndEditing={onEndEditing}
+        ref={inputRef}
+      />
+    </View>
+  );
+};
