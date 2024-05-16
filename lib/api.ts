@@ -304,7 +304,11 @@ export type UpdateGroupExpenseBody = {
   description: string;
   category: string;
   date: string;
-  splitAmongIds: number[];
+  splitAmong: Array<{
+    userId: number;
+    amount: number;
+    type: SplitType;
+  }>;
 };
 
 export const getGroupById = async (

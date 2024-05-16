@@ -68,7 +68,7 @@ function CreateExpenseModal() {
         return acc + (getAmount(member) || 0);
       }, 0);
 
-      if (totalSelected !== amount) {
+      if (splitType === SplitType.AMOUNT && totalSelected !== amount) {
         throw new Error("Total amount mismatch.");
       }
 

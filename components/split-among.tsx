@@ -22,6 +22,7 @@ export interface SplitAmongType {
 }
 
 export default function SplitAmong({
+  fetchingData = false,
   paidById,
   splitType,
   setSplitType,
@@ -33,6 +34,7 @@ export default function SplitAmong({
   setSelected,
   handleSplitOptionsPresentModalPress,
 }: {
+  fetchingData?: boolean;
   paidById: number;
   amount: number;
   splitType: SplitType;
@@ -104,15 +106,17 @@ export default function SplitAmong({
         <Text className="text-2xl text-darkGrey dark:text-white font-bold">
           Split among
         </Text>
-        <Pressable
-          className="flex flex-row items-center"
-          onPress={handleSplitOptionsPresentModalPress}
-        >
-          <Text className="text-primary">
-            {splitType === SplitType.PERCENTAGE ? "By percent" : "By amount"}
-          </Text>
-          <ChevronDown size={16} color={`${COLORS.primary}`} />
-        </Pressable>
+        {!fetchingData && (
+          <Pressable
+            className="flex flex-row items-center"
+            onPress={handleSplitOptionsPresentModalPress}
+          >
+            <Text className="text-primary">
+              {splitType === SplitType.PERCENTAGE ? "By percent" : "By amount"}
+            </Text>
+            <ChevronDown size={16} color={`${COLORS.primary}`} />
+          </Pressable>
+        )}
       </View>
       <View className="rounded-lg flex flex-col space-y-4 bg-white dark:bg-[#232324] py-4 px-4 mt-2">
         {members?.map((member: any, index: number) => (
@@ -122,7 +126,13 @@ export default function SplitAmong({
           >
             <View className="flex flex-row items-center space-x-4">
               <Checkbox.Android
-                status={selected[index].selected ? "checked" : "unchecked"}
+                status={
+                  fetchingData
+                    ? "indeterminate"
+                    : selected[index].selected
+                      ? "checked"
+                      : "unchecked"
+                }
                 color="#FF238C"
                 uncheckedColor="#8F8F91"
                 onPress={() => selectUser(index, !selected[index].selected)}
