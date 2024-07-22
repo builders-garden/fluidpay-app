@@ -8,6 +8,11 @@ export const getRequestClient = (provider: PrivyEmbeddedWalletProvider) => {
     nodeConnectionConfig: {
       baseURL: "https://gnosis.gateway.request.network", //all the requests are stored on gnosis chain and can be retrieved using this public Request node gateway
     },
+    httpConfig: {
+      getConfirmationRetryDelay: 1000,
+      getConfirmationMaxRetry: 120,
+      getConfirmationDeferDelay: 1000,
+    },
     signatureProvider: web3SignatureProvider,
   });
 };

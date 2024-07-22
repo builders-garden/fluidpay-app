@@ -11,18 +11,18 @@ import { Signer, providers } from "ethers";
 
 // This function checks the balance and approval (if not it calls the approve) of the payer passing a requestData.
 // So getRequestData in retrieve-request should be called first
-export const processPayment = async (
+export const preparePayment = async (
   requestData: Types.IRequestData,
   payerAddress: string,
   provider: providers.Provider,
   signer: Signer
 ): Promise<{ success: boolean; message: string }> => {
   // Check if there are sufficient funds
-  const hasFunds = await hasSufficientFunds({
+  /*const hasFunds = await hasSufficientFunds({
     request: requestData,
     address: payerAddress,
     providerOptions: {
-      provider,
+      provider
     },
   });
 
@@ -34,7 +34,7 @@ export const processPayment = async (
       success: false,
       message: "Insufficient funds for the transaction.",
     };
-  }
+  }*/
 
   // Check ERC20 token approval
   const hasApproval = await hasErc20Approval(
@@ -45,7 +45,7 @@ export const processPayment = async (
 
   // If approval is not yet given, then approve
   if (!hasApproval) {
-    const approvalTx = await approveErc20(requestData, signer);
+    const approvalTx = await approveErc20(requestData, provider);
     await approvalTx.wait(); // wait for the transaction to be confirmed
   }
 
@@ -58,5 +58,6 @@ export const sendPaymentTransaction = async (
   signer: Signer
 ) => {
   const paymentTx = await payRequest(requestData, signer);
+  console.log(JSON.stringify(paymentTx, null, 2));
   return await paymentTx.wait(0); // wait for the transaction to be confirmed
 };

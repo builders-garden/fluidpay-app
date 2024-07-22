@@ -1,25 +1,21 @@
 import { PrivyEmbeddedWalletProvider } from "@privy-io/expo";
 import { getRequestClient } from ".";
 import { CreateRequestParams, createRequestParameters } from "./create-request";
-import { processPayment, sendPaymentTransaction } from "./pay-request";
+import { preparePayment, sendPaymentTransaction } from "./pay-request";
 import { getRequestData } from "./retrieve-requests";
 import { getEthersProvider, getEthersSigner } from "../privy";
 import { randomBytes } from "ethers/lib/utils";
 
 export const createAndPayRequest = async (
   requestParams: CreateRequestParams,
-  provider: PrivyEmbeddedWalletProvider
+  eoaProvider: PrivyEmbeddedWalletProvider,
+  smartAccountSigner: any
 ) => {
   const requestCreateParameters = createRequestParameters(requestParams);
   console.log("Getting request client...");
-  const requestClient = getRequestClient(provider);
+  const requestClient = getRequestClient(eoaProvider);
 
-  console.log(
-    "Creating request...",
-    JSON.stringify(requestCreateParameters, null, 2)
-  );
-  console.log([0, 1, 2, 3, 4].slice(0, 2));
-  console.log(randomBytes(32));
+  console.log("Creating request...");
   const createdRequest = await requestClient.createRequest(
     requestCreateParameters
   );
@@ -36,20 +32,24 @@ export const createAndPayRequest = async (
   );
 
   console.log("Request data", requestData);
-  console.log("Processing payment...");
-  const ethersProvider = getEthersProvider(provider);
-  const ethersSigner = getEthersSigner(provider);
-  const { success, message } = await processPayment(
+  console.log("Preparing payment...");
+  const ethersProvider = getEthersProvider(eoaProvider);
+  const ethersSigner = getEthersSigner(eoaProvider);
+  const { success, message } = await preparePayment(
     requestData,
     requestParams.payerIdentity,
-    ethersProvider,
-    ethersSigner!
+    smartAccountSigner,
+    smartAccountSigner
   );
+  console.log({ success, message });
   if (!success) {
     console.error(message);
     throw new Error(message);
   }
-
   // Send payment transaction
-  return await sendPaymentTransaction(requestData, ethersSigner!);
+  const paymentTx = await sendPaymentTransaction(
+    requestData,
+    smartAccountSigner!
+  );
+  return paymentTx;
 };
