@@ -14,6 +14,7 @@ import { http } from "wagmi";
 import { getWalletClient } from "./smart-accounts";
 import { EmbeddedWalletState } from "@privy-io/expo";
 import tokens from "../constants/tokens";
+import { signerToSafeSmartAccount } from "permissionless/_types/accounts";
 
 const transportUrl = (chain: Chain) =>
   `https://api.pimlico.io/v2/${chain.id}/rpc?apikey=${process.env.EXPO_PUBLIC_PIMLICO_API_KEY}`;
