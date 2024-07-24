@@ -1,59 +1,74 @@
+import { executeTransaction } from "../pimlico";
+import { Chain, createPublicClient, erc20Abi, http, parseUnits } from "viem";
+import { ERC20_FEE_PROXY_ADDRESS } from "../../constants/request-network-contracts";
 import {
-  approveErc20,
-  hasErc20Approval,
-  hasSufficientFunds,
-  payRequest,
-} from "@requestnetwork/payment-processor";
-import { Types } from "@requestnetwork/request-client.js";
-import { Signer, providers } from "ethers";
-import {
-  approveUSDCTransfer,
-  walletClientToProvider,
-  walletClientToSigner,
-} from "../pimlico";
-import { Chain } from "viem";
-import { ERC20_FEE_PROXY_ADDRESS_SEPOLIA } from ".";
+  approveERC20TxData,
+  payERC20FeeRequestTxData,
+} from "./smart-contracts";
+import tokens from "../../constants/tokens";
 
-// This function checks the balance and approval (if not it calls the approve) of the payer passing a requestData.
-// So getRequestData in retrieve-request should be called first
-export const preparePayment = async (
-  //requestData: Types.IRequestData,
+// This function checks the allowance for USDC (if not enough it calls the approve) of the payer.
+export const approvePayment = async (
   smartAccountClient: any,
   chain: Chain,
-  //payerAddress: string,
   amount: number
 ): Promise<{ success: boolean; message: string }> => {
-  /*const provider = walletClientToProvider(smartAccountClient);
-
-  // Check ERC20 token approval
-  /*const hasApproval = await hasErc20Approval(
-    requestData,
-    payerAddress,
-    provider
-  );
-
-  // If approval is not yet given, then approve
-  if (!hasApproval) {
-    const approvalTx = await approveErc20(requestData, provider);
-    await approvalTx.wait(); // wait for the transaction to be confirmed
-  }*/
-
-  await approveUSDCTransfer(
-    smartAccountClient,
+  const usdcAddress = tokens.USDC[chain.id] as `0x${string}`;
+  const erc20FeeProxyAddress = ERC20_FEE_PROXY_ADDRESS[
+    chain.id
+  ] as `0x${string}`;
+  // Check if the payer approved the ERC20 transfer
+  const publicClient = createPublicClient({
     chain,
-    ERC20_FEE_PROXY_ADDRESS_SEPOLIA as `0x${string}`,
-    amount
-  );
+    transport: http(),
+  });
+  const erc20Allowance = await publicClient.readContract({
+    address: usdcAddress,
+    abi: erc20Abi,
+    functionName: "allowance",
+    args: [smartAccountClient.account.address, erc20FeeProxyAddress],
+  });
+  console.log("ERC20 Allowance", erc20Allowance, BigInt(erc20Allowance));
+  console.log("Amount", amount);
+  console.log("Amount * 10 * 6", parseUnits(amount.toString(), 6));
+  // if the allowance is not enough, approve the ERC20 transfer
+  if (erc20Allowance < parseUnits(amount.toString(), 6)) {
+    console.log("Approving ERC20 transfer...");
+    await executeTransaction(
+      smartAccountClient,
+      usdcAddress,
+      BigInt(0),
+      approveERC20TxData(erc20FeeProxyAddress, amount)
+    );
+  }
 
   // Return some success response or the next action
   return { success: true, message: "Ready for payment" };
 };
 
-export const sendPaymentTransaction = async (
-  requestData: Types.IRequestData,
-  signer: any
+export const sendPayment = async (
+  smartAccountClient: any,
+  chain: Chain,
+  payeeAddress: `0x${string}`,
+  amount: number,
+  paymentReference: string
 ) => {
-  const paymentTx = await payRequest(requestData, signer);
-  console.log(JSON.stringify(paymentTx, null, 2));
-  return await paymentTx.wait(0); // wait for the transaction to be confirmed
+  const usdcAddress = tokens.USDC[chain.id] as `0x${string}`;
+  const erc20FeeProxyAddress = ERC20_FEE_PROXY_ADDRESS[
+    chain.id
+  ] as `0x${string}`;
+  return await executeTransaction(
+    smartAccountClient,
+    erc20FeeProxyAddress,
+    BigInt(0),
+    payERC20FeeRequestTxData(
+      {
+        address: usdcAddress,
+        decimals: 6,
+      },
+      payeeAddress,
+      amount,
+      paymentReference
+    )
+  ); // wait for the transaction to be confirmed
 };

@@ -1,6 +1,5 @@
 import {
   ENTRYPOINT_ADDRESS_V07,
-  SmartAccountClient,
   createSmartAccountClient,
   walletClientToSmartAccountSigner,
 } from "permissionless";
@@ -20,10 +19,7 @@ import { http } from "wagmi";
 import { getWalletClient } from "./smart-accounts";
 import { EmbeddedWalletState } from "@privy-io/expo";
 import tokens from "../constants/tokens";
-import { signerToSafeSmartAccount } from "permissionless/_types/accounts";
-import { BigNumber, constants, providers } from "ethers";
-import { erc20FeeProxyAbi } from "./request-network/erc20_fee_proxy_abi";
-import { ERC20_FEE_PROXY_ADDRESS_SEPOLIA } from "./request-network";
+import { providers } from "ethers";
 
 const transportUrl = (chain: Chain) =>
   `https://api.pimlico.io/v2/${chain.id}/rpc?apikey=${process.env.EXPO_PUBLIC_PIMLICO_API_KEY}`;
@@ -92,40 +88,6 @@ export const transferUSDC = async (
   });
 };
 
-export const checkUSDCAllowance = async (
-  smartAccountClient: any,
-  chain: Chain,
-  spender: `0x${string}`
-) => {
-  const USDC_ADDRESS = tokens.USDC[chain.id] as `0x${string}`;
-  return await smartAccountClient.call({
-    to: USDC_ADDRESS,
-    data: encodeFunctionData({
-      abi: erc20Abi,
-      functionName: "allowance",
-      args: [smartAccountClient.address, spender],
-    }),
-  });
-};
-
-export const approveUSDCTransfer = async (
-  smartAccountClient: any,
-  chain: Chain,
-  spender: `0x${string}`,
-  amount: number
-) => {
-  const USDC_ADDRESS = tokens.USDC[chain.id] as `0x${string}`;
-  return await smartAccountClient.sendTransaction({
-    to: USDC_ADDRESS,
-    value: BigInt(0),
-    data: encodeFunctionData({
-      abi: erc20Abi,
-      functionName: "approve",
-      args: [spender, BigInt(amount * 10 ** 6)],
-    }),
-  });
-};
-
 export function walletClientToSigner(walletClient: WalletClient) {
   const { account, chain, transport } = walletClient;
   const network = {
@@ -148,36 +110,23 @@ export function walletClientToProvider(walletClient: WalletClient) {
   return new providers.Web3Provider(transport, network);
 }
 
-export async function payERC20Request(
+/**
+ * This function executes a transaction on the blockchain
+ * @param smartAccountClient the pimlico smart account client
+ * @param to the address of the recipient or contract to call
+ * @param value the value to be sent with the transaction
+ * @param data the data to be sent with the transaction
+ * @returns the hash of the transaction
+ */
+export async function executeTransaction(
   smartAccountClient: any,
-  chain: Chain,
-  paymentAddress: `0x${string}`,
-  amount: number,
-  paymentReference: `0x${string}`
-) {
-  const USDC_ADDRESS = tokens.USDC[chain.id] as `0x${string}`;
-  console.log([
-    USDC_ADDRESS,
-    paymentAddress,
-    BigInt(amount * 10 ** 6),
-    `0x${paymentReference}`,
-    BigNumber.from(0),
-    constants.AddressZero,
-  ]);
+  to: `0x${string}`,
+  value: any,
+  data: `0x${string}`
+): Promise<`0x${string}`> {
   return await smartAccountClient.sendTransaction({
-    to: ERC20_FEE_PROXY_ADDRESS_SEPOLIA,
-    value: BigInt(0),
-    data: encodeFunctionData({
-      abi: erc20FeeProxyAbi,
-      functionName: "transferFromWithReferenceAndFee",
-      args: [
-        USDC_ADDRESS,
-        paymentAddress,
-        BigInt(amount * 10 ** 6),
-        `0x${paymentReference}`,
-        BigNumber.from(0),
-        constants.AddressZero,
-      ],
-    }),
+    to,
+    value,
+    data,
   });
 }

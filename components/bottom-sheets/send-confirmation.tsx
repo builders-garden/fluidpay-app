@@ -110,8 +110,11 @@ const SendConfirmation = ({
         chain,
       },
       provider,
-      smartAccountClient
+      smartAccountClient,
+      chain
     );
+
+    console.log("Request created", request.requestId);
 
     const payment = {
       payerId: user!.id,
@@ -119,7 +122,7 @@ const SendConfirmation = ({
       chainId: chain.id,
       amount: amount,
       description: note,
-      txHash: request.transactionHash as `0x${string}`,
+      txHash: request.hash as `0x${string}`,
     };
     await createPayment(user!.token, payment);
     setIsLoadingTransfer(false);

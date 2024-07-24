@@ -1,28 +1,22 @@
 import { PrivyEmbeddedWalletProvider } from "@privy-io/expo";
 import { getRequestClient } from ".";
 import { CreateRequestParams, createRequestParameters } from "./create-request";
-import { preparePayment, sendPaymentTransaction } from "./pay-request";
+import { approvePayment, sendPayment } from "./pay-request";
 import { getRequestData } from "./retrieve-requests";
-import { getEthersProvider, getEthersSigner } from "../privy";
-import { randomBytes } from "ethers/lib/utils";
-import { sepolia } from "viem/chains";
+import { Chain, sepolia } from "viem/chains";
 import { getPaymentReference } from "@requestnetwork/payment-detection";
-import {
-  payERC20Request,
-  walletClientToProvider,
-  walletClientToSigner,
-} from "../pimlico";
 
 export const createAndPayRequest = async (
   requestParams: CreateRequestParams,
   eoaProvider: PrivyEmbeddedWalletProvider,
-  smartAccountSigner: any
+  smartAccountSigner: any,
+  chain: Chain
 ) => {
   const requestCreateParameters = createRequestParameters(requestParams);
   console.log("Getting request client...");
   const requestClient = getRequestClient(eoaProvider);
 
-  /*console.log("Creating request...");
+  console.log("Creating request...");
   const createdRequest = await requestClient.createRequest(
     requestCreateParameters
   );
@@ -30,43 +24,44 @@ export const createAndPayRequest = async (
   console.log("Waiting confirmation...");
   const confirmedRequestData = await createdRequest.waitForConfirmation();
 
-  console.log("Request created", confirmedRequestData.requestId);*/
+  console.log("Request created", confirmedRequestData.requestId);
 
   // Prepare for payment
   console.log("Retrieving request data...");
   const requestData = await getRequestData(
     requestClient,
-    // confirmedRequestData.requestId
-    "01178feb4e4b4d00aaa14c8b3ca543d2b0c48c535b684747e1586e689f0a718fcd"
+    confirmedRequestData.requestId
   );
 
   console.log("Getting payment reference...");
   const paymentReference = await getPaymentReference(requestData);
+  if (!paymentReference) {
+    throw new Error("Payment reference not found");
+  }
   console.log("Payment reference", paymentReference);
 
-  console.log("Request data", requestData);
+  //console.log("Request data", requestData);
   console.log("Preparing payment...");
-  const { success, message } = await preparePayment(
+  const { success, message } = await approvePayment(
     smartAccountSigner,
-    sepolia,
+    chain,
     requestParams.amount
   );
-  console.log({ success, message });
+  console.log("Approval given", success, message);
   if (!success) {
     console.error(message);
     throw new Error(message);
   }
   // Send payment transaction
-  /*const paymentTx = await sendPaymentTransaction(
-    requestData,
-    walletClientToProvider(smartAccountSigner)
-  );*/
-  const paymentTx = await payERC20Request(
+  const hash = await sendPayment(
     smartAccountSigner,
-    sepolia,
+    chain,
     requestParams.payeeIdentity as `0x${string}`,
     requestParams.amount,
-    paymentReference as `0x${string}`
+    paymentReference as string
   );
-  return paymentTx;
+  return {
+    hash,
+    requestId: confirmedRequestData.requestId,
+  };
 };
