@@ -47,7 +47,7 @@ export const createAndPayRequest = async (
     chain,
     requestParams.amount
   );
-  console.log("Approval given", success, message);
+  console.log("Token transfer approved");
   if (!success) {
     console.error(message);
     throw new Error(message);
