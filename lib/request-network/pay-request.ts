@@ -12,7 +12,7 @@ export const approvePayment = async (
   smartAccountClient: any,
   chain: Chain,
   amount: number
-): Promise<{ success: boolean; message: string }> => {
+): Promise<boolean> => {
   const usdcAddress = tokens.USDC[chain.id] as `0x${string}`;
   const erc20FeeProxyAddress = ERC20_FEE_PROXY_ADDRESS[
     chain.id
@@ -28,12 +28,8 @@ export const approvePayment = async (
     functionName: "allowance",
     args: [smartAccountClient.account.address, erc20FeeProxyAddress],
   });
-  console.log("ERC20 Allowance", erc20Allowance, BigInt(erc20Allowance));
-  console.log("Amount", amount);
-  console.log("Amount * 10 * 6", parseUnits(amount.toString(), 6));
   // if the allowance is not enough, approve the ERC20 transfer
   if (erc20Allowance < parseUnits(amount.toString(), 6)) {
-    console.log("Approving ERC20 transfer...");
     await executeTransaction(
       smartAccountClient,
       usdcAddress,
@@ -43,7 +39,7 @@ export const approvePayment = async (
   }
 
   // Return some success response or the next action
-  return { success: true, message: "Ready for payment" };
+  return true;
 };
 
 export const sendPayment = async (

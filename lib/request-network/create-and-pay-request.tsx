@@ -42,15 +42,14 @@ export const createAndPayRequest = async (
 
   //console.log("Request data", requestData);
   console.log("Preparing payment...");
-  const { success, message } = await approvePayment(
+  const isApproved = await approvePayment(
     smartAccountSigner,
     chain,
     requestParams.amount
   );
   console.log("Token transfer approved");
-  if (!success) {
-    console.error(message);
-    throw new Error(message);
+  if (!isApproved) {
+    throw new Error("Token transfer not approved");
   }
   // Send payment transaction
   const hash = await sendPayment(
