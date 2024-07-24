@@ -88,19 +88,10 @@ const SendConfirmation = ({
       wallet
     );
     const provider = await wallet.getProvider!();
-    /*
-    const txHash = await transferUSDC(
-      smartAccountClient,
-      amount,
-      chain,
-      sendUser?.smartAccountAddress
-    );
-    */
     const request = await createAndPayRequest(
       {
         payeeIdentity: sendUserAddress!,
         payerIdentity: address!,
-        // signerIdentity: user!.address,
         signerIdentity: address!,
         amount,
         expectedAmount: amount * 10 ** 6,
