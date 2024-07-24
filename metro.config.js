@@ -5,7 +5,14 @@ const extraNodeModules = require("node-libs-browser");
 
 const config = getSentryExpoConfig(__dirname);
 
-config.resolver.extraNodeModules = extraNodeModules;
+config.resolver.extraNodeModules = {
+  ...extraNodeModules,
+  crypto: require.resolve("./cryptoPolyfill"),
+  stream: require.resolve("stream-browserify"),
+  buffer: require.resolve("buffer"),
+  http: require.resolve("http-browserify"),
+  https: require.resolve("https-browserify"),
+};
 config.resolver.sourceExts.push("cjs");
 
 // Enable package exports

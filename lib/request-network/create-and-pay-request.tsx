@@ -1,25 +1,22 @@
 import { PrivyEmbeddedWalletProvider } from "@privy-io/expo";
 import { getRequestClient } from ".";
 import { CreateRequestParams, createRequestParameters } from "./create-request";
-import { processPayment, sendPaymentTransaction } from "./pay-request";
+import { approvePayment, sendPayment } from "./pay-request";
 import { getRequestData } from "./retrieve-requests";
-import { getEthersProvider, getEthersSigner } from "../privy";
-import { randomBytes } from "ethers/lib/utils";
+import { Chain, sepolia } from "viem/chains";
+import { getPaymentReference } from "@requestnetwork/payment-detection";
 
 export const createAndPayRequest = async (
   requestParams: CreateRequestParams,
-  provider: PrivyEmbeddedWalletProvider
+  eoaProvider: PrivyEmbeddedWalletProvider,
+  smartAccountSigner: any,
+  chain: Chain
 ) => {
   const requestCreateParameters = createRequestParameters(requestParams);
   console.log("Getting request client...");
-  const requestClient = getRequestClient(provider);
+  const requestClient = getRequestClient(eoaProvider);
 
-  console.log(
-    "Creating request...",
-    JSON.stringify(requestCreateParameters, null, 2)
-  );
-  console.log([0, 1, 2, 3, 4].slice(0, 2));
-  console.log(randomBytes(32));
+  console.log("Creating request...");
   const createdRequest = await requestClient.createRequest(
     requestCreateParameters
   );
@@ -30,26 +27,40 @@ export const createAndPayRequest = async (
   console.log("Request created", confirmedRequestData.requestId);
 
   // Prepare for payment
+  console.log("Retrieving request data...");
   const requestData = await getRequestData(
     requestClient,
     confirmedRequestData.requestId
   );
 
-  console.log("Request data", requestData);
-  console.log("Processing payment...");
-  const ethersProvider = getEthersProvider(provider);
-  const ethersSigner = getEthersSigner(provider);
-  const { success, message } = await processPayment(
-    requestData,
-    requestParams.payerIdentity,
-    ethersProvider,
-    ethersSigner!
-  );
-  if (!success) {
-    console.error(message);
-    throw new Error(message);
+  console.log("Getting payment reference...");
+  const paymentReference = await getPaymentReference(requestData);
+  if (!paymentReference) {
+    throw new Error("Payment reference not found");
   }
+  console.log("Payment reference", paymentReference);
 
+  //console.log("Request data", requestData);
+  console.log("Preparing payment...");
+  const isApproved = await approvePayment(
+    smartAccountSigner,
+    chain,
+    requestParams.amount
+  );
+  console.log("Token transfer approved");
+  if (!isApproved) {
+    throw new Error("Token transfer not approved");
+  }
   // Send payment transaction
-  return await sendPaymentTransaction(requestData, ethersSigner!);
+  const hash = await sendPayment(
+    smartAccountSigner,
+    chain,
+    requestParams.payeeIdentity as `0x${string}`,
+    requestParams.amount,
+    paymentReference as string
+  );
+  return {
+    hash,
+    requestId: confirmedRequestData.requestId,
+  };
 };

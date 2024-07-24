@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -18,6 +18,10 @@ import { Chain } from "viem";
 import { useEmbeddedWallet } from "@privy-io/expo";
 import { formatBigInt } from "../../lib/utils";
 import { useColorScheme } from "nativewind";
+import tokens from "../../constants/tokens";
+import { createAndPayRequest } from "../../lib/request-network/create-and-pay-request";
+import { getWalletClient } from "../../lib/smart-accounts";
+import { walletClientToSmartAccountSigner } from "permissionless";
 
 const sceenHeight = Dimensions.get("window").height;
 
@@ -62,6 +66,10 @@ const SendConfirmation = ({
     (state) => state
   );
 
+  const [sendUserAddress, setSendUserAddress] = useState<string | null>(
+    sendUser?.smartAccountAddress
+  );
+
   // callbacks
   const handleSheetChanges = useCallback((index: number) => {
     console.log("handleSheetChanges", index);
@@ -79,12 +87,25 @@ const SendConfirmation = ({
       chain,
       wallet
     );
-    const txHash = await transferUSDC(
+    const provider = await wallet.getProvider!();
+    const request = await createAndPayRequest(
+      {
+        payeeIdentity: sendUserAddress!,
+        payerIdentity: address!,
+        signerIdentity: address!,
+        amount,
+        expectedAmount: amount * 10 ** 6,
+        paymentAddress: sendUserAddress!,
+        reason: "Reason",
+        currencyAddress: tokens.USDC[chain.id] as `0x${string}`,
+        chain,
+      },
+      provider,
       smartAccountClient,
-      amount,
-      chain,
-      sendUser?.smartAccountAddress
+      chain
     );
+
+    console.log("Request created", request.requestId);
 
     const payment = {
       payerId: user!.id,
@@ -92,7 +113,7 @@ const SendConfirmation = ({
       chainId: chain.id,
       amount: amount,
       description: note,
-      txHash,
+      txHash: request.hash as `0x${string}`,
     };
     await createPayment(user!.token, payment);
     setIsLoadingTransfer(false);
