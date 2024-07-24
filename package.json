@@ -24,6 +24,7 @@
     "@react-native-segmented-control/segmented-control": "2.4.1",
     "@react-navigation/native": "^6.1.17",
     "@requestnetwork/epk-signature": "^0.8.0",
+    "@requestnetwork/payment-detection": "^0.44.0",
     "@requestnetwork/payment-processor": "^0.46.0",
     "@requestnetwork/request-client.js": "^0.48.0",
     "@requestnetwork/types": "^0.44.0",

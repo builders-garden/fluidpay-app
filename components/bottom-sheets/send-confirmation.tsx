@@ -102,6 +102,7 @@ const SendConfirmation = ({
         payerIdentity: address!,
         // signerIdentity: user!.address,
         signerIdentity: address!,
+        amount,
         expectedAmount: amount * 10 ** 6,
         paymentAddress: sendUserAddress!,
         reason: "Reason",

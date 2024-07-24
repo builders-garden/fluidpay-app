@@ -384,7 +384,7 @@ const getDetails = (
   },
   {
     key: "Address",
-    value: shortenAddress(user?.smartAccountAddress!),
+    value: user?.smartAccountAddress!,
     editable: false,
     copiable: true,
   },

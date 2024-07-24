@@ -3652,7 +3652,7 @@
     "@requestnetwork/types" "0.44.0"
     tslib "2.5.0"
 
-"@requestnetwork/payment-detection@0.44.0":
+"@requestnetwork/payment-detection@0.44.0", "@requestnetwork/payment-detection@^0.44.0":
   version "0.44.0"
   resolved "https://registry.yarnpkg.com/@requestnetwork/payment-detection/-/payment-detection-0.44.0.tgz#04d315362bfe86e8363857e32ccdb3860c372b97"
   integrity sha512-4upeNm1xmG7W4Vt+uUP1K5a7JriTbBOauDgprQAlXjHuDVBtSaStsFzSP+1Yn6F8EFc8e0rNr3IdQ+7hmuBm5A==
