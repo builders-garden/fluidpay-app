@@ -33,13 +33,6 @@ export const createAndPayRequest = async (
     confirmedRequestData.requestId
   );
 
-  console.log("Getting payment reference...");
-  const paymentReference = await getPaymentReference(requestData);
-  if (!paymentReference) {
-    throw new Error("Payment reference not found");
-  }
-  console.log("Payment reference", paymentReference);
-
   //console.log("Request data", requestData);
   console.log("Preparing payment...");
   const isApproved = await approvePayment(
@@ -51,6 +44,14 @@ export const createAndPayRequest = async (
   if (!isApproved) {
     throw new Error("Token transfer not approved");
   }
+
+  console.log("Getting payment reference...");
+  const paymentReference = await getPaymentReference(requestData);
+  if (!paymentReference) {
+    throw new Error("Payment reference not found");
+  }
+  console.log("Payment reference", paymentReference);
+
   // Send payment transaction
   const hash = await sendPayment(
     smartAccountSigner,
