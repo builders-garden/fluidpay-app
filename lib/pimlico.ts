@@ -1,6 +1,5 @@
 import {
   ENTRYPOINT_ADDRESS_V07,
-  SmartAccountClient,
   createSmartAccountClient,
   walletClientToSmartAccountSigner,
 } from "permissionless";
@@ -9,12 +8,18 @@ import {
   createPimlicoBundlerClient,
   createPimlicoPaymasterClient,
 } from "permissionless/clients/pimlico";
-import { Chain, createPublicClient, encodeFunctionData, erc20Abi } from "viem";
+import {
+  Chain,
+  createPublicClient,
+  encodeFunctionData,
+  erc20Abi,
+  WalletClient,
+} from "viem";
 import { http } from "wagmi";
 import { getWalletClient } from "./smart-accounts";
 import { EmbeddedWalletState } from "@privy-io/expo";
 import tokens from "../constants/tokens";
-import { signerToSafeSmartAccount } from "permissionless/_types/accounts";
+import { providers } from "ethers";
 
 const transportUrl = (chain: Chain) =>
   `https://api.pimlico.io/v2/${chain.id}/rpc?apikey=${process.env.EXPO_PUBLIC_PIMLICO_API_KEY}`;
@@ -82,3 +87,46 @@ export const transferUSDC = async (
     }),
   });
 };
+
+export function walletClientToSigner(walletClient: WalletClient) {
+  const { account, chain, transport } = walletClient;
+  const network = {
+    chainId: chain!.id,
+    name: chain!.name,
+    ensAddress: chain!.contracts?.ensRegistry?.address,
+  };
+  const provider = new providers.Web3Provider(transport, network);
+  const signer = provider.getSigner(account!.address);
+  return signer;
+}
+
+export function walletClientToProvider(walletClient: WalletClient) {
+  const { chain, transport } = walletClient;
+  const network = {
+    chainId: chain!.id,
+    name: chain!.name,
+    ensAddress: chain!.contracts?.ensRegistry?.address,
+  };
+  return new providers.Web3Provider(transport, network);
+}
+
+/**
+ * This function executes a transaction on the blockchain
+ * @param smartAccountClient the pimlico smart account client
+ * @param to the address of the recipient or contract to call
+ * @param value the value to be sent with the transaction
+ * @param data the data to be sent with the transaction
+ * @returns the hash of the transaction
+ */
+export async function executeTransaction(
+  smartAccountClient: any,
+  to: `0x${string}`,
+  value: any,
+  data: `0x${string}`
+): Promise<`0x${string}`> {
+  return await smartAccountClient.sendTransaction({
+    to,
+    value,
+    data,
+  });
+}

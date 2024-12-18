@@ -6,6 +6,7 @@ export interface CreateRequestParams {
   payeeIdentity: string;
   payerIdentity: string;
   signerIdentity: string;
+  amount: number;
   expectedAmount: string | number;
   paymentAddress: string;
   reason: string;
